@@ -1,5 +1,5 @@
 # QQRobot
-A QQ robot based on lz1998/Spring-CQ
+A QQ robot based on PicqBotX.
 # 更新日志和已实现功能
 ## 👉 2020-06-22
 #### 0.0.1: 首次更新
