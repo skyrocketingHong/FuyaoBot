@@ -3,7 +3,7 @@ D:\_skyrocketing_FILE\Code\Project\Git\QQRobot\src\main\java\ninja\skyrocketing\
 D:\_skyrocketing_FILE\Code\Project\Git\QQRobot\src\main\java\ninja\skyrocketing\util\RandomUtil.java
 D:\_skyrocketing_FILE\Code\Project\Git\QQRobot\src\main\java\ninja\skyrocketing\util\FileUtil.java
 D:\_skyrocketing_FILE\Code\Project\Git\QQRobot\src\main\java\ninja\skyrocketing\robot\service\impl\RepeaterServiceImpl.java
-D:\_skyrocketing_FILE\Code\Project\Git\QQRobot\src\main\java\ninja\skyrocketing\message\EverywhereMessage.java
+D:\_skyrocketing_FILE\Code\Project\Git\QQRobot\src\main\java\ninja\skyrocketing\robot\message\EverywhereMessage.java
 D:\_skyrocketing_FILE\Code\Project\Git\QQRobot\src\main\java\ninja\skyrocketing\util\TimeUtil.java
 D:\_skyrocketing_FILE\Code\Project\Git\QQRobot\src\main\java\ninja\skyrocketing\robot\service\impl\TimeServiceImpl.java
 D:\_skyrocketing_FILE\Code\Project\Git\QQRobot\src\main\java\ninja\skyrocketing\robot\service\impl\EasterEggServiceImpl.java

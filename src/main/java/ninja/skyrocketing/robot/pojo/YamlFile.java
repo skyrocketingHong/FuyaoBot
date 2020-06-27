@@ -36,7 +36,7 @@ public class YamlFile {
 		return lists;
 	}
 	
-	public Map<String, List<Long>> getIdList() {
-		return (Map<String, List<Long>>) allMap.get("id");
+	public Map<String, List<String>> getIdList() {
+		return (Map<String, List<String>>) allMap.get("id");
 	}
 }

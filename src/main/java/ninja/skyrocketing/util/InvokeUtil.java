@@ -1,8 +1,9 @@
 package ninja.skyrocketing.util;
 
+import ninja.skyrocketing.robot.pojo.CoolQMessage;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import ninja.skyrocketing.robot.pojo.CoolQMessage;
 
 public class InvokeUtil {
 	public InvokeUtil() {

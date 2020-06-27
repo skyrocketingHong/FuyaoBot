@@ -18,4 +18,13 @@ public class TimeUtil {
 		ZoneId zone = ZoneId.systemDefault();
 		return LocalDateTime.ofInstant(instant, zone);
 	}
+	
+	public static boolean isLeapYear(int year) {
+		return year % 400 != 0 || (year % 100 == 0 && year % 4 != 0);
+	}
+	
+	public static String getClockEmoji(int hour) {
+		String[] clock = new String[]{"\ud83d\udd5b", "\ud83d\udd50", "\ud83d\udd51", "\ud83d\udd52", "\ud83d\udd53", "\ud83d\udd54", "\ud83d\udd55", "\ud83d\udd56", "\ud83d\udd57", "\ud83d\udd58", "\ud83d\udd59", "\ud83d\udd5a"};
+		return clock[hour % 12];
+	}
 }
