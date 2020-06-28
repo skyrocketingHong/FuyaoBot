@@ -9,14 +9,14 @@ import ninja.skyrocketing.util.MatchUtil;
 import ninja.skyrocketing.util.RandomUtil;
 
 public class EverywhereMessage {
-	private static final int randomNum = RandomUtil.getRandomNum(100);
-	
 	public static String Sender(EventGroupMessage event, YamlFile yamlFile) throws Exception {
 		CoolQMessage coolQMessage = new CoolQMessage(event.getMessage(), event.getGroupId(), event.getSenderId(), event, yamlFile);
 		boolean userInBlacklist = yamlFile.getIdList().get("user").contains(coolQMessage.getUserId().toString());
 		boolean groupInBlacklist = yamlFile.getIdList().get("group").contains(coolQMessage.getGroupId().toString());
+		int randomNum = RandomUtil.getRandomNum(100);
+		
 		if (!userInBlacklist) {
-			String className = MatchUtil.matchedClass(yamlFile, coolQMessage.getMsg(), randomNum);
+			String className = MatchUtil.matchedClass(yamlFile, coolQMessage.getMsg());
 			if (className != null) {
 				return InvokeUtil.runByInvoke(className, coolQMessage);
 			}
@@ -25,7 +25,6 @@ public class EverywhereMessage {
 				return coolQMessage.sendGroupSelfMessage();
 			}
 		}
-		
 		return null;
 	}
 	
@@ -33,12 +32,11 @@ public class EverywhereMessage {
 		CoolQMessage coolQMessage = new CoolQMessage(event.getMessage(), event.getSenderId(), event, yamlFile);
 		boolean userInBlacklist = (yamlFile.getIdList().get("user")).contains(coolQMessage.getUserId().toString());
 		if (!userInBlacklist) {
-			String className = MatchUtil.matchedClass(yamlFile, coolQMessage.getMsg(), randomNum);
+			String className = MatchUtil.matchedClass(yamlFile, coolQMessage.getMsg());
 			if (className != null) {
 				return InvokeUtil.runByInvoke(className, coolQMessage);
 			}
 		}
-		
 		return null;
 	}
 }

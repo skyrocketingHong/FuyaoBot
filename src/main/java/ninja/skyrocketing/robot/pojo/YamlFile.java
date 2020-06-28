@@ -6,6 +6,8 @@ import java.util.Map;
 
 public class YamlFile {
 	private Map<String, Object> allMap;
+	public YamlFile() {
+	}
 	
 	public YamlFile(Map<String, Object> allMap) {
 		this.allMap = allMap;
@@ -13,6 +15,14 @@ public class YamlFile {
 	
 	public Map<String, Object> getAllMap() {
 		return allMap;
+	}
+	
+	public void delAllMap() {
+		this.allMap = null;
+	}
+	
+	public void setAllMap(Map<String, Object> allMap) {
+		this.allMap = allMap;
 	}
 	
 	public Map<String, String> getNoteAndFunc() {

@@ -12,7 +12,7 @@
 
     <groupId>ninja.skyrocketing</groupId>
     <artifactId>qqrobot</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <repositories>
         <repository>
             <id>jitpack.io</id>
@@ -24,11 +24,6 @@
             <groupId>com.github.hydevelop</groupId>
             <artifactId>PicqBotX</artifactId>
             <version>4.15.0.1052</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.8.1</version>
         </dependency>
         <dependency>
             <groupId>com.esotericsoftware.yamlbeans</groupId>

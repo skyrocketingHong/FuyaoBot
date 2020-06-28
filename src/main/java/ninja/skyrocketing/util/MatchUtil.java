@@ -6,7 +6,7 @@ public class MatchUtil {
 	public static String[] matchedMsgAndClass(String str) {
 		return str.split("@");
 	}
-	public static String matchedClass(YamlFile yamlFile, String msg, Integer integer) {
+	public static String matchedClass(YamlFile yamlFile, String msg) {
 		if (yamlFile.getReplyEqualsMap().containsKey(msg)) {
 			return yamlFile.getReplyEqualsMap().get(msg);
 		} else {
@@ -17,8 +17,11 @@ public class MatchUtil {
 						return matchedMsgAndClass[1];
 					if (i == 1 && msg.matches(matchedMsgAndClass[0]))
 						return matchedMsgAndClass[1];
-					if (i == 2 && msg.matches(matchedMsgAndClass[0]) && integer > 90)
-						return matchedMsgAndClass[1];
+					if (i == 2 && msg.matches(matchedMsgAndClass[0])){
+						int randomNum = RandomUtil.getRandomNum(100);
+						if(randomNum > 90)
+							return matchedMsgAndClass[1];
+					}
 				}
 			}
 		}

@@ -18,15 +18,15 @@ public class RunRobot {
 		
 		PicqConfig config = new PicqConfig(8082).setDebug(false).setColorSupportLevel(DISABLED);
 		PicqBotX bot = new PicqBotX(config);
-		
+
 		bot.addAccount("Bot01", "127.0.0.1", 8081);
-		
+
 		bot.getEventManager().registerListeners(
 				new PrivateMessageListener(yamlFile),
 				new GroupMessageListener(yamlFile));
-		
+
 		bot.startBot();
-		
+
 		bot.getAccountManager().refreshCache();
 	}
 }
