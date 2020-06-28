@@ -2,7 +2,6 @@ package ninja.skyrocketing;
 
 import cc.moecraft.icq.PicqBotX;
 import cc.moecraft.icq.PicqConfig;
-import cc.moecraft.logger.environments.ColorSupportLevel;
 import ninja.skyrocketing.robot.listener.GroupMessageListener;
 import ninja.skyrocketing.robot.listener.PrivateMessageListener;
 import ninja.skyrocketing.robot.pojo.YamlFile;

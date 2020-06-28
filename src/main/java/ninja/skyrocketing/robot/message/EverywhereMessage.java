@@ -8,8 +8,6 @@ import ninja.skyrocketing.util.InvokeUtil;
 import ninja.skyrocketing.util.MatchUtil;
 import ninja.skyrocketing.util.RandomUtil;
 
-import java.util.List;
-
 public class EverywhereMessage {
 	private static final int randomNum = RandomUtil.getRandomNum(100);
 	
@@ -24,7 +22,7 @@ public class EverywhereMessage {
 			}
 			
 			if (randomNum > 98 && !groupInBlacklist) {
-				coolQMessage.sendGroupSelfMessage();
+				return coolQMessage.sendGroupSelfMessage();
 			}
 		}
 		
@@ -33,7 +31,7 @@ public class EverywhereMessage {
 	
 	public static String Sender(EventPrivateMessage event, YamlFile yamlFile) throws Exception {
 		CoolQMessage coolQMessage = new CoolQMessage(event.getMessage(), event.getSenderId(), event, yamlFile);
-		boolean userInBlacklist = ((List)yamlFile.getIdList().get("user")).contains(coolQMessage.getUserId().toString());
+		boolean userInBlacklist = (yamlFile.getIdList().get("user")).contains(coolQMessage.getUserId().toString());
 		if (!userInBlacklist) {
 			String className = MatchUtil.matchedClass(yamlFile, coolQMessage.getMsg(), randomNum);
 			if (className != null) {

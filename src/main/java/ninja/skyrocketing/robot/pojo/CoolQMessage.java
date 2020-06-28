@@ -58,8 +58,8 @@ public class CoolQMessage {
 		this.getEventG().respond(resultMessage, false);
 	}
 	
-	public void sendGroupSelfMessage() {
-		this.getEventG().respond(this.getMsg(), false);
+	public String sendGroupSelfMessage() {
+		return this.getMsg();
 	}
 	
 	public void sendSpecificGroupMessage(Long groupId, String resultMessage) {
