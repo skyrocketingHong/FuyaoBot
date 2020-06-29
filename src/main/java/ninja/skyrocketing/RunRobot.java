@@ -15,8 +15,8 @@ import static cc.moecraft.logger.environments.ColorSupportLevel.DISABLED;
 public class RunRobot {
 	public static void main(String[] args) throws IOException {
 		YamlFile yamlFile = new YamlFile((new YamlUtil()).getYaml());
-		
-		PicqConfig config = new PicqConfig(8082).setDebug(false).setColorSupportLevel(DISABLED);
+
+		PicqConfig config = new PicqConfig(8082).setDebug(false).setColorSupportLevel(DISABLED).setLogPath("");
 		PicqBotX bot = new PicqBotX(config);
 
 		bot.addAccount("Bot01", "127.0.0.1", 8081);

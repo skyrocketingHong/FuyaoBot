@@ -20,9 +20,12 @@ public class EverywhereMessage {
 			if (className != null) {
 				return InvokeUtil.runByInvoke(className, coolQMessage);
 			}
-			
-			if (randomNum > 98 && !groupInBlacklist) {
-				return coolQMessage.sendGroupSelfMessage();
+			if (coolQMessage.getMsg().matches("\\[.*\\] \\[.*\\].*|\\[CQ:image.*\\].*")){
+				return null;
+			} else {
+				if (randomNum > 98 && !groupInBlacklist ) {
+					return coolQMessage.sendGroupSelfMessage();
+				}
 			}
 		}
 		return null;
