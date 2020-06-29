@@ -1,7 +1,6 @@
 package ninja.skyrocketing.robot.service.impl;
 
 import ninja.skyrocketing.robot.pojo.CoolQMessage;
-import ninja.skyrocketing.robot.pojo.YamlFile;
 import ninja.skyrocketing.util.YamlUtil;
 
 import java.io.IOException;

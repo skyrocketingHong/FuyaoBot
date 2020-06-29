@@ -1,5 +1,6 @@
 package ninja.skyrocketing.util;
 
+import ninja.skyrocketing.robot.pojo.CoolQMessage;
 import ninja.skyrocketing.robot.pojo.YamlFile;
 
 public class MatchUtil {
@@ -7,7 +8,9 @@ public class MatchUtil {
 		return str.split("@");
 	}
 
-	public static String matchedClass(YamlFile yamlFile, String msg) {
+	public static String matchedClass(CoolQMessage coolQMessage) {
+		YamlFile yamlFile = coolQMessage.getYamlFile();
+		String msg = coolQMessage.getMsg();
 		if (yamlFile.getReplyEqualsMap().containsKey(msg)) {
 			return yamlFile.getReplyEqualsMap().get(msg);
 		} else {
@@ -21,10 +24,16 @@ public class MatchUtil {
 					if (msg.matches(matchedMsgAndClass[0])) {
 						if (i == 1)
 							return matchedMsgAndClass[1];
-						if (i == 2) {
-							int randomNum = RandomUtil.getRandomNum(100);
-							if (randomNum > 90)
-								return matchedMsgAndClass[1];
+						if (coolQMessage.getGroupId() != null){
+							if (!yamlFile.getIdList().get("group").contains(coolQMessage.getGroupId().toString())){
+								if (i == 2) {
+									int randomNum = RandomUtil.getRandomNum(100);
+									if (randomNum > Integer.parseInt(yamlFile.getConfigList().get("random")))
+										return matchedMsgAndClass[1];
+								}
+							} else {
+								return null;
+							}
 						}
 					}
 				}

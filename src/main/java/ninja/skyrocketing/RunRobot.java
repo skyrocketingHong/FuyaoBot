@@ -23,7 +23,8 @@ public class RunRobot {
 
 		bot.getEventManager().registerListeners(
 				new PrivateMessageListener(yamlFile),
-				new GroupMessageListener(yamlFile));
+				new GroupMessageListener(yamlFile)
+		);
 
 		bot.startBot();
 

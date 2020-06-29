@@ -55,4 +55,8 @@ public class YamlFile {
 	public Map<String, List<String>> getIdList() {
 		return (Map<String, List<String>>) allMap.get("id");
 	}
+	
+	public Map<String, String> getConfigList() {
+		return (Map<String, String>) allMap.get("config");
+	}
 }
