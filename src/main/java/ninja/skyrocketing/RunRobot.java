@@ -2,6 +2,7 @@ package ninja.skyrocketing;
 
 import cc.moecraft.icq.PicqBotX;
 import cc.moecraft.icq.PicqConfig;
+import ninja.skyrocketing.robot.listener.DiscussMessageListener;
 import ninja.skyrocketing.robot.listener.GroupMessageListener;
 import ninja.skyrocketing.robot.listener.PrivateMessageListener;
 import ninja.skyrocketing.robot.pojo.YamlFile;
@@ -23,7 +24,8 @@ public class RunRobot {
 
 		bot.getEventManager().registerListeners(
 				new PrivateMessageListener(yamlFile),
-				new GroupMessageListener(yamlFile)
+				new GroupMessageListener(yamlFile),
+				new DiscussMessageListener(yamlFile)
 		);
 
 		bot.startBot();

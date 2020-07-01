@@ -1,5 +1,6 @@
 package ninja.skyrocketing.robot.pojo;
 
+import cc.moecraft.icq.event.events.message.EventDiscussMessage;
 import cc.moecraft.icq.event.events.message.EventGroupMessage;
 import cc.moecraft.icq.event.events.message.EventPrivateMessage;
 
@@ -9,19 +10,28 @@ public class CoolQMessage {
 	Long userId;
 	EventGroupMessage eventG;
 	EventPrivateMessage eventP;
+	EventDiscussMessage eventD;
 	YamlFile yamlFile;
 	
-	public CoolQMessage(String msg, Long groupId, Long userId, EventGroupMessage event, YamlFile yamlFile) {
-		this.msg = msg;
-		this.groupId = groupId;
-		this.userId = userId;
+	public CoolQMessage(EventGroupMessage event, YamlFile yamlFile) {
+		this.msg = event.getMessage();
+		this.groupId = event.getGroupId();
+		this.userId = event.getSenderId();
 		this.eventG = event;
 		this.yamlFile = yamlFile;
 	}
 	
-	public CoolQMessage(String msg, Long userId, EventPrivateMessage event, YamlFile yamlFile) {
-		this.msg = msg;
-		this.userId = userId;
+	public CoolQMessage(EventDiscussMessage event, YamlFile yamlFile) {
+		this.msg = event.getMessage();
+		this.groupId = event.getDiscussId();
+		this.userId = event.getSenderId();
+		this.eventD = event;
+		this.yamlFile = yamlFile;
+	}
+	
+	public CoolQMessage(EventPrivateMessage event, YamlFile yamlFile) {
+		this.msg = event.getMessage();
+		this.userId = event.getSenderId();
 		this.eventP = event;
 		this.yamlFile = yamlFile;
 	}

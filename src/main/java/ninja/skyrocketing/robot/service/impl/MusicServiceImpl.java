@@ -11,7 +11,7 @@ public class MusicServiceImpl {
 		return "[CQ:music,type=163,id=" + id + "]";
 	}
 	public static String qqMusic(CoolQMessage coolQMessage) throws IOException {
-		String id = MusicSearchUtil.qqMusic(coolQMessage.getMsg().replaceAll("^(QQ音乐|qq音乐|QQ|qq|Q音|q音)*点歌\\s*|^来\\w*首\\s*", ""));
+		String id = MusicSearchUtil.qqMusic(coolQMessage.getMsg().replaceAll("^(QQ音乐|qq音乐|QQ|qq|Q音|q音)*点歌\\s*|^来.*首\\s*", ""));
 		return "[CQ:music,type=qq,id=" + id + "]";
 	}
 }
