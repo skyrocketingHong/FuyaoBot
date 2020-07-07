@@ -59,4 +59,8 @@ public class YamlFile {
 	public Map<String, String> getConfigList() {
 		return (Map<String, String>) allMap.get("config");
 	}
+	
+	public Map<Long, Integer> getSignInMap() {
+		return (Map<Long, Integer>) allMap.get("singin");
+	}
 }

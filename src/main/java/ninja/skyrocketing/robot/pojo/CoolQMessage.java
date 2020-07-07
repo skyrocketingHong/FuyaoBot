@@ -4,6 +4,9 @@ import cc.moecraft.icq.event.events.message.EventDiscussMessage;
 import cc.moecraft.icq.event.events.message.EventGroupMessage;
 import cc.moecraft.icq.event.events.message.EventPrivateMessage;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class CoolQMessage {
 	String msg;
 	Long groupId;
@@ -77,6 +80,6 @@ public class CoolQMessage {
 	}
 	
 	public String atSomeone() {
-		return "[CQ:at,qq=" + this.userId + "]";
+		return "[CQ:at,qq=" + this.userId + "]" + " ";
 	}
 }

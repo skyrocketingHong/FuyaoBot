@@ -19,6 +19,11 @@ public class TimeUtil {
 		return LocalDateTime.ofInstant(instant, zone);
 	}
 	
+	public static String getDateTimeString() {
+		LocalDateTime dateTime = LocalDateTime.now();
+		return dateTime.toString().replace("T", " ");
+	}
+	
 	public static boolean isLeapYear(int year) {
 		return year % 400 != 0 || (year % 100 == 0 && year % 4 != 0);
 	}

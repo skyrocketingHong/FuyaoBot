@@ -2,9 +2,11 @@ package ninja.skyrocketing;
 
 import cc.moecraft.icq.PicqBotX;
 import cc.moecraft.icq.PicqConfig;
+import ninja.skyrocketing.robot.dao.impl.SignInImpl;
 import ninja.skyrocketing.robot.listener.DiscussMessageListener;
 import ninja.skyrocketing.robot.listener.GroupMessageListener;
 import ninja.skyrocketing.robot.listener.PrivateMessageListener;
+import ninja.skyrocketing.robot.pojo.SignIn;
 import ninja.skyrocketing.robot.pojo.YamlFile;
 import ninja.skyrocketing.util.YamlUtil;
 

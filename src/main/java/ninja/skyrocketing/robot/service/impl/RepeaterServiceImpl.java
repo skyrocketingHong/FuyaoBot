@@ -30,7 +30,7 @@ public class RepeaterServiceImpl {
 					return front + "？你是认真的吗？还是说有时差？";
 				}
 				if (goodNight) {
-					return front + "晚安哦，明天（今天）记得早点睡。\nおやすみなさい❕";
+					return front + "晚安哦，明天（今天）记得早点睡。\nおやすみなさい！";
 				}
 				return null;
 			}
@@ -50,7 +50,7 @@ public class RepeaterServiceImpl {
 			case 5:
 			case 6:{
 				if(goodMorning) {
-					return front + "早啊，起这么早？\nおはようございます❕";
+					return front + "早啊，起这么早？\nおはようございます！";
 				}
 				if(goodAfternoon) {
 					return front + "我没记错的话，现在还是早上吧。";
@@ -64,7 +64,7 @@ public class RepeaterServiceImpl {
 			case 8:
 			case 9: {
 				if(goodMorning) {
-					return front + "早啊！\nおはようございます❕";
+					return front + "早啊！\nおはようございます！";
 				}
 				if(goodAfternoon) {
 					return front + "我没记错的话，现在还是早上吧。";
@@ -128,7 +128,7 @@ public class RepeaterServiceImpl {
 					return front + "别中午了，都到晚上了。";
 				}
 				if (goodNight) {
-					return front + "晚安哦。\nおやすみなさい❕";
+					return front + "晚安哦。\nおやすみなさい！";
 				}
 				return null;
 			}
