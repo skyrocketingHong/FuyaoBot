@@ -1,14 +1,12 @@
 package ninja.skyrocketing.robot.listener;
 
-import cc.moecraft.icq.event.EventHandler;
-import cc.moecraft.icq.event.IcqListener;
-import cc.moecraft.icq.event.events.message.EventPrivateMessage;
-import ninja.skyrocketing.robot.pojo.YamlFile;
+import net.mamoe.mirai.event.EventHandler;
+import net.mamoe.mirai.event.SimpleListenerHost;
+import net.mamoe.mirai.message.FriendMessageEvent;
+import ninja.skyrocketing.robot.entity.YamlFile;
 import ninja.skyrocketing.robot.sender.PrivateMessageSender;
 
-import java.time.LocalDateTime;
-
-public class PrivateMessageListener extends IcqListener {
+public class PrivateMessageListener extends SimpleListenerHost {
 	static YamlFile yamlFile;
 	
 	public PrivateMessageListener(YamlFile file) {
@@ -16,10 +14,8 @@ public class PrivateMessageListener extends IcqListener {
 	}
 	
 	@EventHandler
-	public static void onPMEvent(EventPrivateMessage event) throws Exception {
-		String msg = PrivateMessageSender.Sender(event, yamlFile);
-		String now = LocalDateTime.now().toString();
-		System.out.println("私聊 回复消息日志 [" + now + "] [userId:" + event.getSenderId() + " msg:" + event.getMessage() + " replyMsg:" + msg.replaceAll("\n|\r|\t", "") + "]");
-		event.respond(msg);
+	public void onMessage(FriendMessageEvent event) throws Exception {
+		if (PrivateMessageSender.Sender(event, yamlFile) != null)
+			event.getSender().sendMessage(PrivateMessageSender.Sender(event, yamlFile));
 	}
 }

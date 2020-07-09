@@ -1,4 +1,4 @@
-package ninja.skyrocketing.robot.pojo;
+package ninja.skyrocketing.robot.entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,10 +7,7 @@ import java.util.Map;
 public class YamlFile {
 	private Map<String, Object> allMap;
 	private List<List<String>> allMatchLists = new ArrayList<>();
-
-	public YamlFile() {
-	}
-
+	
 	public YamlFile(Map<String, Object> allMap) {
 		this.allMap = allMap;
 		String[] listType = {"containslist", "matcheslist", "randomlist"};
@@ -62,5 +59,17 @@ public class YamlFile {
 	
 	public Map<Long, Integer> getSignInMap() {
 		return (Map<Long, Integer>) allMap.get("singin");
+	}
+	
+	public List<String> getBotList() {
+		return (List<String>) allMap.get("bot");
+	}
+	
+	public Long getBotQQ() {
+		return Long.parseLong(getBotList().get(0));
+	}
+	
+	public String getBotPassword() {
+		return getBotList().get(1);
 	}
 }

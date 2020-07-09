@@ -30,3 +30,4 @@ target
 .factorypath
 .idea
 src/main/resources/*
+deviceInfo.json

@@ -1,4 +1,4 @@
-package ninja.skyrocketing.robot.pojo;
+package ninja.skyrocketing.robot.entity;
 
 public class SignIn {
     private Long userId;

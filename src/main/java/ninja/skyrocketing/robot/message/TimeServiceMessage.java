@@ -1,6 +1,7 @@
-package ninja.skyrocketing.robot.service.impl;
+package ninja.skyrocketing.robot.message;
 
-import ninja.skyrocketing.robot.pojo.CoolQMessage;
+import net.mamoe.mirai.message.data.Message;
+import ninja.skyrocketing.robot.entity.CoolQMessage;
 import ninja.skyrocketing.util.TimeUtil;
 
 import java.time.LocalDate;
@@ -8,24 +9,23 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-public class TimeServiceImpl {
-	public static String timeOfNow(CoolQMessage coolQMessage) {
+public class TimeServiceMessage {
+	public static Message timeOfNow(CoolQMessage coolQMessage) {
 		LocalDateTime beijingTime = LocalDateTime.now();
 		LocalDateTime ptTime = LocalDateTime.now(ZoneId.of("America/Los_Angeles"));
-		
-		return "中国标准时间 (UTC+8)：\n" + TimeUtil.getClockEmoji(beijingTime.getHour()) +
+		return coolQMessage.sendMsg("中国标准时间 (UTC+8)：\n" + TimeUtil.getClockEmoji(beijingTime.getHour()) +
 				beijingTime.format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")) +
 				"\n太平洋时间 (UTC-7/UTC-8)：\n" + TimeUtil.getClockEmoji(ptTime.getHour()) +
-				ptTime.format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss"));
+				ptTime.format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")));
 	}
 	
-	public static String kaoyanCountDown(CoolQMessage coolQMessage) {
+	public static Message kaoyanCountDown(CoolQMessage coolQMessage) {
 		LocalDate today = LocalDate.now();
 		String days = TimeUtil.calculateDate(new int[]{today.getYear(), today.getMonthValue(), today.getDayOfMonth()}, new int[]{2020, 12, 19}).toString();
-		return "距离 2021 考研还有 " + days + " 天！";
+		return coolQMessage.sendMsg("距离 2021 考研还有 " + days + " 天！");
 	}
 	
-	public static String calendar(CoolQMessage coolQMessage) {
+	public static Message calendar(CoolQMessage coolQMessage) {
 		int offset, count = 0, sum = 0;
 		int mon[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 		String[] msg = coolQMessage.getMsg().split(" ");
@@ -62,7 +62,7 @@ public class TimeServiceImpl {
 				if(count % 7 == 0)
 					result.append("\n");
 			}
-			return result.toString();
+			return coolQMessage.sendMsg(result.toString());
 		}
 		return null;
 	}

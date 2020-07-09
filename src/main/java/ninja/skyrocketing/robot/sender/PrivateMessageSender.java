@@ -1,12 +1,13 @@
 package ninja.skyrocketing.robot.sender;
 
-import cc.moecraft.icq.event.events.message.EventPrivateMessage;
-import ninja.skyrocketing.robot.pojo.CoolQMessage;
-import ninja.skyrocketing.robot.pojo.YamlFile;
+import net.mamoe.mirai.message.FriendMessageEvent;
+import net.mamoe.mirai.message.data.Message;
+import ninja.skyrocketing.robot.entity.CoolQMessage;
+import ninja.skyrocketing.robot.entity.YamlFile;
 import ninja.skyrocketing.util.SenderUtil;
 
 public class PrivateMessageSender {
-	public static String Sender(EventPrivateMessage event, YamlFile yamlFile) throws Exception {
+	public static Message Sender(FriendMessageEvent event, YamlFile yamlFile) throws Exception {
 		CoolQMessage coolQMessage = new CoolQMessage(event, yamlFile);
 		return SenderUtil.Sender(yamlFile, coolQMessage);
 	}

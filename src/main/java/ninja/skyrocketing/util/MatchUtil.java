@@ -1,7 +1,7 @@
 package ninja.skyrocketing.util;
 
-import ninja.skyrocketing.robot.pojo.CoolQMessage;
-import ninja.skyrocketing.robot.pojo.YamlFile;
+import ninja.skyrocketing.robot.entity.CoolQMessage;
+import ninja.skyrocketing.robot.entity.YamlFile;
 
 public class MatchUtil {
 	public static String[] matchedMsgAndClass(String str) {
