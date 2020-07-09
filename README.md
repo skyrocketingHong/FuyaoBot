@@ -1,5 +1,5 @@
 # QQRobot
-A QQ robot based on PicqBotX.
+A QQ robot based on [Mirai](https://github.com/mamoe/mirai).
 # 已实现功能
 00. 可能有小彩蛋
 01. 点歌（默认使用QQ音乐），网易云点歌（1.1.2中添加）
@@ -73,4 +73,4 @@ A QQ robot based on PicqBotX.
 #### 2.0.0.15
 * 重构代码，使用Mirai(https://github.com/mamoe/mirai)
 * 添加功能。
-    * 实现功能13
+    * 实现功能14

@@ -21,6 +21,6 @@ public class VideoSearchUtil {
 		url = bilibiliSearch.getByPath("data.result[8].data[0].arcurl", String.class);
 		
 		//返回小程序json
-		return "{\"app\":\"com.tencent.structmsg\",\"config\":{\"autosize\":true,\"ctime\":1594271225,\"forward\":true,\"type\":\"normal\"},\"desc\":\"视频\",\"extra\":{\"app_type\":1,\"appid\":100495085},\"meta\":{\"video\":{\"app_type\":1,\"appid\":100495085,\"desc\":\"" + author + "\",\"jumpUrl\":\"" + url + "\",\"preview\":\"" + preview + "\",\"tag\":\"哔哩哔哩\",\"title\":\"" + desc + "\"}},\"prompt\":\"[分享] + " + desc + "\",\"ver\":\"0.0.0.1\",\"view\":\"video\"}";
+		return "{\"app\":\"com.tencent.structmsg\",\"config\":{\"autosize\":true,\"ctime\":1594271225,\"forward\":true,\"type\":\"normal\"},\"desc\":\"视频\",\"extra\":{\"app_type\":1,\"appid\":100495085},\"meta\":{\"video\":{\"app_type\":1,\"appid\":100495085,\"desc\":\"" + author + "\",\"jumpUrl\":\"" + url + "\",\"preview\":\"" + preview + "\",\"tag\":\"哔哩哔哩\",\"title\":\"" + desc + "\"}},\"prompt\":\"[分享]" + desc + "\",\"ver\":\"0.0.0.1\",\"view\":\"video\"}";
 	}
 }
