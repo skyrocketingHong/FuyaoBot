@@ -15,7 +15,7 @@ public class CoolQMessage {
 	YamlFile yamlFile;
 	
 	public CoolQMessage(GroupMessageEvent event, YamlFile yamlFile) {
-		this.msg = event.getMessage().get(1).toString();
+		this.msg = event.getMessage().toString().replaceAll("\\[mirai:.*:\\d+,\\d+\\]$?","");
 		this.groupId = event.getGroup().getId();
 		this.userId = event.getSender().getId();
 		this.groupMessageEvent = event;

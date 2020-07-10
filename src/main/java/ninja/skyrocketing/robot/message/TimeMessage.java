@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-public class TimeServiceMessage {
+public class TimeMessage {
 	public static Message timeOfNow(CoolQMessage coolQMessage) {
 		LocalDateTime beijingTime = LocalDateTime.now();
 		LocalDateTime ptTime = LocalDateTime.now(ZoneId.of("America/Los_Angeles"));

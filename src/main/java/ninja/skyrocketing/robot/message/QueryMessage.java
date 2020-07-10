@@ -7,7 +7,7 @@ import ninja.skyrocketing.util.TimeUtil;
 
 import java.util.List;
 
-public class QueryServiceMessage {
+public class QueryMessage {
 	public static Message releaseNote(CoolQMessage coolQMessage) {
 		return coolQMessage.sendMsg(coolQMessage.getYamlFile().getNoteAndFunc().get("note"));
 	}

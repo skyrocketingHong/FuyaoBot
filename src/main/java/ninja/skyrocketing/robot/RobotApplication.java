@@ -35,6 +35,7 @@ public class RobotApplication {
 		// 机器人
 		bot = BotFactoryJvm.newBot(QQ, PASSWORD, new BotConfiguration() {{
 			// 设备缓存信息
+			//setProtocol(MiraiProtocol.ANDROID_PHONE);
 			setDeviceInfo(context -> SystemDeviceInfoKt.loadAsDeviceInfo(new File("deviceInfo.json"), context));
 		}});
 		// 登录

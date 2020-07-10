@@ -6,7 +6,7 @@ import ninja.skyrocketing.robot.entity.YamlFile;
 
 public class SenderUtil {
 	public static Message Sender(YamlFile yamlFile, CoolQMessage coolQMessage) throws Exception {
-		boolean userInBlacklist = yamlFile.getIdList().get("user").contains(coolQMessage.getUserId().toString());
+		boolean userInBlacklist = yamlFile.getIdList().get("baneduser").contains(coolQMessage.getUserId().toString());
 		if (!userInBlacklist) {
 			String className = MatchUtil.matchedClass(coolQMessage);
 			if (className != null) {

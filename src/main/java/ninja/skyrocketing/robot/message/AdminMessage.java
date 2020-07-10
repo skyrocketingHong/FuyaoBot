@@ -6,7 +6,7 @@ import ninja.skyrocketing.util.YamlUtil;
 
 import java.io.IOException;
 
-public class AdminServiceMessage {
+public class AdminMessage {
 	public static Message refreshConfigFile(CoolQMessage coolQMessage) throws IOException {
 		boolean isAdmin = coolQMessage.getYamlFile().getIdList().get("admin").contains(coolQMessage.getUserId().toString());
 		if (isAdmin) {

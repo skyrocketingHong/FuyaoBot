@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class GameServiceMessage {
+public class GameMessage {
 	public static Message dice(CoolQMessage coolQMessage) {
 		int randomNum = RandomUtil.getRandomNum(100);
 		String[] dice = new String[]{"⚀", "⚁", "⚂", "⚃", "⚄", "⚅"};

@@ -2,14 +2,22 @@ package ninja.skyrocketing.robot.message;
 
 import net.mamoe.mirai.message.data.Message;
 import ninja.skyrocketing.robot.entity.CoolQMessage;
+import ninja.skyrocketing.util.RandomUtil;
 import ninja.skyrocketing.util.TimeUtil;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public class RepeaterServiceMessage {
+public class RepeaterMessage {
 	public static Message stupidAI(CoolQMessage coolQMessage) {
-		return coolQMessage.sendMsg(coolQMessage.getMsg().replaceAll("吗[?？]?$", "！"));
+		if (coolQMessage.getYamlFile().getIdList().get("banedgroup").contains(coolQMessage.getGroupId().toString())){
+			return null;
+		} else {
+			int randomNum = RandomUtil.getRandomNum(100);
+			if (randomNum > Integer.parseInt(coolQMessage.getYamlFile().getConfigList().get("random")))
+				return coolQMessage.sendMsg(coolQMessage.getMsg().replaceAll("吗[?？]?$", "！"));
+		}
+		return null;
 	}
 	
 	public static Message morningAndNight(CoolQMessage coolQMessage) {
@@ -138,7 +146,14 @@ public class RepeaterServiceMessage {
 	}
 	
 	public static Message justThis(CoolQMessage coolQMessage) {
-		return coolQMessage.sendMsg(coolQMessage.getMsg());
+		if (coolQMessage.getYamlFile().getIdList().get("banedgroup").contains(coolQMessage.getGroupId().toString())){
+			return null;
+		} else {
+			int randomNum = RandomUtil.getRandomNum(100);
+			if (randomNum > Integer.parseInt(coolQMessage.getYamlFile().getConfigList().get("random")))
+				return coolQMessage.sendMsg(coolQMessage.getMsg());
+		}
+		return null;
 	}
 	
 	public static Message repeaterCommand(CoolQMessage coolQMessage) {

@@ -22,6 +22,7 @@ public class MusicSearchUtil {
 			
 			JSONObject jsonMusic = HttpUtil.readJsonFromUrl(apiUrl + searchStr);
 			musicTitle = jsonMusic.getByPath("result.songs[0].name", String.class);
+			System.out.println(musicTitle);
 			if (musicTitle == null) {
 				return null;
 			} else {
