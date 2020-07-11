@@ -53,6 +53,6 @@ public class MusicSearchUtil {
 						".jpg?max_age=2592000";
 			}
 		}
-		return "{\"app\":\"com.tencent.structmsg\",\"config\":{\"autosize\":true,\"forward\":true,\"type\":\"normal\"},\"desc\":\"音乐\",\"extra\":{\"app_type\":1},\"meta\":{\"music\":{\"action\":\"\",\"android_pkg_name\":\"\",\"app_type\":1,\"appid\":100497308,\"desc\":\"" + musicSummary + "\",\"jumpUrl\":\"" + jumpUrl + "\",\"musicUrl\":\"" + musicUrl + "\",\"preview\":\"" + musicJpg + "\",\"sourceMsgId\":\"0\",\"source_icon\":\"\",\"source_url\":\"\",\"tag\":\"" + tag + "\",\"title\":\"" + musicTitle + "\"}},\"prompt\":\"" + "[分享]" + musicTitle +  "\",\"ver\":\"0.0.0.1\",\"view\":\"music\"}";
+		return "{\"app\":\"com.tencent.structmsg\",\"config\":{\"autosize\":true,\"forward\":true,\"type\":\"normal\"},\"desc\":\"音乐\",\"extra\":{\"app_type\":1},\"meta\":{\"music\":{\"action\":\"\",\"android_pkg_name\":\"\",\"app_type\":1,\"appid\":100497308,\"desc\":\"" + musicSummary + "\",\"jumpUrl\":\"" + jumpUrl + "\",\"musicUrl\":\"" + musicUrl + "\",\"preview\":\"" + musicJpg + "\",\"sourceMsgId\":\"0\",\"source_icon\":\"\",\"source_url\":\"\",\"tag\":\"" + tag + "\",\"title\":\"" + musicTitle + "\"}},\"prompt\":\"" + "[分享]" + musicTitle + "\",\"ver\":\"0.0.0.1\",\"view\":\"music\"}";
 	}
 }

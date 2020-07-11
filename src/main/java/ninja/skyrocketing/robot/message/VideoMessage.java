@@ -2,7 +2,7 @@ package ninja.skyrocketing.robot.message;
 
 import net.mamoe.mirai.message.data.LightApp;
 import net.mamoe.mirai.message.data.Message;
-import ninja.skyrocketing.robot.entity.CoolQMessage;
+import ninja.skyrocketing.robot.entity.MessageEntity;
 import ninja.skyrocketing.util.VideoSearchUtil;
 
 import java.io.IOException;
@@ -13,8 +13,8 @@ import java.io.IOException;
  * @Version 1.0
  */
 public class VideoMessage {
-	public static Message bilibiliVideo(CoolQMessage coolQMessage) throws IOException {
-		String json = VideoSearchUtil.bilibiliVideo(coolQMessage.getMsg().replaceAll("^来.*个视频\\s*", ""));
+	public static Message bilibiliVideo(MessageEntity messageEntity) throws IOException {
+		String json = VideoSearchUtil.bilibiliVideo(messageEntity.getMsg().replaceAll("^来.*个视频\\s*", ""));
 		return new LightApp(json);
 	}
 }

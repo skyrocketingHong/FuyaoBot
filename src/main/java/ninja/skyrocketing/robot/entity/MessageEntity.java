@@ -6,27 +6,27 @@ import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.PlainText;
 
-public class CoolQMessage {
+public class MessageEntity {
 	String msg;
 	Long groupId;
 	Long userId;
 	GroupMessageEvent groupMessageEvent;
 	FriendMessageEvent friendMessageEvent;
-	YamlFile yamlFile;
+	YamlFileEntity yamlFileEntity;
 	
-	public CoolQMessage(GroupMessageEvent event, YamlFile yamlFile) {
-		this.msg = event.getMessage().toString().replaceAll("\\[mirai:.*:\\d+,\\d+\\]$?","");
+	public MessageEntity(GroupMessageEvent event, YamlFileEntity yamlFileEntity) {
+		this.msg = event.getMessage().toString().replaceAll("\\[mirai:.*:\\d+,\\d+\\]$?", "");
 		this.groupId = event.getGroup().getId();
 		this.userId = event.getSender().getId();
 		this.groupMessageEvent = event;
-		this.yamlFile = yamlFile;
+		this.yamlFileEntity = yamlFileEntity;
 	}
 	
-	public CoolQMessage(FriendMessageEvent event, YamlFile yamlFile) {
+	public MessageEntity(FriendMessageEvent event, YamlFileEntity yamlFileEntity) {
 		this.msg = event.getMessage().get(1).toString();
 		this.userId = event.getSender().getId();
 		this.friendMessageEvent = event;
-		this.yamlFile = yamlFile;
+		this.yamlFileEntity = yamlFileEntity;
 	}
 	
 	public String getMsg() {
@@ -53,8 +53,8 @@ public class CoolQMessage {
 		return this.friendMessageEvent;
 	}
 	
-	public YamlFile getYamlFile() {
-		return this.yamlFile;
+	public YamlFileEntity getYamlFile() {
+		return this.yamlFileEntity;
 	}
 	
 	public Message atSomeone(String resultMsg) {

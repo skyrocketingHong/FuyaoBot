@@ -48,11 +48,8 @@
     <orderEntry type="library" name="Maven: org.jetbrains.kotlinx:atomicfu:0.14.2" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlinx:kotlinx-io:0.1.16" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlinx:kotlinx-coroutines-io:0.1.16" level="project" />
-    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:8.0.20" level="project" />
-    <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-java:3.6.1" level="project" />
     <orderEntry type="library" name="Maven: com.alibaba:druid:1.1.23" level="project" />
     <orderEntry type="library" name="Maven: com.esotericsoftware.yamlbeans:yamlbeans:1.14" level="project" />
-    <orderEntry type="library" name="Maven: cn.hutool:hutool-json:5.3.8" level="project" />
-    <orderEntry type="library" name="Maven: cn.hutool:hutool-core:5.3.8" level="project" />
+    <orderEntry type="library" name="Maven: cn.hutool:hutool-all:5.3.8" level="project" />
   </component>
 </module>

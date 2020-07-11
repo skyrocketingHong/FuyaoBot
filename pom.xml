@@ -6,7 +6,7 @@
 
     <groupId>ninja.skyrocketing</groupId>
     <artifactId>qqrobot</artifactId>
-    <version>2.0.1.16</version>
+    <version>2.2.0.17</version>
     <build>
         <plugins>
             <plugin>
@@ -36,6 +36,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
                 <configuration>
                     <source>8</source>
                     <target>8</target>
@@ -56,11 +57,11 @@
             <artifactId>mirai-core-qqandroid</artifactId>
             <version>1.0.4</version> <!-- 替换版本为最新版本 -->
         </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.20</version>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>mysql</groupId>-->
+        <!--            <artifactId>mysql-connector-java</artifactId>-->
+        <!--            <version>8.0.20</version>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
@@ -73,7 +74,7 @@
         </dependency>
         <dependency>
             <groupId>cn.hutool</groupId>
-            <artifactId>hutool-json</artifactId>
+            <artifactId>hutool-all</artifactId>
             <version>5.3.8</version>
         </dependency>
 

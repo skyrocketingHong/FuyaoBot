@@ -3,19 +3,21 @@ package ninja.skyrocketing.robot.listener;
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.message.FriendMessageEvent;
-import ninja.skyrocketing.robot.entity.YamlFile;
+import net.mamoe.mirai.message.data.Message;
+import ninja.skyrocketing.robot.entity.YamlFileEntity;
 import ninja.skyrocketing.robot.sender.PrivateMessageSender;
 
 public class PrivateMessageListener extends SimpleListenerHost {
-	static YamlFile yamlFile;
+	static YamlFileEntity yamlFileEntity;
 	
-	public PrivateMessageListener(YamlFile file) {
-		yamlFile = file;
+	public PrivateMessageListener(YamlFileEntity file) {
+		yamlFileEntity = file;
 	}
 	
 	@EventHandler
 	public void onMessage(FriendMessageEvent event) throws Exception {
-		if (PrivateMessageSender.Sender(event, yamlFile) != null)
-			event.getSender().sendMessage(PrivateMessageSender.Sender(event, yamlFile));
+		Message message = PrivateMessageSender.Sender(event, yamlFileEntity);
+		if (message != null)
+			event.getSender().sendMessage(message);
 	}
 }

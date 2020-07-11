@@ -1,7 +1,7 @@
 package ninja.skyrocketing.robot.message;
 
 import net.mamoe.mirai.message.data.Message;
-import ninja.skyrocketing.robot.entity.CoolQMessage;
+import ninja.skyrocketing.robot.entity.MessageEntity;
 import ninja.skyrocketing.util.RandomUtil;
 import ninja.skyrocketing.util.TimeUtil;
 
@@ -10,35 +10,34 @@ import java.util.Map;
 import java.util.Set;
 
 public class GameMessage {
-	public static Message dice(CoolQMessage coolQMessage) {
+	public static Message dice(MessageEntity messageEntity) {
 		int randomNum = RandomUtil.getRandomNum(100);
 		String[] dice = new String[]{"⚀", "⚁", "⚂", "⚃", "⚄", "⚅"};
-		
-		return coolQMessage.atSomeone(dice[randomNum % 6] + "\n点数为" + (randomNum % 6 + 1));
+		return messageEntity.atSomeone(dice[randomNum % 6] + "\n点数为" + (randomNum % 6 + 1));
 	}
 	
-	public static Message rockPaperScissors(CoolQMessage coolQMessage) {
+	public static Message rockPaperScissors(MessageEntity messageEntity) {
 		int randomNum = RandomUtil.getRandomNum(100);
 		String[] rockPaperScissorsIcon = new String[]{"✊", "✌", "✋"};
 		String[] rockPaperScissorsText = new String[]{"石头", "剪刀", "布"};
-		return coolQMessage.atSomeone(rockPaperScissorsIcon[randomNum % 3] + "\n手势为" + rockPaperScissorsText[randomNum % 3]);
+		return messageEntity.atSomeone(rockPaperScissorsIcon[randomNum % 3] + "\n手势为" + rockPaperScissorsText[randomNum % 3]);
 	}
 	
-	public static Message sign(CoolQMessage coolQMessage) {
+	public static Message sign(MessageEntity messageEntity) {
 		int randomNum = RandomUtil.getRandomNum(100) + 1000;
-		Map<Long, Integer> map =  coolQMessage.getYamlFile().getSignInMap();
-		if (map.containsKey(coolQMessage.getUserId())){
-			return coolQMessage.sendMsg("不要重复签到哦！");
+		Map<Long, Integer> map = messageEntity.getYamlFile().getSignInMap();
+		if (map.containsKey(messageEntity.getUserId())) {
+			return messageEntity.sendMsg("不要重复签到哦！");
 		} else {
-			map.put(coolQMessage.getUserId(), randomNum);
+			map.put(messageEntity.getUserId(), randomNum);
 		}
-		return coolQMessage.atSomeone("签到成功✔\n" + TimeUtil.getDateTimeString() + " 获取 " + map.get(coolQMessage.getUserId()).toString() + " EXP");
+		return messageEntity.atSomeone("签到成功✔\n" + TimeUtil.getDateTimeString() + " 获取 " + map.get(messageEntity.getUserId()).toString() + " EXP");
 	}
 	
-	public static Message genRandomNum(CoolQMessage coolQMessage) {
-		int num = Integer.parseInt(coolQMessage.getMsg().replaceAll("生成随机数\\s*", ""));
+	public static Message genRandomNum(MessageEntity messageEntity) {
+		int num = Integer.parseInt(messageEntity.getMsg().replaceAll("生成随机数\\s*", ""));
 		if (num >= 101) {
-			return coolQMessage.atSomeone(num + "太大了，为避免刷屏拒绝生成！");
+			return messageEntity.atSomeone(num + "太大了，为避免刷屏拒绝生成！");
 		} else {
 			Set<Integer> numSet = new HashSet<>();
 			int temp;
@@ -50,7 +49,7 @@ public class GameMessage {
 				}
 			}
 			numSet.clear();
-			return coolQMessage.atSomeone("生成的" + num + "个随机数为：\n" + result);
+			return messageEntity.atSomeone("生成的" + num + "个随机数为：\n" + result);
 		}
 	}
 }

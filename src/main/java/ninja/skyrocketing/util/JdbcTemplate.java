@@ -19,7 +19,8 @@ public class JdbcTemplate {
 	
 	/**
 	 * DML 操作模板方法
-	 * @param sql 执行操作的 SQL 语句
+	 *
+	 * @param sql       执行操作的 SQL 语句
 	 * @param arguments SQL 语句参数
 	 */
 	public static void update(String sql, Object... arguments) {
@@ -47,8 +48,9 @@ public class JdbcTemplate {
 	
 	/**
 	 * DQL 操作模板
-	 * @param sql 执行操作的 SQL 语句
-	 * @param handler 对数据库返回结果集进行装箱的操作类
+	 *
+	 * @param sql       执行操作的 SQL 语句
+	 * @param handler   对数据库返回结果集进行装箱的操作类
 	 * @param arguments SQL 语句参数
 	 * @return 返回数据库查询结果集
 	 */

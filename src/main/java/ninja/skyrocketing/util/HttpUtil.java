@@ -26,7 +26,7 @@ public class HttpUtil {
 	}
 	
 	public static String chnCharterReplace(String str) throws UnsupportedEncodingException {
-		return java.net.URLEncoder.encode(str,"utf-8");
+		return java.net.URLEncoder.encode(str, "utf-8");
 	}
 	
 	public static String spaceReplace(String str) {

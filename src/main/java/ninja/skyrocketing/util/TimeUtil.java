@@ -19,6 +19,14 @@ public class TimeUtil {
 		return LocalDateTime.ofInstant(instant, zone);
 	}
 	
+	public static String reformatDateTimeOfTimestamp(long timestamp) {
+		return getDateTimeOfTimestamp(timestamp).toString().replaceAll("T", " ");
+	}
+	
+	public static String reformatDateTime(LocalDateTime localDateTime) {
+		return localDateTime.toString().replaceAll("T", " ");
+	}
+	
 	public static String getDateTimeString() {
 		LocalDateTime dateTime = LocalDateTime.now();
 		return dateTime.toString().replace("T", " ");

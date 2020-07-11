@@ -25,6 +25,7 @@ public class BeanHandler<T> implements ResultSetHandlerInterface {
 	
 	/**
 	 * 数据库集操作类
+	 *
 	 * @param rSet 数据库处理结果集
 	 * @return 数据库结果集 List 集合
 	 */
