@@ -20,12 +20,12 @@ public class EasterEggMessage {
 	
 	public static Message firePhoto(MessageEntity messageEntity) throws MalformedURLException {
 		//获取转发闪照消息的群
-		long admin = Long.parseLong(messageEntity.getYamlFile().getIdList().get("admingroup").get(0));
+		long admin = Long.parseLong(messageEntity.getYamlFile().getIdList().get("flashgroup").get(0));
 		//将闪照转为图片类型
 		Image flashImage = ((FlashImage) messageEntity.getGroupMessageEvent().getMessage().get(1)).getImage();
 		//生成消息
 		MessageChainBuilder messages = new MessageChainBuilder() {{
-			add("⚠ 机器人闪照提醒 ⚠" +
+			add("⚠ 机器人闪照提醒 ⚠" + "\n" +
 					"① 时间：" + TimeUtil.reformatDateTimeOfTimestamp(messageEntity.getGroupMessageEvent().getTime()) + "\n" +
 					"② 群名：" + messageEntity.getGroupMessageEvent().getGroup().getName() + "\n" +
 					"③ 群号：" + messageEntity.getGroupMessageEvent().getGroup().getId() + "\n" +

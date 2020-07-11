@@ -19,8 +19,9 @@ public class GroupMessageListener extends SimpleListenerHost {
 	public void onMessage(GroupMessageEvent event) throws Exception {
 		Message message = GroupMessageSender.Sender(event, yamlFileEntity);
 		if (message != null) {
-			LoggerMessage.logger(event, message, yamlFileEntity);
 			event.getGroup().sendMessage(message);
+			Thread.sleep(1000);
+			LoggerMessage.logger(event, message, Long.parseLong(yamlFileEntity.getIdList().get("admingroup").get(0)));
 		}
 	}
 }

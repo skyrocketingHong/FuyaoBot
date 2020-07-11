@@ -6,6 +6,7 @@ import net.mamoe.mirai.event.Events;
 import net.mamoe.mirai.utils.BotConfiguration;
 import net.mamoe.mirai.utils.SystemDeviceInfoKt;
 import ninja.skyrocketing.robot.entity.YamlFileEntity;
+import ninja.skyrocketing.robot.listener.GroupMemberAdminEvent;
 import ninja.skyrocketing.robot.listener.GroupMessageListener;
 import ninja.skyrocketing.robot.listener.PrivateMessageListener;
 import ninja.skyrocketing.robot.message.TimerMessage;
@@ -54,6 +55,7 @@ public class RobotApplication {
 		//事件监听器注册
 		Events.registerEvents(bot, new GroupMessageListener(yamlFileEntity));
 		Events.registerEvents(bot, new PrivateMessageListener(yamlFileEntity));
+		Events.registerEvents(bot, new GroupMemberAdminEvent(yamlFileEntity));
 		
 		//启动成功后给管理群发消息
 		bot.getGroup(Long.parseLong(yamlFileEntity.getIdList().get("admingroup").get(0))).sendMessage("启动成功！");

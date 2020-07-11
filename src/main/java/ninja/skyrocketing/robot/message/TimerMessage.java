@@ -22,7 +22,7 @@ public class TimerMessage extends TimerTask {
 	@Override
 	public void run() {
 		int recallDelay = 1000 * 60;
-		int count = 0;
+		botEntity.getFriend(Long.parseLong(yamlFileEntity.getIdList().get("admingroup").get(0))).sendMessage("⚠ 机器人整点报时开始提醒 ⚠");
 		for (String groupId : yamlFileEntity.getIdList().get("timegroup")) {
 			botEntity.getGroup(Long.parseLong(groupId))
 					.sendMessage("整点报时\n" +
@@ -30,9 +30,7 @@ public class TimerMessage extends TimerTask {
 							"本消息将在 " + recallDelay + " ms 后撤回"
 					)
 					.recallIn(recallDelay);
-			count++;
 		}
-		botEntity.getFriend(Long.parseLong(yamlFileEntity.getIdList().get("admingroup").get(0))).sendMessage("⚠已在" + count + "个群中完成整点报时");
 		
 		try {
 			Thread.sleep(10000);    //设置让它休眠一段时间，测试下一次运行时间是否还是整点
