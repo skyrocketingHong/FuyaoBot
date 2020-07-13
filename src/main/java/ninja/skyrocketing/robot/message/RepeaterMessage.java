@@ -1,6 +1,9 @@
 package ninja.skyrocketing.robot.message;
 
+import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.message.data.Message;
+import net.mamoe.mirai.message.data.MessageChain;
+import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.robot.entity.MessageEntity;
 import ninja.skyrocketing.util.RandomUtil;
 import ninja.skyrocketing.util.TimeUtil;
@@ -158,7 +161,22 @@ public class RepeaterMessage {
 	
 	public static Message repeaterCommand(MessageEntity messageEntity) {
 		if (messageEntity.getMsg().length() > 2) {
-			return messageEntity.sendMsg(messageEntity.getMsg().substring(2));
+			MessageChain messageChain = messageEntity.getGroupMessageEvent().getMessage();
+			String content = messageChain.contentToString();
+			int index = -1;
+			if (content.contains("[图片]")) {
+				for (int i = 1; i < messageChain.size(); ++i) {
+					if (messageChain.get(i).contentToString().matches("\\[mirai:image:\\{.*\\}.mirai\\]")) {
+						break;
+					}
+					index = i;
+				}
+				Image image = (Image) messageChain.get(index);
+				return new MessageChainBuilder() {{
+					add(image);
+				}}.asMessageChain();
+			}
+			return messageEntity.sendMsg(messageEntity.getGroupMessageEvent().getMessage().contentToString().substring(2));
 		} else {
 			return null;
 		}

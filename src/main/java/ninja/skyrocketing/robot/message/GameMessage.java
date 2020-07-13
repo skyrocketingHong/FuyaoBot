@@ -35,21 +35,26 @@ public class GameMessage {
 	}
 	
 	public static Message genRandomNum(MessageEntity messageEntity) {
-		int num = Integer.parseInt(messageEntity.getMsg().replaceAll("生成随机数\\s*", ""));
-		if (num >= 101) {
-			return messageEntity.atSomeone(num + "太大了，为避免刷屏拒绝生成！");
+		String str = messageEntity.getMsg().replaceAll("生成随机数\\s*", "");
+		if (str == null) {
+			return messageEntity.atSomeone("没有指定数量。");
 		} else {
-			Set<Integer> numSet = new HashSet<>();
-			int temp;
-			StringBuilder result = new StringBuilder();
-			while (numSet.size() < num) {
-				temp = RandomUtil.getRandomNum(num);
-				if (numSet.add(temp)) {
-					result.append(temp).append(" ");
+			int num = Integer.parseInt(str);
+			if (num >= 101) {
+				return messageEntity.atSomeone(num + "太大了，为避免刷屏拒绝生成！");
+			} else {
+				Set<Integer> numSet = new HashSet<>();
+				int temp;
+				StringBuilder result = new StringBuilder();
+				while (numSet.size() < num) {
+					temp = RandomUtil.getRandomNum(num);
+					if (numSet.add(temp)) {
+						result.append(temp).append(" ");
+					}
 				}
+				numSet.clear();
+				return messageEntity.atSomeone("生成的" + num + "个随机数为：\n" + result);
 			}
-			numSet.clear();
-			return messageEntity.atSomeone("生成的" + num + "个随机数为：\n" + result);
 		}
 	}
 }

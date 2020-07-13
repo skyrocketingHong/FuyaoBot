@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 public class YamlFileEntity {
-	private Map<String, Object> allMap;
+	public static Map<String, Object> allMap;
 	
 	public YamlFileEntity(Map<String, Object> allMap) {
-		this.allMap = allMap;
+		YamlFileEntity.allMap = allMap;
 	}
 	
 	public Map<String, Object> getAllMap() {
@@ -15,11 +15,11 @@ public class YamlFileEntity {
 	}
 	
 	public void setAllMap(Map<String, Object> allMap) {
-		this.allMap = allMap;
+		YamlFileEntity.allMap = allMap;
 	}
 	
 	public void delAllMap() {
-		this.allMap = null;
+		allMap = null;
 	}
 	
 	public Map<String, String> getNoteAndFunc() {
@@ -60,5 +60,15 @@ public class YamlFileEntity {
 	
 	public String getBotPassword() {
 		return getBotList().get(1);
+	}
+	
+	public boolean isBanedUser(Long id) {
+		List<String> banedIdList = getIdList().get("baneduser");
+		for (int i = 0; i < banedIdList.size(); i++) {
+			if (getIdList().get("baneduser").get(i).equals(id.toString())) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
