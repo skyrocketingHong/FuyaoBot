@@ -31,3 +31,4 @@ target
 .idea
 src/main/resources/*
 deviceInfo.json
+/src/main/java/META-INF/MANIFEST.MF

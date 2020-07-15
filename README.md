@@ -20,54 +20,15 @@ A QQ robot based on [Mirai](https://github.com/mamoe/mirai).
 16. ~~整点报时（部分群）。~~
 17. 进群/退群、禁言/解禁，~~撤回~~，机器人被禁言/撤回/移出群聊提醒。
 18. 守望先锋街机模式列表。
-# 3. config.yml文件格式
+# 3. 数据库脚本
 ```
-config:
-  #随机复读阈值，整数
-  random: 90
-
-bot:
-  #机器人账号密码
-  - "123456"
-  - "password"
-
-id:
-  #用户黑名单
-  baneduser:
-    - 12345678
-  #群黑名单
-  banedgroup:
-    - 12345678
-  #机器人管理员账号
-  admin:
-    - 12345678
-  #机器人管理群
-  admingroup:
-    - 12345678
-  #闪照转发群
-  flashgroup:
-    - 12345678
-  #整点报时群
-  timegroup:
-    - 12345678
-
-reply:
-  #消息匹配map，适合完全匹配的消息
-  equalsmap:
-    #关键字: 对应运行的类
-    功能: QueryMessage.getFunction
-  #消息匹配list，适合需要用正则表达式的消息，@作为分隔符
-  matcheslist:
-    #"正则表达式@对应运行的类"
-    - "^来.*首.+@MusicMessage.qqMusic"
-
-noteandfunc:
-  #更新日志
-  note: "完整更新日志：https://github.com/skyrocketingHong/QQRobot/blob/master/README.md"
-  #功能列表
-  func: "00、可能有小彩蛋"
+咕咕咕
 ```
 # 4. 更新日志
+## 2020-07-15
+#### 3.0.0.21
+* 从数据库读取参数和配置
+* 修复部分问题
 ## 2020-07-12
 #### 2.3.1.19
 * 修复部分问题。
