@@ -5,6 +5,7 @@ import net.mamoe.mirai.message.GroupMessageEvent;
 import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
+import net.mamoe.mirai.message.data.PlainText;
 
 public class MessageEncapsulation {
 	String msg;
@@ -63,5 +64,9 @@ public class MessageEncapsulation {
 		MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
 		messageChainBuilder.add(resultMsg);
 		return messageChainBuilder.asMessageChain();
+	}
+	
+	public Message notSudo() {
+		return new PlainText(getUserId() + " is not in the sudoers file. This incident will be reported.");
 	}
 }

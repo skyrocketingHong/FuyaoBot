@@ -31,6 +31,9 @@ public class UserExp {
 	@Column(name = "sign_date")
 	private Date signDate;
 	
+	@Column(name = "next_sign_date")
+	private Date nextSignDate;
+	
 	public UserExp() {
 	}
 	
@@ -39,6 +42,7 @@ public class UserExp {
 		this.groupId = groupId;
 		this.exp = exp;
 		this.signDate = signDate;
+		this.nextSignDate = new Date(signDate.getTime() + 6 * 60 * 60 * 1000L);
 	}
 	
 	public UserExp(Long id, Integer exp) {
@@ -76,5 +80,13 @@ public class UserExp {
 	
 	public void setGroupId(Long groupId) {
 		this.groupId = groupId;
+	}
+	
+	public Date getNextSignDate() {
+		return nextSignDate;
+	}
+	
+	public void setNextSignDate(Date nextSignDate) {
+		this.nextSignDate = nextSignDate;
 	}
 }

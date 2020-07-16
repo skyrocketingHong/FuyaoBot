@@ -11,14 +11,14 @@ import java.util.*;
  * @Version 1.0
  */
 public class BotConfig {
-	private static ConfigDao config;
-	private static GroupIdDao groupId;
-	private static MessageQueueDao messageQueue;
-	private static TriggerDao trigger;
-	private static UserExpDao userExp;
-	private static UserIdDao userId;
-	private static OverwatchModeDao overwatchMode;
-	private static FuckDao fuck;
+	public static ConfigDao config;
+	public static GroupIdDao groupId;
+	public static MessageQueueDao messageQueue;
+	public static TriggerDao trigger;
+	public static UserExpDao userExp;
+	public static UserIdDao userId;
+	public static OverwatchModeDao overwatchMode;
+	public static FuckDao fuck;
 	
 	private static Set<Long> bannedUsers = new HashSet<>();
 	private static Set<Long> adminUsers = new HashSet<>();
@@ -51,13 +51,17 @@ public class BotConfig {
 	 * 刷新数据库数据缓存
 	 **/
 	public static void refresh() {
-		triggers.clear();
-		triggers = getAllTrigger();
+		refreshTriggerList();
 		configListToMap();
 		userExpListToMap();
 		divideUsers();
 		divideGroups();
 		fuckListToMap();
+	}
+	
+	public static void refreshTriggerList() {
+		triggers.clear();
+		triggers = getAllTrigger();
 	}
 	
 	
@@ -101,8 +105,10 @@ public class BotConfig {
 		return configMap;
 	}
 	
-	public static void setConfigMap(Map<String, String> configMap) {
-		BotConfig.configMap = configMap;
+	public static void setConfigMap(Integer id, String key, String value) {
+		configMap.put(key, value);
+		config.save(new Config(id, key, value));
+		configListToMap();
 	}
 	
 	public static Map<Integer, String> getFuckWordsMap() {

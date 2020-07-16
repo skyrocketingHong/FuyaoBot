@@ -2,12 +2,15 @@ package ninja.skyrocketing.robot.listener;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import kotlin.coroutines.CoroutineContext;
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.robot.entity.BotConfig;
+import ninja.skyrocketing.robot.messages.LogMessage;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @Author skyrocketing Hong
@@ -25,130 +28,91 @@ public class GroupMemberAdminEvent extends SimpleListenerHost {
 			add("记得阅读群公告（如果有的话）哦！");
 		}};
 		event.getGroup().sendMessage(messages.asMessageChain());
-		for (Long id : BotConfig.getAdminGroups()) {
-			event.getBot().getGroup(id).sendMessage("⚠ 机器人群管事件提醒 ⚠" + "\n" +
-					"① 操作：" + "进群" + "\n" +
-					"② 回复消息：" + messages.asMessageChain().contentToString().replaceAll("\\t|\\n", "") + "\n" +
-					"③ 群名：" + event.getGroup().getName() + "\n" +
-					"④ 群号：" + event.getGroup().getId() + "\n" +
-					"⑤ 群名片：" + event.getMember().getNameCard() + "\n" +
-					"⑥ QQ号：" + event.getMember().getId());
-		}
-		
 	}
 	
 	@EventHandler
 	public void onLeave(MemberLeaveEvent.Quit event) {
 		MessageChainBuilder messages = new MessageChainBuilder() {{
-			add("👀群员减少提醒\n" + "群员" +
+			add("⚠ 群员减少提醒\n" + "群员" +
 					event.getMember().getId() +
 					"已退出群聊。");
 		}};
 		event.getGroup().sendMessage(messages.asMessageChain());
-		for (Long id : BotConfig.getAdminGroups()) {
-			event.getBot().getGroup(id).sendMessage("⚠ 机器人群管事件提醒 ⚠" + "\n" +
-					"① 操作：" + "退群" + "\n" +
-					"② 回复消息：" + messages.asMessageChain().contentToString().replaceAll("\\t|\\n", "") + "\n" +
-					"③ 群名：" + event.getGroup().getName() + "\n" +
-					"④ 群号：" + event.getGroup().getId() + "\n" +
-					"⑤ QQ号：" + event.getMember().getId()
-			);
-		}
 	}
 	
 	@EventHandler
 	public void onMute(MemberMuteEvent event) {
 		MessageChainBuilder messages = new MessageChainBuilder() {{
-			add("👀群员被禁言提醒\n" + "群员" +
+			add("⚠ 群员被禁言提醒\n" + "群员" +
 					event.getGroup().get(event.getMember().getId()).getNameCard() + " (" + event.getMember().getId() + ") " +
 					"已被管理员" + event.getGroup().get(event.getOperator().getId()).getNameCard() + " (" + event.getOperator().getId() + ") " +
 					"禁言，解封时间：" + DateUtil.offsetSecond(new DateTime(), event.getDurationSeconds()));
 		}};
 		event.getGroup().sendMessage(messages.asMessageChain());
-		for (Long id : BotConfig.getAdminGroups()) {
-			event.getBot().getGroup(id).sendMessage("⚠ 机器人群管事件提醒 ⚠" + "\n" +
-					"① 操作：" + "禁言" + "\n" +
-					"② 回复消息：" + messages.asMessageChain().contentToString().replaceAll("\\t|\\n", "") + "\n" +
-					"③ 解封时间：" + DateUtil.offsetSecond(new DateTime(), event.getDurationSeconds()) + "\n" +
-					"④ 群名：" + event.getGroup().getName() + "\n" +
-					"⑤ 群号：" + event.getGroup().getId() + "\n" +
-					"⑥ 操作人：" + event.getOperator().getId() + "\n" +
-					"⑦ 被封群员QQ号：" + event.getMember().getId()
-			);
-		}
 	}
 	
 	@EventHandler
 	public void onUnmute(MemberUnmuteEvent event) {
 		MessageChainBuilder messages = new MessageChainBuilder() {{
-			add("👀群员被解除禁言提醒\n" + "群员" +
+			add("⚠ 群员被解除禁言提醒\n" + "群员" +
 					event.getMember().getId() +
 					"已被管理员" + event.getGroup().get(event.getOperator().getId()).getNameCard() + " (" + event.getOperator().getId() + ") " +
 					"解除禁言。");
 		}};
 		event.getGroup().sendMessage(messages.asMessageChain());
-		for (Long id : BotConfig.getAdminGroups()) {
-			event.getBot().getGroup(id).sendMessage("⚠ 机器人群管事件提醒 ⚠" + "\n" +
-					"① 操作：" + "解除禁言" + "\n" +
-					"② 回复消息：" + messages.asMessageChain().contentToString().replaceAll("\\t|\\n", "") + "\n" +
-					"④ 群名：" + event.getGroup().getName() + "\n" +
-					"⑤ 群号：" + event.getGroup().getId() + "\n" +
-					"⑥ 操作人：" + event.getOperator().getId() + "\n" +
-					"⑦ 被解封群员QQ号：" + event.getMember().getId()
-			);
-		}
 	}
 	
 	@EventHandler
 	public void onBotMute(BotMuteEvent event) {
+		MessageChainBuilder messages = LogMessage.logMessage("FATAL");
+		messages.add("机器人被禁言" + "\n" +
+				"1. 解封时间：" + DateUtil.offsetSecond(new DateTime(), event.getDurationSeconds()) + "\n" +
+				"2. 群名：" + event.getGroup().getName() + "\n" +
+				"3. 群号：" + event.getGroup().getId() + "\n" +
+				"4. 操作人：" + event.getOperator().getId() + " " + event.getOperator().getNameCard());
 		for (Long id : BotConfig.getAdminGroups()) {
-			event.getBot().getGroup(id).sendMessage("⚠ 机器人被禁言提醒 ⚠" + "\n" +
-					"① 操作：" + "机器人被禁言" + "\n" +
-					"② 解封时间：" + DateUtil.offsetSecond(new DateTime(), event.getDurationSeconds()) + "\n" +
-					"③ 群名：" + event.getGroup().getName() + "\n" +
-					"④ 群号：" + event.getGroup().getId() + "\n" +
-					"⑤ 操作人：" + event.getOperator().getId() + " " + event.getOperator().getNameCard()
-			);
+			event.getBot().getGroup(id).sendMessage(messages.asMessageChain());
 		}
 	}
 	
 	@EventHandler
 	public void onBotUnmute(BotUnmuteEvent event) {
+		MessageChainBuilder messages = LogMessage.logMessage("FATAL");
+		messages.add("机器人被解除禁言" + "\n" +
+				"1. 群名：" + event.getGroup().getName() + "\n" +
+				"2. 群号：" + event.getGroup().getId() + "\n" +
+				"3. 操作人：" + event.getOperator().getId() + " " + event.getOperator().getNameCard());
 		for (Long id : BotConfig.getAdminGroups()) {
-			event.getBot().getGroup(id).sendMessage("⚠ 机器人被解除禁言提醒 ⚠" + "\n" +
-					"① 操作：" + "机器人被解除禁言" + "\n" +
-					"② 群名：" + event.getGroup().getName() + "\n" +
-					"③ 群号：" + event.getGroup().getId() + "\n" +
-					"④ 操作人：" + event.getOperator().getId() + " " + event.getOperator().getNameCard()
-			);
+			event.getBot().getGroup(id).sendMessage(messages.asMessageChain());
 		}
 	}
 	
 	@EventHandler
 	public void onBotKick(BotLeaveEvent.Active event) {
+		MessageChainBuilder messages = LogMessage.logMessage("FATAL");
+		messages.add("机器人被移除群聊" + "\n" +
+				"1. 群名：" + event.getGroup().getName() + "\n" +
+				"2. 群号：" + event.getGroup().getId() + "\n"
+		);
 		for (Long id : BotConfig.getAdminGroups()) {
-			event.getBot().getGroup(id).sendMessage("⚠ 机器人被移出群聊提醒 ⚠" + "\n" +
-					"① 操作：" + "机器人被移除群聊" + "\n" +
-					"② 群名：" + event.getGroup().getName() + "\n" +
-					"③ 群号：" + event.getGroup().getId() + "\n"
-			);
+			event.getBot().getGroup(id).sendMessage(messages.asMessageChain());
 		}
 	}
 	
 	@EventHandler
 	public void onBotJoin(BotJoinGroupEvent.Invite event) {
+		MessageChainBuilder messages = LogMessage.logMessage("FATAL");
+		messages.add("机器人加入群聊" + "\n" +
+				"1. 群名：" + event.getGroup().getName() + "\n" +
+				"2. 群号：" + event.getGroup().getId() + "\n" +
+				"3. 邀请人：" + event.getInvitor().getNameCard() + " " + event.getInvitor().getId());
 		for (Long id : BotConfig.getAdminGroups()) {
-			event.getBot().getGroup(id).sendMessage("⚠ 机器人加入群聊提醒 ⚠" + "\n" +
-					"① 操作：" + "机器人加入群聊" + "\n" +
-					"② 群名：" + event.getGroup().getName() + "\n" +
-					"③ 群号：" + event.getGroup().getId() + "\n" +
-					"④ 邀请人：" + event.getInvitor().getNameCard() + " " + event.getInvitor().getId()
-			);
+			event.getBot().getGroup(id).sendMessage(messages.asMessageChain());
 		}
 	}
-	
-	@EventHandler
-	public void onBotRecalled(MessageRecallEvent.GroupRecall event) {
+
+//	@EventHandler
+//	public void onBotRecalled(MessageRecallEvent.GroupRecall event) {
 //		MessageChainBuilder messages = new MessageChainBuilder() {{
 //			add("👀群员撤回消息提醒\n" + event.getGroup().get(event.getOperator().getId()).getNameCard() + " (" + event.getOperator().getId() + ") " +
 //					"撤回了" +
@@ -158,16 +122,11 @@ public class GroupMemberAdminEvent extends SimpleListenerHost {
 //					" 发的一条消息。");
 //		}};
 //		event.getGroup().sendMessage(messages.asMessageChain());
-		if (event.getAuthorId() == event.getBot().getId()) {
-			for (Long id : BotConfig.getAdminGroups()) {
-				event.getBot().getGroup(id).sendMessage("⚠ 机器人撤回消息提醒 ⚠" + "\n" +
-						"① 操作：" + "机器人消息被撤回" + "\n" +
-						//"② 回复消息：" + messages.asMessageChain().contentToString().replaceAll("\\t|\\n", "") + "\n" +
-						"② 群名：" + event.getGroup().getName() + "\n" +
-						"③ 群号：" + event.getGroup().getId() + "\n" +
-						"④ 操作人：" + event.getOperator().getId() + " " + event.getOperator().getNameCard()
-				);
-			}
-		}
+//	}
+	
+	@Override
+	public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {
+		// 处理事件处理时抛出的异常
+		System.out.println(context + " " + exception);
 	}
 }

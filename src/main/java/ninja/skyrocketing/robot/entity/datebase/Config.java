@@ -28,6 +28,12 @@ public class Config implements Serializable {
 	public Config() {
 	}
 	
+	public Config(Integer id, String name, String value) {
+		this.id = id;
+		this.name = name;
+		this.value = value;
+	}
+	
 	public Integer getId() {
 		return id;
 	}

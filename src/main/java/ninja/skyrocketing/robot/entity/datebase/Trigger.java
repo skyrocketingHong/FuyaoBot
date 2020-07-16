@@ -17,106 +17,124 @@ import java.util.Date;
 public class Trigger {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Integer id;
 	
 	@Column(name = "keyword")
-	private String Keyword;
+	private String keyword;
 	
 	@Column(name = "implementation")
-	private String Implementation;
+	private String implementation;
 	
 	@Column(name = "enable")
-	private boolean Enable;
+	private boolean enable;
 	
 	@Column(name = "added_date")
-	private Date AddedDate;
+	private Date addedDate;
 	
 	@Column(name = "name")
-	private String Name;
+	private String name;
 	
 	@Column(name = "operate")
-	private String Operate;
+	private String operate;
 	
 	@Column(name = "shown")
-	private boolean Shown;
+	private boolean shown;
 	
 	public Trigger() {
 	}
 	
-	public Long getId() {
+	public Trigger(Integer id, String keyword, String implementation, boolean enable, Date addedDate, String name, String operate, boolean shown) {
+		this.id = id;
+		this.keyword = keyword;
+		this.implementation = implementation;
+		this.enable = enable;
+		this.addedDate = addedDate;
+		this.name = name;
+		this.operate = operate;
+		this.shown = shown;
+	}
+	
+	public Integer getId() {
 		return id;
 	}
 	
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	
 	public String getKeyword() {
-		return Keyword;
+		return keyword;
 	}
 	
 	public void setKeyword(String keyword) {
-		Keyword = keyword;
+		this.keyword = keyword;
 	}
 	
 	public String getImplementation() {
-		return Implementation;
+		return implementation;
 	}
 	
 	public void setImplementation(String implementation) {
-		Implementation = implementation;
+		this.implementation = implementation;
 	}
 	
 	public boolean isEnable() {
-		return Enable;
+		return enable;
 	}
 	
 	public void setEnable(boolean enable) {
-		Enable = enable;
+		this.enable = enable;
+	}
+	
+	public String isEnableToString() {
+		if (isEnable()) {
+			return "启用";
+		}
+		return "禁用";
 	}
 	
 	public Date getAddedDate() {
-		return AddedDate;
+		return addedDate;
 	}
 	
 	public void setAddedDate(Date addedDate) {
-		AddedDate = addedDate;
+		this.addedDate = addedDate;
 	}
 	
 	public String getName() {
-		return Name;
+		return name;
 	}
 	
 	public void setName(String name) {
-		Name = name;
+		this.name = name;
 	}
 	
 	public String getOperate() {
-		return Operate;
+		return operate;
 	}
 	
 	public void setOperate(String operate) {
-		Operate = operate;
+		this.operate = operate;
 	}
 	
 	public boolean isShown() {
-		return Shown;
+		return shown;
 	}
 	
 	public void setShown(boolean shown) {
-		Shown = shown;
+		this.shown = shown;
 	}
 	
 	@Override
 	public String toString() {
 		return "Trigger: \n" +
 				"id=" + id +
-				", Keyword='" + Keyword + '\'' +
-				", Implementation='" + Implementation + '\'' +
-				", Enable=" + Enable +
-				", AddedDate=" + AddedDate +
-				", Name='" + Name + '\'' +
-				", Operate='" + Operate + '\'' +
-				", Shown=" + Shown + "\n";
+				", Keyword='" + keyword + '\'' +
+				", Implementation='" + implementation + '\'' +
+				", Enable=" + enable +
+				", AddedDate=" + addedDate +
+				", Name='" + name + '\'' +
+				", Operate='" + operate + '\'' +
+				", Shown=" + shown + "\n";
 	}
 }

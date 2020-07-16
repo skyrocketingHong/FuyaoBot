@@ -5,6 +5,7 @@ import net.mamoe.mirai.message.data.Message;
 import ninja.skyrocketing.robot.entity.BotConfig;
 import ninja.skyrocketing.robot.entity.MessageEncapsulation;
 import ninja.skyrocketing.robot.entity.datebase.Trigger;
+import ninja.skyrocketing.robot.messages.LogMessage;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -14,7 +15,19 @@ public class GroupMessageSender {
 		MessageEncapsulation messageEntity = new MessageEncapsulation(event);
 		String className = matchedClass(messageEntity);
 		if (className != null) {
-			return runByInvoke(className, messageEntity);
+			Message message = runByInvoke(className, messageEntity);
+			if (message != null) {
+				if (!className.contains("EasterEggMessage")) {
+					if (className.equals("RepeaterMessage.repeaterCommand")) {
+						LogMessage.logMessage("WARN", messageEntity);
+						return message;
+					}
+					LogMessage.logMessage("INFO", messageEntity);
+					return message;
+				}
+				return message;
+			}
+			return null;
 		}
 		return null;
 	}
@@ -28,6 +41,11 @@ public class GroupMessageSender {
 	 **/
 	public static String matchedClass(MessageEncapsulation messageEntity) {
 		String msg = messageEntity.getMsg();
+		if (msg.matches("^\\[闪照\\]$")) {
+			if (messageEntity.getGroupMessageEvent().getMessage().toString().matches(".*GroupFlashImage.*")) {
+				msg = messageEntity.getGroupMessageEvent().getMessage().toString();
+			}
+		}
 		for (Trigger trigger : BotConfig.getTriggers()) {
 			if (trigger.isEnable()) {
 				if (msg.matches(trigger.getKeyword())) {

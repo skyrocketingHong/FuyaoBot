@@ -13,6 +13,20 @@ import java.time.format.DateTimeFormatter;
 
 public class RepeaterMessage {
 	/**
+	 * kkjj
+	 **/
+	public static Message kkjj(MessageEncapsulation messageEntity) {
+		return kk(messageEntity);
+	}
+	
+	/**
+	 * kk
+	 **/
+	public static Message kk(MessageEncapsulation messageEntity) {
+		return messageEntity.sendMsg("kk？gkd发！");
+	}
+	
+	/**
 	 * 人工智障
 	 **/
 	public static Message stupidAI(MessageEncapsulation messageEntity) {

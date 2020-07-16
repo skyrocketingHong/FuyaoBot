@@ -1,4 +1,4 @@
-package ninja.skyrocketing.robot;
+package ninja.skyrocketing;
 
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactoryJvm;
@@ -9,6 +9,7 @@ import ninja.skyrocketing.robot.dao.*;
 import ninja.skyrocketing.robot.entity.BotConfig;
 import ninja.skyrocketing.robot.listener.GroupMemberAdminEvent;
 import ninja.skyrocketing.robot.listener.GroupMessageListener;
+import ninja.skyrocketing.utils.TimeUtil;
 import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -44,7 +45,6 @@ public class RobotApplication implements CommandLineRunner {
 	@Resource
 	private FuckDao fuckDao;
 	
-	//mvn package "-Dmaven.test.skip=true"
 	public static void main(String[] args) {
 		SpringApplication app = new SpringApplication(RobotApplication.class);
 		app.setBannerMode(Banner.Mode.OFF);
@@ -89,7 +89,7 @@ public class RobotApplication implements CommandLineRunner {
 		
 		// 发送启动成功提示消息
 		for (Long groupId : BotConfig.getAdminGroups()) {
-			bot.getGroup(groupId).sendMessage("[INFO] " + "启动成功！");
+			bot.getGroup(groupId).sendMessage("[INFO] " + TimeUtil.getDateTimeString() + " 启动成功");
 		}
 		
 		// 挂载该机器人的线程
