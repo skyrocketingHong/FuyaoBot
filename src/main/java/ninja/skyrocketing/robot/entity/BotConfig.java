@@ -27,7 +27,7 @@ public class BotConfig {
 	private static Set<Long> flashImageGroups = new HashSet<>();
 	
 	private static List<Trigger> triggers = new ArrayList<>();
-	private static Map<Long, UserExp> userExpMap = new HashMap<>();
+	private static Map<UserExpIds, UserExp> userExpMap = new HashMap<>();
 	private static Map<String, String> configMap = new HashMap<>();
 	private static Map<Integer, String> fuckWordsMap = new HashMap<>();
 	
@@ -92,12 +92,12 @@ public class BotConfig {
 		return triggers;
 	}
 	
-	public static Map<Long, UserExp> getUserExpMap() {
+	public static Map<UserExpIds, UserExp> getUserExpMap() {
 		return userExpMap;
 	}
 	
 	public static void setUserExpMap(UserExp userExpTmp) {
-		BotConfig.userExpMap.put(userExpTmp.getId(), userExpTmp);
+		BotConfig.userExpMap.put(userExpTmp.getUserExpIds(), userExpTmp);
 		userExp.save(userExpTmp);
 	}
 	
@@ -129,7 +129,7 @@ public class BotConfig {
 	private static void userExpListToMap() {
 		userExpMap.clear();
 		for (UserExp userExp : getAllUserExp()) {
-			userExpMap.put(userExp.getId(), userExp);
+			userExpMap.put(userExp.getUserExpIds(), userExp);
 		}
 	}
 	

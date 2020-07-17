@@ -2,10 +2,7 @@ package ninja.skyrocketing.robot.entity.datebase;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -18,12 +15,8 @@ import java.util.Date;
 @Entity
 @Table(name = "user_exp")
 public class UserExp {
-	@Id
-	@Column(name = "id")
-	private Long id;
-	
-	@Column(name = "group_id")
-	private Long groupId;
+	@EmbeddedId
+	private UserExpIds userExpIds;
 	
 	@Column(name = "exp")
 	private Integer exp;
@@ -38,24 +31,19 @@ public class UserExp {
 	}
 	
 	public UserExp(Long id, Long groupId, Integer exp, Date signDate) {
-		this.id = id;
-		this.groupId = groupId;
+		this.userExpIds = new UserExpIds(id, groupId);
 		this.exp = exp;
 		this.signDate = signDate;
 		this.nextSignDate = new Date(signDate.getTime() + 6 * 60 * 60 * 1000L);
-	}
-	
-	public UserExp(Long id, Integer exp) {
-		this.id = id;
-		this.exp = exp;
+		this.userExpIds = new UserExpIds(id, groupId);
 	}
 	
 	public Long getId() {
-		return id;
+		return userExpIds.getUserId();
 	}
 	
 	public void setId(Long id) {
-		this.id = id;
+		this.userExpIds.setUserId(id);
 	}
 	
 	public Integer getExp() {
@@ -75,11 +63,11 @@ public class UserExp {
 	}
 	
 	public Long getGroupId() {
-		return groupId;
+		return userExpIds.getGroupId();
 	}
 	
 	public void setGroupId(Long groupId) {
-		this.groupId = groupId;
+		this.userExpIds.setGroupId(groupId);
 	}
 	
 	public Date getNextSignDate() {
@@ -88,5 +76,9 @@ public class UserExp {
 	
 	public void setNextSignDate(Date nextSignDate) {
 		this.nextSignDate = nextSignDate;
+	}
+	
+	public UserExpIds getUserExpIds() {
+		return this.userExpIds;
 	}
 }

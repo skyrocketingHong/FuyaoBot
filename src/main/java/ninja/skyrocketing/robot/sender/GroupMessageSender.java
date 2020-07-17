@@ -47,9 +47,11 @@ public class GroupMessageSender {
 			}
 		}
 		for (Trigger trigger : BotConfig.getTriggers()) {
-			if (trigger.isEnable()) {
-				if (msg.matches(trigger.getKeyword())) {
+			if (msg.matches(trigger.getKeyword())) {
+				if (trigger.isEnable()) {
 					return trigger.getImplementation();
+				} else {
+					return "FuncOffMessage.FuncOff";
 				}
 			}
 		}

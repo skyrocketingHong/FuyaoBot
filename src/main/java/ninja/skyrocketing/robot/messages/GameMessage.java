@@ -7,6 +7,7 @@ import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.robot.entity.BotConfig;
 import ninja.skyrocketing.robot.entity.MessageEncapsulation;
+import ninja.skyrocketing.robot.entity.datebase.UserExpIds;
 import ninja.skyrocketing.robot.entity.datebase.UserExp;
 import ninja.skyrocketing.utils.HttpUtil;
 import ninja.skyrocketing.utils.RandomUtil;
@@ -41,43 +42,44 @@ public class GameMessage {
 	}
 	
 	/**
-	 * 签到（无查询）
+	 * 签到
 	 **/
-	public static Message sign(MessageEncapsulation messageEntity) {
+	public static Message sign(MessageEncapsulation messageEncapsulation) {
 		Date date = new Date();
-		if (!BotConfig.getUserExpMap().containsKey(messageEntity.getUserId())) {
+		UserExpIds userExpIdsTmp = new UserExpIds(messageEncapsulation.getUserId(), messageEncapsulation.getGroupId());
+		if (!BotConfig.getUserExpMap().containsKey(userExpIdsTmp)) {
 			int randomNum = RandomUtil.getRandomNum(10) + 10;
-			UserExp userExp = new UserExp(messageEntity.getUserId(), messageEntity.getGroupId(), randomNum, date);
+			UserExp userExp = new UserExp(messageEncapsulation.getUserId(), messageEncapsulation.getGroupId(), randomNum, date);
 			BotConfig.setUserExpMap(userExp);
-			return messageEntity.atSomeone("\n" +
+			return messageEncapsulation.atSomeone("\n" +
 					DateUtil.format(date, "YYYY年MM月dd日 HH:mm:ss") +
 					"\n签到成功✔\n" +
 					"获取 " + randomNum + " EXP" + "\n" +
-					"总经验值为 " + randomNum + " EXP" + "\n" +
+					"这是你第一次在这个群签到哦!" + "\n" +
 					"下次签到时间: " + "\n" +
-					DateUtil.format(BotConfig.getUserExpMap().get(messageEntity.getUserId()).getNextSignDate(), "YYYY年MM月dd日 HH:mm:ss:sss") + "\n" +
+					DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "YYYY年MM月dd日 HH:mm:ss") + "\n" +
 					"(发送 \"EXP查询\" 获取总经验值)"
 			);
 		} else {
-			if (DateUtil.between(date, BotConfig.getUserExpMap().get(messageEntity.getUserId()).getSignDate(), HOUR) >= 6) {
+			if (DateUtil.between(date, BotConfig.getUserExpMap().get(userExpIdsTmp).getSignDate(), HOUR) >= 6) {
 				int randomNum = RandomUtil.getRandomNum(10) + 10;
-				int expTmp = BotConfig.getUserExpMap().get(messageEntity.getUserId()).getExp();
-				UserExp userExp = new UserExp(messageEntity.getUserId(), messageEntity.getGroupId(), randomNum + expTmp, date);
+				int expTmp = BotConfig.getUserExpMap().get(userExpIdsTmp).getExp();
+				UserExp userExp = new UserExp(messageEncapsulation.getUserId(), messageEncapsulation.getGroupId(), randomNum + expTmp, date);
 				BotConfig.setUserExpMap(userExp);
-				return messageEntity.atSomeone("\n" +
+				return messageEncapsulation.atSomeone("\n" +
 						DateUtil.format(date, "YYYY年MM月dd日 HH:mm:ss") + "\n" +
 						"签到成功 ✓" + "\n" +
 						"获取 " + randomNum + " EXP" + "\n" +
 						"签到后经验值为 " + (randomNum + expTmp) + " EXP" + "\n" +
 						"下次签到时间: " + "\n" +
-						DateUtil.format(BotConfig.getUserExpMap().get(messageEntity.getUserId()).getNextSignDate(), "YYYY年MM月dd日 HH:mm:ss:sss") + "\n" +
+						DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "YYYY年MM月dd日 HH:mm:ss") + "\n" +
 						"(发送 \"EXP查询\" 获取总经验值)"
 				);
 			} else {
-				return messageEntity.atSomeone("\n" +
+				return messageEncapsulation.atSomeone("\n" +
 						"签到失败 ×" + "\n" +
 						"下次签到时间: " + "\n" +
-						DateUtil.format(BotConfig.getUserExpMap().get(messageEntity.getUserId()).getNextSignDate(), "YYYY年MM月dd日 HH:mm:ss:sss") + "\n" +
+						DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "YYYY年MM月dd日 HH:mm:ss") + "\n" +
 						"(发送 \"EXP查询\" 获取总经验值)"
 				);
 			}
@@ -88,9 +90,10 @@ public class GameMessage {
 	 * 签到查询
 	 **/
 	public static Message signExpQueryById(MessageEncapsulation messageEncapsulation) {
+		UserExpIds userExpIdsTmp = new UserExpIds(messageEncapsulation.getUserId(), messageEncapsulation.getGroupId());
 		return messageEncapsulation.atSomeone("\n" +
-				"当前 EXP 为 " + BotConfig.getUserExpMap().get(messageEncapsulation.getUserId()).getExp() + "\n" +
-				"下次签到时间: " + DateUtil.format(BotConfig.getUserExpMap().get(messageEncapsulation.getUserId()).getNextSignDate(), "YYYY年MM月dd日 HH:mm:ss:sss")
+				"当前 EXP 为 " + BotConfig.getUserExpMap().get(userExpIdsTmp).getExp() + "\n" +
+				"下次签到时间: " + DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "YYYY年MM月dd日 HH:mm:ss:sss")
 		);
 	}
 	
