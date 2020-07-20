@@ -2,7 +2,10 @@ package ninja.skyrocketing.robot.entity.datebase;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -36,6 +39,11 @@ public class UserExp {
 		this.signDate = signDate;
 		this.nextSignDate = new Date(signDate.getTime() + 6 * 60 * 60 * 1000L);
 		this.userExpIds = new UserExpIds(id, groupId);
+	}
+	
+	public UserExp(Long id, Integer exp) {
+		this.exp = exp;
+		this.userExpIds = new UserExpIds(id);
 	}
 	
 	public Long getId() {

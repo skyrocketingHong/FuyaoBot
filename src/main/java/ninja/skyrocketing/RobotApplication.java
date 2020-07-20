@@ -1,5 +1,7 @@
 package ninja.skyrocketing;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUnit;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactoryJvm;
 import net.mamoe.mirai.event.Events;
@@ -27,6 +29,7 @@ import java.io.File;
 @SpringBootApplication
 public class RobotApplication implements CommandLineRunner {
 	public static Bot bot;
+	public static String startTime = TimeUtil.getDateTimeString();
 	
 	@Resource
 	private ConfigDao configDao;
@@ -88,8 +91,13 @@ public class RobotApplication implements CommandLineRunner {
 		Events.registerEvents(bot, new GroupMemberAdminEvent());
 		
 		// 发送启动成功提示消息
+		String endTime = TimeUtil.getDateTimeString();
 		for (Long groupId : BotConfig.getAdminGroups()) {
-			bot.getGroup(groupId).sendMessage("[INFO] " + TimeUtil.getDateTimeString() + " 启动成功");
+			bot.getGroup(groupId).sendMessage("[INFO] " + " 启动成功" + "\n" +
+					"开始启动时间: " + startTime + "\n" +
+					"完成启动时间: " + endTime + "\n" +
+					"启动耗时: " + DateTime.of(startTime, "YYYY年MM月dd日 HH:mm:ss").between(DateTime.of(endTime, "YYYY年MM月dd日 HH:mm:ss"), DateUnit.SECOND) + "s"
+			);
 		}
 		
 		// 挂载该机器人的线程

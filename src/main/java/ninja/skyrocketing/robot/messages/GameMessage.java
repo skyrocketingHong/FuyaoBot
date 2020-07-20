@@ -7,8 +7,8 @@ import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.robot.entity.BotConfig;
 import ninja.skyrocketing.robot.entity.MessageEncapsulation;
-import ninja.skyrocketing.robot.entity.datebase.UserExpIds;
 import ninja.skyrocketing.robot.entity.datebase.UserExp;
+import ninja.skyrocketing.robot.entity.datebase.UserExpIds;
 import ninja.skyrocketing.utils.HttpUtil;
 import ninja.skyrocketing.utils.RandomUtil;
 
@@ -17,6 +17,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static cn.hutool.core.date.DateUnit.HOUR;
@@ -52,13 +53,11 @@ public class GameMessage {
 			UserExp userExp = new UserExp(messageEncapsulation.getUserId(), messageEncapsulation.getGroupId(), randomNum, date);
 			BotConfig.setUserExpMap(userExp);
 			return messageEncapsulation.atSomeone("\n" +
-					DateUtil.format(date, "YYYY年MM月dd日 HH:mm:ss") +
-					"\n签到成功✔\n" +
-					"获取 " + randomNum + " EXP" + "\n" +
-					"这是你第一次在这个群签到哦!" + "\n" +
-					"下次签到时间: " + "\n" +
-					DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "YYYY年MM月dd日 HH:mm:ss") + "\n" +
-					"(发送 \"EXP查询\" 获取总经验值)"
+					"✔ 签到成功 (这是你第一次在这个群签到哦!)" + "\n" +
+					"⚙ 获取 " + randomNum + " EXP" + "\n" +
+					"\uD83D\uDCC5 " + DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "YYYY年MM月dd日 HH:mm:ss") + "后才能再次在此群签到哦!\n" + "\n" +
+					"发送 \"EXP查询\" 获取总经验值" + "\n" +
+					"发送 \"EXP排名\" 获取群经验值排名"
 			);
 		} else {
 			if (DateUtil.between(date, BotConfig.getUserExpMap().get(userExpIdsTmp).getSignDate(), HOUR) >= 6) {
@@ -67,20 +66,18 @@ public class GameMessage {
 				UserExp userExp = new UserExp(messageEncapsulation.getUserId(), messageEncapsulation.getGroupId(), randomNum + expTmp, date);
 				BotConfig.setUserExpMap(userExp);
 				return messageEncapsulation.atSomeone("\n" +
-						DateUtil.format(date, "YYYY年MM月dd日 HH:mm:ss") + "\n" +
-						"签到成功 ✓" + "\n" +
-						"获取 " + randomNum + " EXP" + "\n" +
-						"签到后经验值为 " + (randomNum + expTmp) + " EXP" + "\n" +
-						"下次签到时间: " + "\n" +
-						DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "YYYY年MM月dd日 HH:mm:ss") + "\n" +
-						"(发送 \"EXP查询\" 获取总经验值)"
+						"✔ 签到成功" + "\n" +
+						"⚙ 获取 " + randomNum + " EXP" + "\n" +
+						"\uD83D\uDCC5 " + DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "YYYY年MM月dd日 HH:mm:ss") + "后才能再次在此群签到哦!\n" + "\n" +
+						"发送 \"EXP查询\" 获取总经验值" + "\n" +
+						"发送 \"EXP排名\" 获取群经验值排名"
 				);
 			} else {
 				return messageEncapsulation.atSomeone("\n" +
-						"签到失败 ×" + "\n" +
-						"下次签到时间: " + "\n" +
-						DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "YYYY年MM月dd日 HH:mm:ss") + "\n" +
-						"(发送 \"EXP查询\" 获取总经验值)"
+						"❌ 签到失败 (每群每6小时可签到一次)" + "\n" +
+						"\uD83D\uDCC5 " + DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "YYYY年MM月dd日 HH:mm:ss") + "后才能再次在此群签到哦!\n" + "\n" +
+						"发送 \"EXP查询\" 获取总经验值" + "\n" +
+						"发送 \"EXP排名\" 获取群经验值排名"
 				);
 			}
 		}
@@ -92,9 +89,26 @@ public class GameMessage {
 	public static Message signExpQueryById(MessageEncapsulation messageEncapsulation) {
 		UserExpIds userExpIdsTmp = new UserExpIds(messageEncapsulation.getUserId(), messageEncapsulation.getGroupId());
 		return messageEncapsulation.atSomeone("\n" +
-				"当前 EXP 为 " + BotConfig.getUserExpMap().get(userExpIdsTmp).getExp() + "\n" +
-				"下次签到时间: " + DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "YYYY年MM月dd日 HH:mm:ss:sss")
+				"\uD83D\uDCC2 EXP 查询" + "\n" +
+				"⚙ 在此群的 EXP 为 " + BotConfig.getUserExpMap().get(userExpIdsTmp).getExp() + "\n" +
+				"\uD83D\uDCC5 " + DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "YYYY年MM月dd日 HH:mm:ss") + "后才能再次在此群签到哦!\n" + "\n" +
+				"发送 \"EXP排名\" 获取群经验值排名"
 		);
+	}
+	
+	/**
+	 * 经验值排名（前五名）
+	 **/
+	public static Message expRanking(MessageEncapsulation messageEncapsulation) {
+		List<UserExpIds> userExpIdsList = BotConfig.userExp.findUserExpByGroupId(messageEncapsulation.getGroupId());
+		MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+		messageChainBuilder.add("\uD83D\uDCB9 EXP 前十名" + "\n");
+		for (int i = 0; i < userExpIdsList.size() && i < 10; i++) {
+			messageChainBuilder.add((i + 1) + ". " + messageEncapsulation.getGroupMessageEvent().getGroup().get(userExpIdsList.get(i).getUserId()).getNameCard());
+		}
+		messageChainBuilder.add("\n" + "\n" +
+				"发送 \"EXP查询\" 获取总经验值" + "\n");
+		return messageChainBuilder.asMessageChain();
 	}
 	
 	/**

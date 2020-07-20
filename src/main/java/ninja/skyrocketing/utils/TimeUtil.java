@@ -1,10 +1,13 @@
 package ninja.skyrocketing.utils;
 
+import cn.hutool.core.date.DateUtil;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 
 public class TimeUtil {
 	public static Long calculateDate(int[] beforeDate, int[] afterDate) {
@@ -28,8 +31,8 @@ public class TimeUtil {
 	}
 	
 	public static String getDateTimeString() {
-		LocalDateTime dateTime = LocalDateTime.now();
-		return dateTime.toString().replace("T", " ");
+		Date date = new Date();
+		return DateUtil.format(date, "YYYY年MM月dd日 HH:mm:ss");
 	}
 	
 	public static boolean isLeapYear(int year) {

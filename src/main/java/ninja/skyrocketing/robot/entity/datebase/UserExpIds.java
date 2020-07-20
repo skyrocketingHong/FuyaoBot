@@ -25,6 +25,10 @@ public class UserExpIds implements Serializable {
 	@Column(name = "group_id")
 	private Long groupId;
 	
+	public UserExpIds(Long id) {
+		this.userId = id;
+	}
+	
 	public Long getUserId() {
 		return userId;
 	}
