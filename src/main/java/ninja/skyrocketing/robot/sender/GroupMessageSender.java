@@ -48,7 +48,7 @@ public class GroupMessageSender {
 //		} else
 		{
 			if (msg.matches("^\\[闪照\\]$")) {
-				if (messageEntity.getGroupMessageEvent().getMessage().toString().matches(".*GroupFlashImage.*")) {
+				if (messageEntity.getGroupMessageEvent().getMessage().toString().matches(".*\\[mirai:flash:\\{.*\\}.mirai\\]")) {
 					msg = messageEntity.getGroupMessageEvent().getMessage().toString();
 				}
 			}
