@@ -60,6 +60,11 @@ public class MessageEncapsulation {
 		return message.plus(resultMsg);
 	}
 	
+	public Message atSomeone(Message resultMsg) {
+		net.mamoe.mirai.message.data.Message message = new At(groupMessageEvent.getSender());
+		return message.plus(resultMsg);
+	}
+	
 	public Message sendMsg(String resultMsg) {
 		MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
 		messageChainBuilder.add(resultMsg);

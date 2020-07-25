@@ -27,6 +27,7 @@ public class BotConfig {
 	private static Set<Long> flashImageGroups = new HashSet<>();
 	
 	private static List<Trigger> triggers = new ArrayList<>();
+	private static Map<String, String> triggersCommand = new HashMap<>();
 	private static Map<UserExpIds, UserExp> userExpMap = new HashMap<>();
 	private static Map<String, String> configMap = new HashMap<>();
 	private static Map<Integer, String> fuckWordsMap = new HashMap<>();
@@ -62,6 +63,7 @@ public class BotConfig {
 	public static void refreshTriggerList() {
 		triggers.clear();
 		triggers = getAllTrigger();
+		triggersToCommandMap();
 	}
 	
 	
@@ -90,6 +92,10 @@ public class BotConfig {
 	
 	public static List<Trigger> getTriggers() {
 		return triggers;
+	}
+	
+	public static Map<String, String> getTriggersCommand() {
+		return triggersCommand;
 	}
 	
 	public static Map<UserExpIds, UserExp> getUserExpMap() {
@@ -137,6 +143,15 @@ public class BotConfig {
 		fuckWordsMap.clear();
 		for (Fuck fuck : getAllFuck()) {
 			fuckWordsMap.put(fuck.getId(), fuck.getFuckWords());
+		}
+	}
+	
+	private static void triggersToCommandMap() {
+		triggersCommand.clear();
+		for (Trigger trigger : triggers) {
+			if (trigger.isCommandable()) {
+				triggersCommand.put(trigger.getCommand(), trigger.getImplementation());
+			}
 		}
 	}
 	

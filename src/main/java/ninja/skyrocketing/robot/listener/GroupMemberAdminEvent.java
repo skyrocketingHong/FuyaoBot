@@ -9,6 +9,7 @@ import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.robot.entity.BotConfig;
+import ninja.skyrocketing.robot.entity.datebase.UserExpIds;
 import ninja.skyrocketing.robot.messages.LogMessage;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,10 +23,9 @@ public class GroupMemberAdminEvent extends SimpleListenerHost {
 	@EventHandler
 	public void onJoin(MemberJoinEvent event) {
 		MessageChainBuilder messages = new MessageChainBuilder() {{
-			add("欢迎 ");
+			add("👏 欢迎第" + (event.getGroup().getMembers().size() + 1) + "名群员。" + "\n");
 			add(new At(event.getMember()));
-			add("\n" + "你是第" + (event.getGroup().getMembers().size() + 1) + "名群员。\n");
-			add("记得阅读群公告（如果有的话）哦！");
+			add("\n" + "记得阅读群公告（如果有的话）哦！");
 		}};
 		event.getGroup().sendMessage(messages.asMessageChain());
 	}
@@ -37,6 +37,12 @@ public class GroupMemberAdminEvent extends SimpleListenerHost {
 					event.getMember().getId() +
 					"已退出群聊。");
 		}};
+		try {
+			UserExpIds userExpIds = new UserExpIds(event.getMember().getId(), event.getGroup().getId());
+			BotConfig.userExp.deleteByUserExpIds(userExpIds);
+		} catch (Exception ignored) {
+		
+		}
 		event.getGroup().sendMessage(messages.asMessageChain());
 	}
 	
@@ -70,7 +76,9 @@ public class GroupMemberAdminEvent extends SimpleListenerHost {
 				"2. 群名：" + event.getGroup().getName() + "\n" +
 				"3. 群号：" + event.getGroup().getId() + "\n" +
 				"4. 操作人：" + event.getOperator().getId() + " " + event.getOperator().getNameCard());
+		
 		for (Long id : BotConfig.getAdminGroups()) {
+			messages.add(new At(event.getBot().getGroup(id).getOwner()));
 			event.getBot().getGroup(id).sendMessage(messages.asMessageChain());
 		}
 	}
@@ -83,6 +91,7 @@ public class GroupMemberAdminEvent extends SimpleListenerHost {
 				"2. 群号：" + event.getGroup().getId() + "\n" +
 				"3. 操作人：" + event.getOperator().getId() + " " + event.getOperator().getNameCard());
 		for (Long id : BotConfig.getAdminGroups()) {
+			messages.add(new At(event.getBot().getGroup(id).getOwner()));
 			event.getBot().getGroup(id).sendMessage(messages.asMessageChain());
 		}
 	}
@@ -95,6 +104,7 @@ public class GroupMemberAdminEvent extends SimpleListenerHost {
 				"2. 群号：" + event.getGroup().getId() + "\n"
 		);
 		for (Long id : BotConfig.getAdminGroups()) {
+			messages.add(new At(event.getBot().getGroup(id).getOwner()));
 			event.getBot().getGroup(id).sendMessage(messages.asMessageChain());
 		}
 	}
@@ -107,6 +117,7 @@ public class GroupMemberAdminEvent extends SimpleListenerHost {
 				"2. 群号：" + event.getGroup().getId() + "\n" +
 				"3. 邀请人：" + event.getInvitor().getNameCard() + " " + event.getInvitor().getId());
 		for (Long id : BotConfig.getAdminGroups()) {
+			messages.add(new At(event.getBot().getGroup(id).getOwner()));
 			event.getBot().getGroup(id).sendMessage(messages.asMessageChain());
 		}
 	}

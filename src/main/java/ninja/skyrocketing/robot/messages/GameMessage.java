@@ -15,10 +15,7 @@ import ninja.skyrocketing.utils.RandomUtil;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static cn.hutool.core.date.DateUnit.HOUR;
 
@@ -57,7 +54,8 @@ public class GameMessage {
 					"⚙ 获取 " + randomNum + " EXP" + "\n" +
 					"\uD83D\uDCC5 " + DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "YYYY年MM月dd日 HH:mm:ss") + "后才能再次在此群签到哦!\n" + "\n" +
 					"发送 \"EXP查询\" 获取总经验值" + "\n" +
-					"发送 \"EXP排名\" 获取群经验值排名"
+					"发送 \"EXP排名\" 获取群经验值排名" + "\n" +
+					"(签到功能测试结束，已全功能上线，测试数据已全部删除)"
 			);
 		} else {
 			if (DateUtil.between(date, BotConfig.getUserExpMap().get(userExpIdsTmp).getSignDate(), HOUR) >= 6) {
@@ -70,14 +68,16 @@ public class GameMessage {
 						"⚙ 获取 " + randomNum + " EXP" + "\n" +
 						"\uD83D\uDCC5 " + DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "YYYY年MM月dd日 HH:mm:ss") + "后才能再次在此群签到哦!\n" + "\n" +
 						"发送 \"EXP查询\" 获取总经验值" + "\n" +
-						"发送 \"EXP排名\" 获取群经验值排名"
+						"发送 \"EXP排名\" 获取群经验值排名" + "\n" +
+						"(签到功能测试结束，已全功能上线，测试数据已全部删除)"
 				);
 			} else {
 				return messageEncapsulation.atSomeone("\n" +
 						"❌ 签到失败 (每群每6小时可签到一次)" + "\n" +
 						"\uD83D\uDCC5 " + DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "YYYY年MM月dd日 HH:mm:ss") + "后才能再次在此群签到哦!\n" + "\n" +
 						"发送 \"EXP查询\" 获取总经验值" + "\n" +
-						"发送 \"EXP排名\" 获取群经验值排名"
+						"发送 \"EXP排名\" 获取群经验值排名" + "\n" +
+						"(签到功能测试结束，已全功能上线，测试数据已全部删除)"
 				);
 			}
 		}
@@ -92,7 +92,8 @@ public class GameMessage {
 				"\uD83D\uDCC2 EXP 查询" + "\n" +
 				"⚙ 在此群的 EXP 为 " + BotConfig.getUserExpMap().get(userExpIdsTmp).getExp() + "\n" +
 				"\uD83D\uDCC5 " + DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "YYYY年MM月dd日 HH:mm:ss") + "后才能再次在此群签到哦!\n" + "\n" +
-				"发送 \"EXP排名\" 获取群经验值排名"
+				"发送 \"EXP排名\" 获取群经验值排名" + "\n" +
+				"(签到功能测试结束，已全功能上线，测试数据已全部删除)"
 		);
 	}
 	
@@ -104,10 +105,20 @@ public class GameMessage {
 		MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
 		messageChainBuilder.add("\uD83D\uDCB9 EXP 前十名" + "\n");
 		for (int i = 0; i < userExpIdsList.size() && i < 10; i++) {
-			messageChainBuilder.add((i + 1) + ". " + messageEncapsulation.getGroupMessageEvent().getGroup().get(userExpIdsList.get(i).getUserId()).getNameCard());
+			String nameCard;
+			try {
+				nameCard = messageEncapsulation.getGroupMessageEvent().getGroup().get(userExpIdsList.get(i).getUserId()).getNameCard();
+			} catch (NoSuchElementException e) {
+				UserExpIds userExpIds = new UserExpIds(userExpIdsList.get(i).getUserId(), messageEncapsulation.getGroupMessageEvent().getGroup().getId());
+				BotConfig.userExp.deleteByUserExpIds(userExpIds);
+				continue;
+			}
+			messageChainBuilder.add((i + 1) + ". " + nameCard + "\n");
 		}
-		messageChainBuilder.add("\n" + "\n" +
-				"发送 \"EXP查询\" 获取总经验值" + "\n");
+		messageChainBuilder.add("\n" +
+				"发送 \"EXP查询\" 获取总经验值" + "\n" +
+				"(签到功能测试结束，已全功能上线，测试数据已全部删除)"
+		);
 		return messageChainBuilder.asMessageChain();
 	}
 	
@@ -115,7 +126,7 @@ public class GameMessage {
 	 * 获取一定数量的随机数
 	 **/
 	public static Message genRandomNum(MessageEncapsulation messageEntity) {
-		String str = messageEntity.getMsg().replaceAll("生成随机数\\s*", "");
+		String str = messageEntity.getMsg().replaceAll("生成随机数\\s*|^((do)|(sudo)) get randomnum\\s*", "");
 		if (str == null) {
 			return messageEntity.atSomeone("没有指定数量。");
 		} else {

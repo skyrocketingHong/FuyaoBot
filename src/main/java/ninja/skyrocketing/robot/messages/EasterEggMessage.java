@@ -1,9 +1,6 @@
 package ninja.skyrocketing.robot.messages;
 
-import net.mamoe.mirai.message.data.FlashImage;
-import net.mamoe.mirai.message.data.Image;
-import net.mamoe.mirai.message.data.Message;
-import net.mamoe.mirai.message.data.MessageChainBuilder;
+import net.mamoe.mirai.message.data.*;
 import ninja.skyrocketing.robot.entity.BotConfig;
 import ninja.skyrocketing.robot.entity.MessageEncapsulation;
 
@@ -19,6 +16,7 @@ public class EasterEggMessage {
 		messages.add("5. 图片链接: " + messageEntity.getGroupMessageEvent().getBot().queryImageUrl(flashImage) + "\n");
 		//向群内转发闪照图片
 		for (Long id : BotConfig.getFlashImageGroups()) {
+			messages.add(new At(messageEntity.getGroupMessageEvent().getBot().getGroup(id).getOwner()));
 			messageEntity.getGroupMessageEvent().getBot().getGroup(id).sendMessage(messages.asMessageChain());
 		}
 		//生成群提醒
@@ -32,6 +30,7 @@ public class EasterEggMessage {
 		MessageChainBuilder messages = LogMessage.logMessage("ERROR");
 		messages.add("5. 红包来了，gkd！");
 		for (Long id : BotConfig.getFlashImageGroups()) {
+			messages.add(new At(messageEntity.getGroupMessageEvent().getBot().getGroup(id).getOwner()));
 			messageEntity.getGroupMessageEvent().getBot().getGroup(id).sendMessage(messages.asMessageChain());
 		}
 		return messageEntity.atSomeone("发了一个红包，gkd来白嫖。");

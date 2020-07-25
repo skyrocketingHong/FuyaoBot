@@ -5,7 +5,9 @@ import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.robot.entity.BotConfig;
 import ninja.skyrocketing.robot.entity.MessageEncapsulation;
 import ninja.skyrocketing.robot.entity.datebase.Trigger;
+import ninja.skyrocketing.robot.entity.datebase.UserExpIds;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class AdminMessage {
@@ -67,7 +69,7 @@ public class AdminMessage {
 			for (Trigger trigger : BotConfig.getTriggers()) {
 				messageChainBuilder.add(trigger.getId() + ". " + trigger.getName() + "\n" +
 						trigger.isEnableToString() + "\t" +
-						trigger.getKeyword() + "\n"
+						trigger.getKeywordRegex() + "\n"
 				);
 			}
 			return messageChainBuilder.asMessageChain();
@@ -103,5 +105,25 @@ public class AdminMessage {
 		} else {
 			return messageEncapsulation.notSudo();
 		}
+	}
+	
+	/**
+	 * 清理数据库签到退群人员
+	 * sudo clean userexp
+	 **/
+	public static Message cleanUserExp(MessageEncapsulation messageEncapsulation) {
+		int i = 0;
+		for (UserExpIds tmpUserExpIds : BotConfig.getUserExpMap().keySet()) {
+			try {
+				messageEncapsulation.getGroupMessageEvent().getBot().getGroup(tmpUserExpIds.getGroupId()).get(tmpUserExpIds.getUserId()).getNameCard();
+			} catch (NoSuchElementException e) {
+				System.out.println(e);
+				UserExpIds userExpIds = new UserExpIds(tmpUserExpIds.getUserId(), tmpUserExpIds.getGroupId());
+				System.out.println(userExpIds);
+				BotConfig.userExp.deleteByUserExpIds(userExpIds);
+				++i;
+			}
+		}
+		return messageEncapsulation.sendMsg("已清理" + i);
 	}
 }

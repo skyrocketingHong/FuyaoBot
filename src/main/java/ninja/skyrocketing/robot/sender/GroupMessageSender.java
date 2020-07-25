@@ -41,17 +41,24 @@ public class GroupMessageSender {
 	 **/
 	public static String matchedClass(MessageEncapsulation messageEntity) {
 		String msg = messageEntity.getMsg();
-		if (msg.matches("^\\[闪照\\]$")) {
-			if (messageEntity.getGroupMessageEvent().getMessage().toString().matches(".*GroupFlashImage.*")) {
-				msg = messageEntity.getGroupMessageEvent().getMessage().toString();
+//		if (msg.matches("^((do)|(sudo))\\s{1}((get|set))\\s{1}.+")) {
+//			String[] commandSpilt = msg.split("\\s");
+//			System.out.println(commandSpilt[1] + " " +  commandSpilt[2]);
+//			return BotConfig.getTriggersCommand().get(commandSpilt[1] + " " +  commandSpilt[2]);
+//		} else
+		{
+			if (msg.matches("^\\[闪照\\]$")) {
+				if (messageEntity.getGroupMessageEvent().getMessage().toString().matches(".*GroupFlashImage.*")) {
+					msg = messageEntity.getGroupMessageEvent().getMessage().toString();
+				}
 			}
-		}
-		for (Trigger trigger : BotConfig.getTriggers()) {
-			if (msg.matches(trigger.getKeyword())) {
-				if (trigger.isEnable()) {
-					return trigger.getImplementation();
-				} else {
-					return "FuncOffMessage.FuncOff";
+			for (Trigger trigger : BotConfig.getTriggers()) {
+				if (msg.matches(trigger.getKeywordRegex())) {
+					if (trigger.isEnable()) {
+						return trigger.getImplementation();
+					} else {
+						return "FuncOffMessage.FuncOff";
+					}
 				}
 			}
 		}

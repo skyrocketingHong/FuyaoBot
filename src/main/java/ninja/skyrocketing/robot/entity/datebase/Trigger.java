@@ -1,9 +1,11 @@
 package ninja.skyrocketing.robot.entity.datebase;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
 
 /**
  * @Author skyrocketing Hong
@@ -11,7 +13,11 @@ import java.util.Date;
  * @Version 1.0
  */
 
+@Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Embeddable
 @Entity
 @Table(name = "trigger_list")
 public class Trigger {
@@ -19,17 +25,14 @@ public class Trigger {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@Column(name = "keyword")
-	private String keyword;
+	@Column(name = "keyword_regex")
+	private String keywordRegex;
 	
 	@Column(name = "implementation")
 	private String implementation;
 	
 	@Column(name = "enable")
 	private boolean enable;
-	
-	@Column(name = "added_date")
-	private Date addedDate;
 	
 	@Column(name = "name")
 	private String name;
@@ -40,18 +43,28 @@ public class Trigger {
 	@Column(name = "shown")
 	private boolean shown;
 	
-	public Trigger() {
+	@Column(name = "command")
+	private String command;
+	
+	@Column(name = "admin")
+	private boolean admin;
+	
+	@Column(name = "commandable")
+	private boolean commandable;
+	
+	public String isEnableToString() {
+		if (isEnable()) {
+			return "启用";
+		}
+		return "禁用";
 	}
 	
-	public Trigger(Integer id, String keyword, String implementation, boolean enable, Date addedDate, String name, String operate, boolean shown) {
-		this.id = id;
-		this.keyword = keyword;
-		this.implementation = implementation;
-		this.enable = enable;
-		this.addedDate = addedDate;
-		this.name = name;
-		this.operate = operate;
-		this.shown = shown;
+	public boolean isCommandable() {
+		return commandable;
+	}
+	
+	public void setCommandable(boolean commandable) {
+		this.commandable = commandable;
 	}
 	
 	public Integer getId() {
@@ -62,12 +75,12 @@ public class Trigger {
 		this.id = id;
 	}
 	
-	public String getKeyword() {
-		return keyword;
+	public String getKeywordRegex() {
+		return keywordRegex;
 	}
 	
-	public void setKeyword(String keyword) {
-		this.keyword = keyword;
+	public void setKeywordRegex(String keywordRegex) {
+		this.keywordRegex = keywordRegex;
 	}
 	
 	public String getImplementation() {
@@ -84,21 +97,6 @@ public class Trigger {
 	
 	public void setEnable(boolean enable) {
 		this.enable = enable;
-	}
-	
-	public String isEnableToString() {
-		if (isEnable()) {
-			return "启用";
-		}
-		return "禁用";
-	}
-	
-	public Date getAddedDate() {
-		return addedDate;
-	}
-	
-	public void setAddedDate(Date addedDate) {
-		this.addedDate = addedDate;
 	}
 	
 	public String getName() {
@@ -125,16 +123,34 @@ public class Trigger {
 		this.shown = shown;
 	}
 	
+	public String getCommand() {
+		return command;
+	}
+	
+	public void setCommand(String command) {
+		this.command = command;
+	}
+	
+	public boolean isAdmin() {
+		return admin;
+	}
+	
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
+	}
+	
 	@Override
 	public String toString() {
-		return "Trigger: \n" +
+		return "Trigger{" +
 				"id=" + id +
-				", Keyword='" + keyword + '\'' +
-				", Implementation='" + implementation + '\'' +
-				", Enable=" + enable +
-				", AddedDate=" + addedDate +
-				", Name='" + name + '\'' +
-				", Operate='" + operate + '\'' +
-				", Shown=" + shown + "\n";
+				", keywordRegex='" + keywordRegex + '\'' +
+				", implementation='" + implementation + '\'' +
+				", enable=" + enable +
+				", name='" + name + '\'' +
+				", operate='" + operate + '\'' +
+				", shown=" + shown +
+				", command='" + command + '\'' +
+				", admin=" + admin +
+				'}';
 	}
 }
