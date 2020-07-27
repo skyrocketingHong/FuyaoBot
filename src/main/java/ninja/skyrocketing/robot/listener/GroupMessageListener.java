@@ -18,7 +18,7 @@ public class GroupMessageListener extends SimpleListenerHost {
 				BotConfig.getBannedUsers().contains(event.getSender().getId())) {
 			return ListeningStatus.LISTENING;
 		} else {
-			if (event.getMessage().toString().matches(".*\\[mirai:at:" + event.getBot().getId() + "\\].*") &&
+			if (event.getMessage().toString().matches(".*\\[mirai:at:" + event.getBot().getId() + ",.*\\].*") &&
 					!event.getMessage().toString().matches(".*\\[mirai:quote:\\d*,\\d*\\].*")) {
 				System.out.println(event.getMessage().toString());
 				event.getGroup().sendMessage("@我是没用的\n发送 \"get list func\" 获取功能列表\n发送 \"get list releasenote\" 获取更新日志");
