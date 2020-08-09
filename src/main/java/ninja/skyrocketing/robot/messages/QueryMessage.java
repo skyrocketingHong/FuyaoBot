@@ -2,34 +2,24 @@ package ninja.skyrocketing.robot.messages;
 
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChain;
-import net.mamoe.mirai.message.data.MessageChainBuilder;
+import net.mamoe.mirai.message.data.MessageUtils;
 import net.mamoe.mirai.message.data.SingleMessage;
 import ninja.skyrocketing.robot.entity.BotConfig;
 import ninja.skyrocketing.robot.entity.MessageEncapsulation;
-import ninja.skyrocketing.robot.entity.datebase.Trigger;
 
 public class QueryMessage {
 	/**
 	 * 更新日志
 	 **/
 	public static Message releaseNote(MessageEncapsulation messageEntity) {
-		return messageEntity.sendMsg("更新日志链接（GitHub）：\n" + "https://github.com/skyrocketingHong/QQRobot/blob/master/README.md");
+		return messageEntity.sendMsg("更新日志链接（自己的博客）：\n" + "https://skyrocketing.ninja/2020/qqbot-releasenotes/");
 	}
 	
 	/**
 	 * 普通功能列表
 	 **/
 	public static Message getFunctionList(MessageEncapsulation messageEntity) {
-		MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-		int count = 0;
-		messageChainBuilder.add("扶摇的憨憨机器人的功能列表\n（使用的时候不用带加号）\n");
-		for (Trigger trigger : BotConfig.getTriggers()) {
-			if (trigger.isShown()) {
-				count++;
-				messageChainBuilder.add(count + ". " + trigger.getName() + ": " + trigger.getOperate() + "\n");
-			}
-		}
-		return messageChainBuilder.asMessageChain();
+		return MessageUtils.newImage(BotConfig.getConfigMap().get("func_image"));
 	}
 	
 	/**

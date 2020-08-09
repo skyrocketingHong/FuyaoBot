@@ -3,6 +3,8 @@ package ninja.skyrocketing.robot.messages;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONObject;
+import net.mamoe.mirai.contact.Contact;
+import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.robot.entity.BotConfig;
@@ -143,14 +145,16 @@ public class GameMessage {
 	 * 守望先锋街机模式查询
 	 **/
 	public static Message getOverwatchArcadeModes(MessageEncapsulation messageEntity) throws IOException, ParseException {
+		MessageReceipt<Contact> messageReceipt = messageEntity.getGroupMessageEvent().getGroup().sendMessage("等待API返回数据...");
 		JSONObject owModes = HttpUtil.readJsonFromUrl("https://overwatcharcade.today/api/overwatch/today");
 		SimpleDateFormat updateDateTime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
 		MessageChainBuilder messages = new MessageChainBuilder();
-		messages.add("守望先锋街机模式列表\n更新时间：" +
+		messages.add("今日守望先锋街机模式列表\n更新时间：" +
 				DateTime.of(updateDateTime.parse(owModes.getByPath("created_at", String.class))) + "\n");
 		for (int i = 1; i < 8; i++) {
 			messages.add(i + ". " + owModes.getByPath("modes.tile_" + i + ".name", String.class) + "\n");
 		}
+		messageReceipt.recall();
 		return messages.asMessageChain();
 	}
 }

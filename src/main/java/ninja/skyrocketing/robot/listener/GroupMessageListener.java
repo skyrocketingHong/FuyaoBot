@@ -13,11 +13,11 @@ import org.jetbrains.annotations.NotNull;
 public class GroupMessageListener extends SimpleListenerHost {
 	@EventHandler
 	public ListeningStatus onMessage(GroupMessageEvent event) throws Exception {
-		Message message = GroupMessageSender.Sender(event);
 		if (BotConfig.getBannedGroups().contains(event.getGroup().getId()) ||
 				BotConfig.getBannedUsers().contains(event.getSender().getId())) {
 			return ListeningStatus.LISTENING;
 		} else {
+			Message message = GroupMessageSender.Sender(event);
 			if (event.getMessage().toString().matches(".*\\[mirai:at:" + event.getBot().getId() + ",.*\\].*") &&
 					!event.getMessage().toString().matches(".*\\[mirai:quote:\\d*,\\d*\\].*")) {
 				System.out.println(event.getMessage().toString());

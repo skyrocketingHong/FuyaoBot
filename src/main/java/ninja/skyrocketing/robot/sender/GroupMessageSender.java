@@ -5,7 +5,6 @@ import net.mamoe.mirai.message.data.Message;
 import ninja.skyrocketing.robot.entity.BotConfig;
 import ninja.skyrocketing.robot.entity.MessageEncapsulation;
 import ninja.skyrocketing.robot.entity.datebase.Trigger;
-import ninja.skyrocketing.robot.messages.LogMessage;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -19,10 +18,10 @@ public class GroupMessageSender {
 			if (message != null) {
 				if (!className.contains("EasterEggMessage")) {
 					if (className.equals("RepeaterMessage.repeaterCommand")) {
-						LogMessage.logMessage("WARN", messageEntity);
+//						LogMessage.logMessage("WARN", messageEntity);
 						return message;
 					}
-					LogMessage.logMessage("INFO", messageEntity);
+//					LogMessage.logMessage("INFO", messageEntity);
 					return message;
 				}
 				return message;
