@@ -29,7 +29,7 @@ public class GameMessage {
 	public static Message dice(MessageEncapsulation messageEntity) {
 		int randomNum = RandomUtil.getRandomNum(100);
 		String[] dice = new String[]{"⚀", "⚁", "⚂", "⚃", "⚄", "⚅"};
-		return messageEntity.atSomeone(dice[randomNum % 6] + "\n点数为" + (randomNum % 6 + 1));
+		return messageEntity.atSomeone("\n" + dice[randomNum % 6] + " 点数为" + (randomNum % 6 + 1));
 	}
 	
 	/**
@@ -39,7 +39,7 @@ public class GameMessage {
 		int randomNum = RandomUtil.getRandomNum(100);
 		String[] rockPaperScissorsIcon = new String[]{"✊", "✌", "✋"};
 		String[] rockPaperScissorsText = new String[]{"石头", "剪刀", "布"};
-		return messageEntity.atSomeone(rockPaperScissorsIcon[randomNum % 3] + "\n手势为" + rockPaperScissorsText[randomNum % 3]);
+		return messageEntity.atSomeone("\n" + rockPaperScissorsIcon[randomNum % 3] + " 手势为" + rockPaperScissorsText[randomNum % 3]);
 	}
 	
 	/**
@@ -54,7 +54,7 @@ public class GameMessage {
 			BotConfig.setUserExpMap(userExp);
 			return messageEncapsulation.atSomeone("\n" +
 					"🟢 首次签到成功 获取 " + randomNum + " EXP" + "\n" +
-					TimeUtil.getClockEmoji(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate().getHours()) + " 下次签到时间 " + DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "MM月dd日 HH:mm") + "\n" +
+					TimeUtil.getClockEmoji(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate().getHours()) + " 下次签到时间 " + DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "HH:mm:ss") + "\n" +
 					"🚩 其他指令 \"EXP查询\" \"EXP排名\""
 			);
 		} else {
@@ -65,13 +65,13 @@ public class GameMessage {
 				BotConfig.setUserExpMap(userExp);
 				return messageEncapsulation.atSomeone("\n" +
 						"🟢 签到成功 获取 " + randomNum + " EXP" + "\n" +
-						TimeUtil.getClockEmoji(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate().getHours()) + " 下次签到时间 " + DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "MM月dd日 HH:mm") + "\n" +
+						TimeUtil.getClockEmoji(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate().getHours()) + " 下次签到时间 " + DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "HH:mm:ss") + "\n" +
 						"🚩 其他指令 \"EXP查询\" \"EXP排名\""
 				);
 			} else {
 				return messageEncapsulation.atSomeone("\n" +
 						"🔴 签到失败 (每群每6小时可签到一次)" + "\n" +
-						TimeUtil.getClockEmoji(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate().getHours()) + " 下次签到时间 " + DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "MM月dd日 HH:mm") + "\n" +
+						TimeUtil.getClockEmoji(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate().getHours()) + " 下次签到时间 " + DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "HH:mm:ss") + "\n" +
 						"🚩 其他指令 \"EXP查询\" \"EXP排名\""
 				);
 			}
@@ -96,7 +96,7 @@ public class GameMessage {
 	public static Message expRanking(MessageEncapsulation messageEncapsulation) {
 		List<UserExpIds> userExpIdsList = BotConfig.userExp.findUserExpByGroupId(messageEncapsulation.getGroupId());
 		MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-		messageChainBuilder.add("\uD83D\uDCB9 EXP 前⑤名" + "\n");
+		messageChainBuilder.add("🚀 本群 EXP 前五名" + "\n");
 		for (int i = 0; i < userExpIdsList.size() && i < 5; i++) {
 			String nameCard;
 			try {
@@ -108,9 +108,7 @@ public class GameMessage {
 			}
 			messageChainBuilder.add((i + 1) + ". " + nameCard + "\n");
 		}
-		messageChainBuilder.add("\n" +
-				"🚩 其他指令 \"EXP查询\" \"签到\""
-		);
+		messageChainBuilder.add("🚩 其他指令 \"EXP查询\" \"签到\"");
 		return messageChainBuilder.asMessageChain();
 	}
 	

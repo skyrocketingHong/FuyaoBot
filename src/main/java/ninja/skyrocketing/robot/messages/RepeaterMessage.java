@@ -1,5 +1,6 @@
 package ninja.skyrocketing.robot.messages;
 
+import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
@@ -175,13 +176,15 @@ public class RepeaterMessage {
 			if (msg.matches("复读")) {
 				return null;
 			}
-			return messageEntity.sendMsg(msg.replaceFirst("复读", ""));
+			return messageEntity.atSomeone("\n" + msg.replaceFirst("复读", ""));
 		} else {
 			MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+			messageChainBuilder.append(new At(messageEntity.getGroupMessageEvent().getSender()));
 			for (int i = 2; i < messageChain.size(); i++) {
 				System.out.println(messageChain.get(i));
 				messageChainBuilder.append(messageChain.get(i));
 			}
+			messageEntity.getGroupMessageEvent().getGroup().sendMessage(messageChainBuilder.asMessageChain()).quote();
 			return messageChainBuilder.asMessageChain();
 		}
 	}
