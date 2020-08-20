@@ -28,6 +28,10 @@ A QQ robot based on [Mirai](https://github.com/mamoe/mirai).
 ```
 # 4. 更新日志
 ## 2020-08-20
+#### 3.1.9.31 (Hotfix)
+* 修复闪照、红包检测
+* 修改部分文案
+* 修改协议为Android Watch
 #### 3.1.8.30
 * 添加群员被kick提醒
 * 修改部分文案

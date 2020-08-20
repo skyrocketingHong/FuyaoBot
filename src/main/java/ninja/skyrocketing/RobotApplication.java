@@ -78,7 +78,7 @@ public class RobotApplication implements CommandLineRunner {
 				qqPassword,
 				new BotConfiguration() {{
 					// 设备缓存信息
-					setProtocol(MiraiProtocol.ANDROID_PHONE);
+					setProtocol(MiraiProtocol.ANDROID_WATCH);
 					fileBasedDeviceInfo("deviceInfo.json");
 				}}
 		);

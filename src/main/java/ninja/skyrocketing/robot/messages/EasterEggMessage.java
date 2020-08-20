@@ -10,6 +10,7 @@ public class EasterEggMessage {
 	 **/
 	public static Message firePhoto(MessageEncapsulation messageEntity) {
 		//将闪照转为图片类型
+		System.out.println(messageEntity.getGroupMessageEvent().getMessage());
 		Image flashImage = ((FlashImage) messageEntity.getGroupMessageEvent().getMessage().get(1)).getImage();
 		//生成消息
 		MessageChainBuilder messages = LogMessage.logMessage("ERROR", messageEntity);
@@ -27,7 +28,7 @@ public class EasterEggMessage {
 	 * 红包提醒
 	 **/
 	public static Message RedEnvelope(MessageEncapsulation messageEntity) {
-		MessageChainBuilder messages = LogMessage.logMessage("ERROR");
+		MessageChainBuilder messages = LogMessage.logMessage("ERROR", messageEntity);
 		messages.add("5. 红包来了，gkd！");
 		for (Long id : BotConfig.getFlashImageGroups()) {
 			messages.add(new At(messageEntity.getGroupMessageEvent().getBot().getGroup(id).getOwner()));

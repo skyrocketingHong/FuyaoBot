@@ -34,7 +34,8 @@ public class GroupMemberAdminEvent extends SimpleListenerHost {
 	public void onQuit(MemberLeaveEvent.Quit event) {
 		MessageChainBuilder messages = new MessageChainBuilder() {{
 			add("⚠ 群员减少提醒\n" + "群员" +
-					event.getMember().getId() +
+					event.getMember().getNick() + " (" +
+					event.getMember().getId() + ") " +
 					"已退出群聊。");
 		}};
 		try {
@@ -50,7 +51,8 @@ public class GroupMemberAdminEvent extends SimpleListenerHost {
 	public void onKick(MemberLeaveEvent.Kick event) {
 		MessageChainBuilder messages = new MessageChainBuilder() {{
 			add("⚠ 群员减少提醒\n" + "群员" +
-					event.getMember().getId() +
+					event.getMember().getNick() + " (" +
+					event.getMember().getId() + ") " +
 					"已被" +
 					event.getOperator().getId() +
 					"移出群聊。");
@@ -61,6 +63,21 @@ public class GroupMemberAdminEvent extends SimpleListenerHost {
 		} catch (Exception ignored) {
 		
 		}
+		event.getGroup().sendMessage(messages.asMessageChain());
+	}
+	
+	@EventHandler
+	public void onSetAdmin(MemberPermissionChangeEvent event) {
+		MessageChainBuilder messages = new MessageChainBuilder() {{
+			add("⚠ 群员权限变动\n" +
+					"群员" +
+					event.getMember().getNick() + " (" +
+					event.getMember().getId() + ") " +
+					"已被设置为" +
+					event.getNew().name() +
+					"。"
+			);
+		}};
 		event.getGroup().sendMessage(messages.asMessageChain());
 	}
 	

@@ -46,10 +46,15 @@ public class GroupMessageSender {
 //			return BotConfig.getTriggersCommand().get(commandSpilt[1] + " " +  commandSpilt[2]);
 //		} else
 		{
-			if (msg.matches("^\\[闪照\\]$")) {
-				if (messageEntity.getGroupMessageEvent().getMessage().toString().matches(".*\\[mirai:flash:\\{.*\\}.mirai\\]")) {
+			if (msg.contains("[闪照]")) {
+				if (messageEntity.getGroupMessageEvent().getMessage().toString().matches(".*mirai:flash:.*")) {
 					msg = messageEntity.getGroupMessageEvent().getMessage().toString();
+				} else {
+					return null;
 				}
+			}
+			if (msg.equals("[QQ红包]请使用新版手机QQ查收红包。") || msg.equals("[QQ红包]你收到一个红包，请在新版手机QQ查看。")) {
+				msg = messageEntity.getGroupMessageEvent().getMessage().toString();
 			}
 			for (Trigger trigger : BotConfig.getTriggers()) {
 				if (msg.matches(trigger.getKeywordRegex())) {
