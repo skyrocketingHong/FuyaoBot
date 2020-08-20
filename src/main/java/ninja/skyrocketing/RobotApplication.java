@@ -9,8 +9,7 @@ import net.mamoe.mirai.utils.BotConfiguration;
 import net.mamoe.mirai.utils.SystemDeviceInfoKt;
 import ninja.skyrocketing.robot.dao.*;
 import ninja.skyrocketing.robot.entity.BotConfig;
-import ninja.skyrocketing.robot.listener.GroupMemberAdminEvent;
-import ninja.skyrocketing.robot.listener.GroupMessageListener;
+import ninja.skyrocketing.robot.listener.*;
 import ninja.skyrocketing.utils.TimeUtil;
 import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;
@@ -78,7 +77,7 @@ public class RobotApplication implements CommandLineRunner {
 				qqPassword,
 				new BotConfiguration() {{
 					// 设备缓存信息
-					setProtocol(MiraiProtocol.ANDROID_WATCH);
+					setProtocol(MiraiProtocol.ANDROID_PAD);
 					fileBasedDeviceInfo("deviceInfo.json");
 				}}
 		);
@@ -88,7 +87,9 @@ public class RobotApplication implements CommandLineRunner {
 		
 		// 注册监听事件
 		Events.registerEvents(bot, new GroupMessageListener());
-		Events.registerEvents(bot, new GroupMemberAdminEvent());
+		Events.registerEvents(bot, new GroupMemberAdminEventListener());
+		Events.registerEvents(bot, new FriendEventListener());
+		Events.registerEvents(bot, new GroupEventListener());
 		
 		// 发送启动成功提示消息
 		String endTime = TimeUtil.getDateTimeString();

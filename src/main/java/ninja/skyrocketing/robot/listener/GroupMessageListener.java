@@ -6,9 +6,12 @@ import net.mamoe.mirai.event.ListeningStatus;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.message.GroupMessageEvent;
 import net.mamoe.mirai.message.data.Message;
+import ninja.skyrocketing.RobotApplication;
 import ninja.skyrocketing.robot.entity.BotConfig;
 import ninja.skyrocketing.robot.sender.GroupMessageSender;
 import org.jetbrains.annotations.NotNull;
+
+import static ninja.skyrocketing.robot.sender.AdminListenerMessageSender.ErrorMessageSender;
 
 public class GroupMessageListener extends SimpleListenerHost {
 	@EventHandler
@@ -34,9 +37,9 @@ public class GroupMessageListener extends SimpleListenerHost {
 		return ListeningStatus.LISTENING;
 	}
 	
+	//处理事件处理时抛出的异常
 	@Override
 	public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {
-		// 处理事件处理时抛出的异常
-		System.out.println(context + " " + exception);
+		ErrorMessageSender(context, exception, RobotApplication.bot);
 	}
 }

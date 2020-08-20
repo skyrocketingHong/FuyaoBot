@@ -28,6 +28,10 @@ A QQ robot based on [Mirai](https://github.com/mamoe/mirai).
 ```
 # 4. 更新日志
 ## 2020-08-20
+#### 3.2.0.32
+* 添加自动同意加好友、进群
+* 添加处理事件处理时抛出的异常
+* 修改协议为Android Pad
 #### 3.1.9.31 (Hotfix)
 * 修复闪照、红包检测
 * 修改部分文案
