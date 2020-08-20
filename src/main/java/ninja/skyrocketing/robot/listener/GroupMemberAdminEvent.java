@@ -31,11 +31,29 @@ public class GroupMemberAdminEvent extends SimpleListenerHost {
 	}
 	
 	@EventHandler
-	public void onLeave(MemberLeaveEvent.Quit event) {
+	public void onQuit(MemberLeaveEvent.Quit event) {
 		MessageChainBuilder messages = new MessageChainBuilder() {{
 			add("⚠ 群员减少提醒\n" + "群员" +
 					event.getMember().getId() +
 					"已退出群聊。");
+		}};
+		try {
+			UserExpIds userExpIds = new UserExpIds(event.getMember().getId(), event.getGroup().getId());
+			BotConfig.userExp.deleteByUserExpIds(userExpIds);
+		} catch (Exception ignored) {
+		
+		}
+		event.getGroup().sendMessage(messages.asMessageChain());
+	}
+	
+	@EventHandler
+	public void onKick(MemberLeaveEvent.Kick event) {
+		MessageChainBuilder messages = new MessageChainBuilder() {{
+			add("⚠ 群员减少提醒\n" + "群员" +
+					event.getMember().getId() +
+					"已被" +
+					event.getOperator().getId() +
+					"移出群聊。");
 		}};
 		try {
 			UserExpIds userExpIds = new UserExpIds(event.getMember().getId(), event.getGroup().getId());

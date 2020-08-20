@@ -85,7 +85,7 @@ public class GameMessage {
 		UserExpIds userExpIdsTmp = new UserExpIds(messageEncapsulation.getUserId(), messageEncapsulation.getGroupId());
 		return messageEncapsulation.atSomeone("\n" +
 				"⚙ 总 EXP 为 " + BotConfig.getUserExpMap().get(userExpIdsTmp).getExp() + "\n" +
-				TimeUtil.getClockEmoji(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate().getHours()) + " 下次签到时间 " + DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "MM月dd日 HH:mm") + "\n" +
+				TimeUtil.getClockEmoji(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate().getHours()) + " 下次签到时间 " + DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "HH:mm:ss") + "\n" +
 				"🚩 其他指令 \"签到\" \"EXP排名\""
 		);
 	}
