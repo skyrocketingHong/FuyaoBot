@@ -9,15 +9,14 @@ import java.lang.reflect.Method;
 /**
  * @Author skyrocketing Hong
  * @Date 2020-08-22 022 11:24:55
- * @Version 1.0
  */
 public class InvokeUtil {
-	public static Message runByInvoke(String str, MessageEncapsulation messageEntity) throws Exception {
+	public static Message runByInvoke(String str, MessageEncapsulation messageEncapsulation) throws Exception {
 		String[] className = str.split("\\.");
 		Class<?> clz = Class.forName("ninja.skyrocketing.robot.messages." + className[0]);
 		Method method = clz.getMethod(className[1], MessageEncapsulation.class);
 		Constructor<?> constructor = clz.getConstructor();
 		Object object = constructor.newInstance();
-		return (Message) method.invoke(object, messageEntity);
+		return (Message) method.invoke(object, messageEncapsulation);
 	}
 }

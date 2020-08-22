@@ -14,7 +14,6 @@ import static ninja.skyrocketing.robot.sender.AdminListenerMessageSender.ErrorMe
 /**
  * @Author skyrocketing Hong
  * @Date 2020-08-20 020 19:55:43
- * @Version 1.0
  */
 
 public class FriendEventListener extends SimpleListenerHost {
@@ -29,7 +28,7 @@ public class FriendEventListener extends SimpleListenerHost {
 	@EventHandler
 	public ListeningStatus onAddFriend(FriendAddEvent event) {
 		event.getFriend().sendMessage(
-				"你好啊" + event.getFriend().getNick() + "。\n" + "私聊是不会触发机器人的哦，记得拉到群里去。"
+				"你好啊 \"" + event.getFriend().getNick() + "\"。\n" + "私聊同样可以触发功能哦，欢迎拉到别的群里去。"
 		);
 		return ListeningStatus.LISTENING;
 	}

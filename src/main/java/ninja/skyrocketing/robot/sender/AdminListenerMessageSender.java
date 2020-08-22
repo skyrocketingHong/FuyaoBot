@@ -10,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @Author skyrocketing Hong
  * @Date 2020-08-20 020 20:39:18
- * @Version 1.0
  */
 
 public class AdminListenerMessageSender {

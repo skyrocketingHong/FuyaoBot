@@ -8,7 +8,6 @@ import java.io.Serializable;
 /**
  * @Author skyrocketing Hong
  * @Date 2020-07-14 014 15:40:32
- * @Version 1.0
  */
 
 @Data

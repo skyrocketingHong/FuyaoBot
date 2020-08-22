@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.PlainText;
 import ninja.skyrocketing.robot.entity.MessageEncapsulation;
+import ninja.skyrocketing.utils.MessageUtil;
 import ninja.skyrocketing.utils.TimeUtil;
 
 import java.time.LocalDate;
@@ -15,10 +16,10 @@ public class TimeMessage {
 	/**
 	 * 时间：获取当前时间
 	 **/
-	public static Message timeOfNow(MessageEncapsulation messageEntity) {
-		return messageEntity.sendMsg(time().contentToString());
+	public static Message timeOfNow(MessageEncapsulation messageEncapsulation) {
+		return MessageUtil.stringToMessage(time().contentToString());
 	}
-	
+
 	/**
 	 * 获取当前时间的函数
 	 **/
@@ -41,7 +42,7 @@ public class TimeMessage {
 	/**
 	 * 考研倒计时
 	 **/
-	public static Message kaoyanCountDown(MessageEncapsulation messageEntity) {
+	public static Message kaoyanCountDown(MessageEncapsulation messageEncapsulation) {
 		LocalDate today = LocalDate.now();
 		String days = TimeUtil.calculateDate(
 				new int[]{
@@ -53,16 +54,16 @@ public class TimeMessage {
 						12,
 						19
 				}).toString();
-		return messageEntity.sendMsg("距离 2021 考研还有 " + days + " 天！");
+		return MessageUtil.stringToMessage("距离 2021 考研还有 " + days + " 天！");
 	}
 	
 	/**
 	 * 输出日历
 	 **/
-	public static Message calendar(MessageEncapsulation messageEntity) {
+	public static Message calendar(MessageEncapsulation messageEncapsulation) {
 		int offset, count = 0, sum = 0;
 		int mon[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-		String[] msg = messageEntity.getMsg().split(" ");
+		String[] msg = messageEncapsulation.getMsg().split(" ");
 		if (msg.length > 1) {
 			int year = Integer.parseInt(msg[1]);
 			int month = Integer.parseInt(msg[2]);
@@ -96,7 +97,7 @@ public class TimeMessage {
 				if (count % 7 == 0)
 					result.append("\n");
 			}
-			return messageEntity.sendMsg(result.toString());
+			return MessageUtil.stringToMessage(result.toString());
 		}
 		return null;
 	}

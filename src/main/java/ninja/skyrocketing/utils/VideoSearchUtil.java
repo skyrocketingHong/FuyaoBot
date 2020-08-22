@@ -7,7 +7,6 @@ import java.io.IOException;
 /**
  * @Author skyrocketing Hong
  * @Date 2020-07-09 009 12:12:32
- * @Version 1.0
  */
 public class VideoSearchUtil {
 	public static String bilibiliVideo(String str) throws IOException {

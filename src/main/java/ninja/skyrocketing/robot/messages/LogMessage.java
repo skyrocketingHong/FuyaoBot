@@ -8,7 +8,6 @@ import ninja.skyrocketing.utils.TimeUtil;
 /**
  * @Author skyrocketing Hong
  * @Date 2020-07-14 014 22:31:33
- * @Version 1.0
  */
 public class LogMessage {
 	public static MessageChainBuilder logMessage(String level, MessageEncapsulation... messageEncapsulation) {

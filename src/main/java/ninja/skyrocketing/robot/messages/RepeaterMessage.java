@@ -1,11 +1,11 @@
 package ninja.skyrocketing.robot.messages;
 
-import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.robot.entity.BotConfig;
 import ninja.skyrocketing.robot.entity.MessageEncapsulation;
+import ninja.skyrocketing.utils.MessageUtil;
 import ninja.skyrocketing.utils.RandomUtil;
 import ninja.skyrocketing.utils.TimeUtil;
 
@@ -16,24 +16,24 @@ public class RepeaterMessage {
 	/**
 	 * kkjj
 	 **/
-	public static Message kkjj(MessageEncapsulation messageEntity) {
-		return kk(messageEntity);
+	public static Message kkjj(MessageEncapsulation messageEncapsulation) {
+		return kk(messageEncapsulation);
 	}
 	
 	/**
 	 * kk
 	 **/
-	public static Message kk(MessageEncapsulation messageEntity) {
-		return messageEntity.sendMsg("kk？gkd发！");
+	public static Message kk(MessageEncapsulation messageEncapsulation) {
+		return MessageUtil.stringToMessage("kk？gkd发！");
 	}
 	
 	/**
 	 * 人工智障
 	 **/
-	public static Message stupidAI(MessageEncapsulation messageEntity) {
+	public static Message stupidAI(MessageEncapsulation messageEncapsulation) {
 		int randomNum = RandomUtil.getRandomNum(100);
 		if (randomNum > Integer.parseInt(BotConfig.getConfigMap().get("random"))) {
-			return messageEntity.sendMsg(messageEntity.getMsg().replaceAll("吗[?？]?$", "！"));
+			return MessageUtil.stringToMessage(messageEncapsulation.getMsg().replaceAll("吗[?？]?$", "！"));
 		}
 		return null;
 	}
@@ -41,14 +41,14 @@ public class RepeaterMessage {
 	/**
 	 * 早午晚问候
 	 **/
-	public static Message morningAndNight(MessageEncapsulation messageEntity) {
+	public static Message morningAndNight(MessageEncapsulation messageEncapsulation) {
 		LocalTime now = LocalTime.now();
 		int hour = now.getHour();
-		boolean goodNight = messageEntity.getMsg().matches("^(晚安)(鸭|啊|哦|呀|安)?|安{1,2}$");
-		boolean goodMorning = messageEntity.getMsg().matches("早+(鸭|啊|哦|安|上好)*");
-		boolean goodAfternoon = messageEntity.getMsg().matches("午+(安|好)*|中午好|下午好");
-		Message front = messageEntity.atSomeone("\n" + TimeUtil.getClockEmoji(hour) +
-				"当前时间" + now.format(DateTimeFormatter.ofPattern("HH:mm")) + "\n");
+		boolean goodNight = messageEncapsulation.getMsg().matches("^(晚安)(鸭|啊|哦|呀|安)?|安{1,2}$");
+		boolean goodMorning = messageEncapsulation.getMsg().matches("早+(鸭|啊|哦|安|上好)*");
+		boolean goodAfternoon = messageEncapsulation.getMsg().matches("午+(安|好)*|中午好|下午好");
+		Message front = MessageUtil.atSomeone("\n" + TimeUtil.getClockEmoji(hour) +
+				"当前时间" + now.format(DateTimeFormatter.ofPattern("HH:mm")) + "\n", messageEncapsulation);
 		switch (hour) {
 			case 0:
 			case 1:
@@ -169,22 +169,22 @@ public class RepeaterMessage {
 	/**
 	 * 100%复读
 	 **/
-	public static Message repeaterCommand(MessageEncapsulation messageEntity) {
-		MessageChain messageChain = messageEntity.getGroupMessageEvent().getMessage();
+	public static Message repeaterCommand(MessageEncapsulation messageEncapsulation) {
+		MessageChain messageChain =
+				messageEncapsulation.getGroupId() == 1L ?
+						messageEncapsulation.getFriendMessageEvent().getMessage() : messageEncapsulation.getGroupMessageEvent().getMessage();
 		if (messageChain.size() <= 2) {
 			String msg = messageChain.contentToString();
 			if (msg.matches("复读")) {
 				return null;
 			}
-			return messageEntity.atSomeone("\n" + msg.replaceFirst("复读", ""));
+			return new MessageChainBuilder().asMessageChain().plus(msg.replaceFirst("复读", ""));
 		} else {
 			MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-			messageChainBuilder.append(new At(messageEntity.getGroupMessageEvent().getSender()));
 			for (int i = 2; i < messageChain.size(); i++) {
 				System.out.println(messageChain.get(i));
 				messageChainBuilder.append(messageChain.get(i));
 			}
-			messageEntity.getGroupMessageEvent().getGroup().sendMessage(messageChainBuilder.asMessageChain()).quote();
 			return messageChainBuilder.asMessageChain();
 		}
 	}

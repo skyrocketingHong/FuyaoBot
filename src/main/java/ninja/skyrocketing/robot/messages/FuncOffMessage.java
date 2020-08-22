@@ -7,7 +7,6 @@ import ninja.skyrocketing.robot.entity.MessageEncapsulation;
 /**
  * @Author skyrocketing Hong
  * @Date 2020-07-17 017 09:26:18
- * @Version 1.0
  */
 public class FuncOffMessage {
 	public static Message FuncOff(MessageEncapsulation messageEncapsulation) {

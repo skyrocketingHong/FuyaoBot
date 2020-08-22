@@ -6,6 +6,7 @@ import ninja.skyrocketing.robot.entity.BotConfig;
 import ninja.skyrocketing.robot.entity.MessageEncapsulation;
 import ninja.skyrocketing.robot.entity.datebase.Trigger;
 import ninja.skyrocketing.robot.entity.datebase.UserExpIds;
+import ninja.skyrocketing.utils.MessageUtil;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -18,9 +19,9 @@ public class AdminMessage {
 	public static Message refreshConfigFile(MessageEncapsulation messageEncapsulation) {
 		if (BotConfig.getAdminUsers().contains(messageEncapsulation.getUserId())) {
 			BotConfig.refresh();
-			return messageEncapsulation.sendMsg("Refresh done.");
+			return MessageUtil.stringToMessage("Refresh done.");
 		} else {
-			return messageEncapsulation.notSudo();
+			return MessageUtil.notSudo(messageEncapsulation);
 		}
 	}
 	
@@ -31,10 +32,10 @@ public class AdminMessage {
 	 **/
 	public static Message getRandomRate(MessageEncapsulation messageEncapsulation) {
 		if (BotConfig.getAdminUsers().contains(messageEncapsulation.getUserId())) {
-			return messageEncapsulation.sendMsg("Random rate is " +
+			return MessageUtil.stringToMessage("Random rate is " +
 					(100 - Long.parseLong(BotConfig.getConfigMap().get("random"))) / 100.00 + " now.");
 		} else {
-			return messageEncapsulation.notSudo();
+			return MessageUtil.notSudo(messageEncapsulation);
 		}
 	}
 	
@@ -48,13 +49,13 @@ public class AdminMessage {
 			String num = messageEncapsulation.getMsg().substring(32);
 			System.out.println(Integer.parseInt(num));
 			if (Integer.parseInt(num) <= 0 || Integer.parseInt(num) >= 100) {
-				return messageEncapsulation.sendMsg("Random rate must between 0 (include) and 100 (include).");
+				return MessageUtil.stringToMessage("Random rate must between 0 (include) and 100 (include).");
 			} else {
 				BotConfig.setConfigMap(1, "random", num);
 				return getRandomRate(messageEncapsulation);
 			}
 		} else {
-			return messageEncapsulation.notSudo();
+			return MessageUtil.notSudo(messageEncapsulation);
 		}
 	}
 	
@@ -74,7 +75,7 @@ public class AdminMessage {
 			}
 			return messageChainBuilder.asMessageChain();
 		} else {
-			return messageEncapsulation.notSudo();
+			return MessageUtil.notSudo(messageEncapsulation);
 		}
 	}
 	
@@ -103,7 +104,7 @@ public class AdminMessage {
 			
 			return messageChainBuilder.asMessageChain();
 		} else {
-			return messageEncapsulation.notSudo();
+			return MessageUtil.notSudo(messageEncapsulation);
 		}
 	}
 	
@@ -124,6 +125,6 @@ public class AdminMessage {
 				++i;
 			}
 		}
-		return messageEncapsulation.sendMsg("已清理" + i);
+		return MessageUtil.stringToMessage("已清理" + i);
 	}
 }

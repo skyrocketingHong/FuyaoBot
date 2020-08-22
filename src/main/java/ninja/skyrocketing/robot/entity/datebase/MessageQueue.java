@@ -7,7 +7,6 @@ import javax.persistence.*;
 /**
  * @Author skyrocketing Hong
  * @Date 2020-07-14 014 16:33:07
- * @Version 1.0
  */
 
 @Data

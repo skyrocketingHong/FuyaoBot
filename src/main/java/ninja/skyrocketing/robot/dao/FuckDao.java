@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 /**
  * @Author skyrocketing Hong
  * @Date 2020-07-15 015 12:55:53
- * @Version 1.0
  */
 
 @Repository

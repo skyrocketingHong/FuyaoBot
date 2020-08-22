@@ -2,10 +2,6 @@ package ninja.skyrocketing.robot.entity;
 
 import net.mamoe.mirai.message.FriendMessageEvent;
 import net.mamoe.mirai.message.GroupMessageEvent;
-import net.mamoe.mirai.message.data.At;
-import net.mamoe.mirai.message.data.Message;
-import net.mamoe.mirai.message.data.MessageChainBuilder;
-import net.mamoe.mirai.message.data.PlainText;
 
 public class MessageEncapsulation {
 	String msg;
@@ -54,24 +50,5 @@ public class MessageEncapsulation {
 	
 	public FriendMessageEvent getFriendMessageEvent() {
 		return this.friendMessageEvent;
-	}
-	
-	public Message atSomeone(String resultMsg) {
-		if (groupId == 1L) {
-			MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-			messageChainBuilder.add("私聊使用群聊功能");
-			return messageChainBuilder.asMessageChain().plus(resultMsg);
-		}
-		return new At(groupMessageEvent.getSender()).plus(resultMsg);
-	}
-	
-	public Message sendMsg(String resultMsg) {
-		MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-		messageChainBuilder.add(resultMsg);
-		return messageChainBuilder.asMessageChain();
-	}
-	
-	public Message notSudo() {
-		return new PlainText(getUserId() + " is not in the sudoers file. This incident will be reported.");
 	}
 }

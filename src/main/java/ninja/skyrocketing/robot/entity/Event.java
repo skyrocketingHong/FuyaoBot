@@ -7,7 +7,6 @@ import net.mamoe.mirai.message.GroupMessageEvent;
 /**
  * @Author skyrocketing Hong
  * @Date 2020-07-14 014 17:51:30
- * @Version 1.0
  */
 public class Event {
 	private GroupMessageEvent groupMessageEvent;

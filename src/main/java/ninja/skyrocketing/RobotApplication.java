@@ -22,7 +22,6 @@ import java.io.File;
 /**
  * @Author skyrocketing Hong
  * @Date 2020-07-03 003 11:52:14
- * @Version 1.0
  */
 
 @SpringBootApplication

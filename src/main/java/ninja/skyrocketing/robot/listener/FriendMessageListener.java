@@ -5,33 +5,25 @@ import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.ListeningStatus;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.message.FriendMessageEvent;
-import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.message.data.Message;
 import ninja.skyrocketing.RobotApplication;
 import ninja.skyrocketing.robot.entity.BotConfig;
 import ninja.skyrocketing.robot.sender.FriendMessageSender;
+import ninja.skyrocketing.utils.MessageUtil;
 import org.jetbrains.annotations.NotNull;
-
-import java.net.URL;
 
 import static ninja.skyrocketing.robot.sender.AdminListenerMessageSender.ErrorMessageSender;
 
 /**
  * @Author skyrocketing Hong
  * @Date 2020-08-22 022 11:16:39
- * @Version 1.0
  */
 public class FriendMessageListener extends SimpleListenerHost {
 	@EventHandler
 	public ListeningStatus onMessage(FriendMessageEvent event) throws Exception {
 		if (!BotConfig.getBannedUsers().contains(event.getSender().getId())) {
 			if (event.getMessage().contentToString().equals("get list func")) {
-				Image image = event.getSender().uploadImage(
-						new URL("http://gchat.qpic.cn/gchatpic_new/0/0-0-" +
-								BotConfig.getConfigMap().get("func_image").replaceAll("-|\\{|\\}|\\.mirai", "") +
-								"/0?term=2")
-				);
-				event.getSender().sendMessage(image);
+				event.getSender().sendMessage(MessageUtil.getFunctionImage());
 			} else if (event.getMessage().contentToString().matches("^(EXP|exp)排名$")) {
 				event.getSender().sendMessage("EXP排名仅限群聊中使用");
 			} else {

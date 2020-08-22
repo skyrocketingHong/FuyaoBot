@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * @Author skyrocketing Hong
  * @Date 2020-07-14 014 17:05:59
- * @Version 1.0
  */
 public interface GroupIdDao extends JpaRepository<GroupId, Integer> {
 }

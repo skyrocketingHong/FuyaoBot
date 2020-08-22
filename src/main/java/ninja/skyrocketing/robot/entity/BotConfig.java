@@ -8,7 +8,6 @@ import java.util.*;
 /**
  * @Author skyrocketing Hong
  * @Date 2020-07-14 014 17:09:10
- * @Version 1.0
  */
 public class BotConfig {
 	public static ConfigDao config;
