@@ -55,7 +55,7 @@ public class GameMessage {
 			return messageEncapsulation.atSomeone("\n" +
 					"🟢 首次签到成功 获取 " + randomNum + " EXP" + "\n" +
 					TimeUtil.getClockEmoji(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate().getHours()) + " 下次签到时间 " + DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "HH:mm:ss") + "\n" +
-					"🚩 其他指令 \"EXP查询\" \"EXP排名\""
+					"🚩 其他指令 \"1.EXP查询\" \"2.EXP排名 (仅限群聊使用)\""
 			);
 		} else {
 			if (DateUtil.between(date, BotConfig.getUserExpMap().get(userExpIdsTmp).getSignDate(), HOUR) >= 6) {
@@ -66,13 +66,13 @@ public class GameMessage {
 				return messageEncapsulation.atSomeone("\n" +
 						"🟢 签到成功 获取 " + randomNum + " EXP" + "\n" +
 						TimeUtil.getClockEmoji(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate().getHours()) + " 下次签到时间 " + DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "HH:mm:ss") + "\n" +
-						"🚩 其他指令 \"EXP查询\" \"EXP排名\""
+						"🚩 其他指令 \"1.EXP查询\" \"2.EXP排名 (仅限群聊使用)\""
 				);
 			} else {
 				return messageEncapsulation.atSomeone("\n" +
 						"🔴 签到失败 (每群每6小时可签到一次)" + "\n" +
 						TimeUtil.getClockEmoji(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate().getHours()) + " 下次签到时间 " + DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "HH:mm:ss") + "\n" +
-						"🚩 其他指令 \"EXP查询\" \"EXP排名\""
+						"🚩 其他指令 \"1.EXP查询\" \"2.EXP排名 (仅限群聊使用)\""
 				);
 			}
 		}
@@ -118,11 +118,11 @@ public class GameMessage {
 	public static Message genRandomNum(MessageEncapsulation messageEntity) {
 		String str = messageEntity.getMsg().replaceAll("生成随机数\\s*|^((do)|(sudo)) get randomnum\\s*", "");
 		if (str == null) {
-			return messageEntity.atSomeone("没有指定数量。");
+			return messageEntity.atSomeone("\n" + "没有指定数量。");
 		} else {
 			int num = Integer.parseInt(str);
 			if (num >= 101) {
-				return messageEntity.atSomeone(num + "太大了，为避免刷屏拒绝生成！");
+				return messageEntity.atSomeone("\n" + num + "太大了，为避免刷屏拒绝生成！");
 			} else {
 				Set<Integer> numSet = new HashSet<>();
 				int temp;
@@ -134,7 +134,7 @@ public class GameMessage {
 					}
 				}
 				numSet.clear();
-				return messageEntity.atSomeone("生成的" + num + "个随机数为：\n" + result);
+				return messageEntity.atSomeone("\n" + "生成的" + num + "个随机数为：\n" + result);
 			}
 		}
 	}

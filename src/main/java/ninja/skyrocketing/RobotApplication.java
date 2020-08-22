@@ -87,6 +87,7 @@ public class RobotApplication implements CommandLineRunner {
 		
 		// 注册监听事件
 		Events.registerEvents(bot, new GroupMessageListener());
+		Events.registerEvents(bot, new FriendMessageListener());
 		Events.registerEvents(bot, new GroupMemberAdminEventListener());
 		Events.registerEvents(bot, new FriendEventListener());
 		Events.registerEvents(bot, new GroupEventListener());

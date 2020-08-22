@@ -23,6 +23,11 @@ import static ninja.skyrocketing.robot.sender.AdminListenerMessageSender.ErrorMe
  */
 
 public class GroupEventListener extends SimpleListenerHost {
+	//当群名片为空时返回昵称
+	private String getNameOfMember(String nick, String nameCard) {
+		return nameCard.isEmpty() ? nick : nameCard;
+	}
+	
 	//进群后的第一条消息
 	@EventHandler
 	public ListeningStatus onInviteGroup(BotJoinGroupEvent event) {
@@ -38,7 +43,7 @@ public class GroupEventListener extends SimpleListenerHost {
 				"1. 解封时间：" + DateUtil.offsetSecond(new DateTime(), event.getDurationSeconds()) + "\n" +
 				"2. 群名：" + event.getGroup().getName() + "\n" +
 				"3. 群号：" + event.getGroup().getId() + "\n" +
-				"4. 操作人：" + event.getOperator().getId() + " " + event.getOperator().getNameCard() + "\n");
+				"4. 操作人：" + getNameOfMember(event.getOperator().getNick(), event.getOperator().getNameCard()) + " (" + event.getOperator().getId() + ")" + "\n");
 		AdminMessageSender(messages, event.getBot());
 		return ListeningStatus.LISTENING;
 	}
@@ -50,7 +55,7 @@ public class GroupEventListener extends SimpleListenerHost {
 		messages.add("机器人被解除禁言" + "\n" +
 				"1. 群名：" + event.getGroup().getName() + "\n" +
 				"2. 群号：" + event.getGroup().getId() + "\n" +
-				"3. 操作人：" + event.getOperator().getId() + " " + event.getOperator().getNameCard() + "\n");
+				"3. 操作人：" + getNameOfMember(event.getOperator().getNick(), event.getOperator().getNameCard()) + " (" + event.getOperator().getId() + ")" + "\n");
 		AdminMessageSender(messages, event.getBot());
 		return ListeningStatus.LISTENING;
 	}
@@ -74,7 +79,7 @@ public class GroupEventListener extends SimpleListenerHost {
 		messages.add("机器人加入群聊" + "\n" +
 				"1. 群名：" + event.getGroup().getName() + "\n" +
 				"2. 群号：" + event.getGroup().getId() + "\n" +
-				"3. 邀请人：" + event.getInvitor().getNameCard() + " " + event.getInvitor().getId() + "\n");
+				"3. 邀请人：" + getNameOfMember(event.getInvitor().getNick(), event.getInvitor().getNameCard()) + " (" + event.getInvitor().getId() + ")" + "\n");
 		AdminMessageSender(messages, event.getBot());
 		return ListeningStatus.LISTENING;
 	}
@@ -83,6 +88,12 @@ public class GroupEventListener extends SimpleListenerHost {
 	@EventHandler
 	public ListeningStatus onBotInvite(BotInvitedJoinGroupRequestEvent event) {
 		event.accept();
+		MessageChainBuilder messages = LogMessage.logMessage("FATAL");
+		messages.add("机器人收到加群邀请" + "\n" +
+				"1. 群名：" + event.getGroupName() + "\n" +
+				"2. 群号：" + event.getGroupId() + "\n" +
+				"3. 邀请人：" + event.getInvitor().getNick() + " (" + event.getInvitor().getId() + ")" + "\n");
+		AdminMessageSender(messages, event.getBot());
 		return ListeningStatus.LISTENING;
 	}
 	

@@ -12,7 +12,7 @@ public class QueryMessage {
 	 * 更新日志
 	 **/
 	public static Message releaseNote(MessageEncapsulation messageEntity) {
-		return messageEntity.sendMsg("更新日志链接（自己的博客）：\n" + "https://skyrocketing.ninja/2020/qqbot-releasenotes/");
+		return messageEntity.sendMsg("更新日志链接：\n" + "https://skyrocketing.ninja/2020/qqbot-releasenotes/");
 	}
 	
 	/**

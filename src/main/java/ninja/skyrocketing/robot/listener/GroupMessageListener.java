@@ -23,7 +23,6 @@ public class GroupMessageListener extends SimpleListenerHost {
 			Message message = GroupMessageSender.Sender(event);
 			if (event.getMessage().toString().matches(".*\\[mirai:at:" + event.getBot().getId() + ",.*\\].*") &&
 					!event.getMessage().toString().matches(".*\\[mirai:quote:\\d*,\\d*\\].*")) {
-				System.out.println(event.getMessage().toString());
 				event.getGroup().sendMessage("别@我，没做人工智障回复。\n" +
 						"发送 \"get list func\" 获取功能列表\n" +
 						"发送 \"get list releasenote\" 获取更新日志");

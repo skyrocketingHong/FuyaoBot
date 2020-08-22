@@ -26,10 +26,11 @@ public class TimeMessage {
 		LocalDateTime beijingTime = LocalDateTime.now();
 //		LocalDateTime ptTime = LocalDateTime.now(ZoneId.of("America/Los_Angeles"));
 		ChineseDate chineseDate = new ChineseDate(DateUtil.parseDate(beijingTime.toLocalDate().toString()));
-		return new PlainText(TimeUtil.getClockEmoji(beijingTime.getHour()) +
-				" 中国标准时间 (UTC+8)" + "\n" +
+		return new PlainText(
+//				TimeUtil.getClockEmoji(beijingTime.getHour()) +
+//				" 中国标准时间 (UTC+8)" + "\n" +
 				chineseDate.toString() + "\n" +
-				beijingTime.format(DateTimeFormatter.ofPattern("yyyy年MM月dd日\nHH:mm"))
+						beijingTime.format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss"))
 //				+ "\n" +
 //				TimeUtil.getClockEmoji(ptTime.getHour()) +
 //				" 太平洋时间 (UTC-7/UTC-8)" + "\n" +

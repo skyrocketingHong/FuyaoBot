@@ -27,6 +27,7 @@ public class MessageEncapsulation {
 	
 	public MessageEncapsulation(FriendMessageEvent event) {
 		this.msg = event.getMessage().contentToString();
+		this.groupId = 1L;
 		this.userId = event.getSender().getId();
 		this.friendMessageEvent = event;
 	}
@@ -56,13 +57,12 @@ public class MessageEncapsulation {
 	}
 	
 	public Message atSomeone(String resultMsg) {
-		net.mamoe.mirai.message.data.Message message = new At(groupMessageEvent.getSender());
-		return message.plus(resultMsg);
-	}
-	
-	public Message atSomeone(Message resultMsg) {
-		net.mamoe.mirai.message.data.Message message = new At(groupMessageEvent.getSender());
-		return message.plus(resultMsg);
+		if (groupId == 1L) {
+			MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+			messageChainBuilder.add("私聊使用群聊功能");
+			return messageChainBuilder.asMessageChain().plus(resultMsg);
+		}
+		return new At(groupMessageEvent.getSender()).plus(resultMsg);
 	}
 	
 	public Message sendMsg(String resultMsg) {
