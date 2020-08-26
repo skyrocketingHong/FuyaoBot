@@ -11,7 +11,7 @@
     </parent>
     <groupId>ninja.skyrocketing</groupId>
     <artifactId>qqrobot</artifactId>
-    <version>3.3.1.34</version>
+    <version>3.3.2.35</version>
 
     <repositories>
         <repository>
@@ -24,7 +24,7 @@
         <dependency>
             <groupId>net.mamoe</groupId>
             <artifactId>mirai-core-qqandroid</artifactId>
-            <version>1.2.1</version> <!-- 替换版本为最新版本 -->
+            <version>1.2.2</version> <!-- 替换版本为最新版本 -->
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>

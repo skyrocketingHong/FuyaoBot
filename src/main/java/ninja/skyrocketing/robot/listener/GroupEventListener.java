@@ -18,7 +18,6 @@ import java.net.MalformedURLException;
 import static ninja.skyrocketing.robot.sender.AdminListenerMessageSender.AdminMessageSender;
 import static ninja.skyrocketing.robot.sender.AdminListenerMessageSender.ErrorMessageSender;
 
-
 /**
  * @Author skyrocketing Hong
  * @Date 2020-08-20 020 20:11:15

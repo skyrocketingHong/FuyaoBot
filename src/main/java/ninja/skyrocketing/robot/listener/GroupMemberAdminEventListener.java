@@ -27,6 +27,16 @@ import static ninja.skyrocketing.robot.sender.AdminListenerMessageSender.ErrorMe
  */
 
 public class GroupMemberAdminEventListener extends SimpleListenerHost {
+	//清理退群后数据库残留的数据
+	private void cleanExpDataAfterMemberLeave(MemberLeaveEvent event) {
+		try {
+			UserExpIds userExpIds = new UserExpIds(event.getMember().getId(), event.getGroup().getId());
+			BotConfig.userExp.deleteByUserExpIds(userExpIds);
+		} catch (Exception e) {
+			ErrorMessageSender(e, RobotApplication.bot);
+		}
+	}
+	
 	//群里来新人了
 	@EventHandler
 	public ListeningStatus onJoin(MemberJoinEvent event) throws MalformedURLException {
@@ -54,13 +64,8 @@ public class GroupMemberAdminEventListener extends SimpleListenerHost {
 					"(提醒消息将在1分钟内自动撤回)"
 			);
 		}};
-		try {
-			UserExpIds userExpIds = new UserExpIds(event.getMember().getId(), event.getGroup().getId());
-			BotConfig.userExp.deleteByUserExpIds(userExpIds);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		event.getGroup().sendMessage(messages.asMessageChain()).recallIn(3600);
+		cleanExpDataAfterMemberLeave(event);
+		event.getGroup().sendMessage(messages.asMessageChain()).recallIn(60000);
 		return ListeningStatus.LISTENING;
 	}
 
@@ -73,19 +78,14 @@ public class GroupMemberAdminEventListener extends SimpleListenerHost {
 					MessageUtil.getNameOfMember(event.getMember()) + "\" (" +
 					event.getMember().getId() + ") " +
 					"已被 \"" +
-					MessageUtil.getNameOfMember(event.getMember()) + "\" (" +
+					MessageUtil.getNameOfMember(event.getOperator()) + "\" (" +
 					event.getOperator().getId() + ") " +
 					"移出群聊。\n" +
 					"(提醒消息将在1分钟内自动撤回)"
 			);
 		}};
-		try {
-			UserExpIds userExpIds = new UserExpIds(event.getMember().getId(), event.getGroup().getId());
-			BotConfig.userExp.deleteByUserExpIds(userExpIds);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		event.getGroup().sendMessage(messages.asMessageChain()).recallIn(3600);
+		cleanExpDataAfterMemberLeave(event);
+		event.getGroup().sendMessage(messages.asMessageChain()).recallIn(60000);
 		return ListeningStatus.LISTENING;
 	}
 
@@ -103,7 +103,7 @@ public class GroupMemberAdminEventListener extends SimpleListenerHost {
 					"(提醒消息将在1分钟内自动撤回)"
 			);
 		}};
-		event.getGroup().sendMessage(messages.asMessageChain()).recallIn(3600);
+		event.getGroup().sendMessage(messages.asMessageChain()).recallIn(60000);
 		return ListeningStatus.LISTENING;
 	}
 	
@@ -119,7 +119,7 @@ public class GroupMemberAdminEventListener extends SimpleListenerHost {
 					"(提醒消息将在1分钟内自动撤回)"
 			);
 		}};
-		event.getGroup().sendMessage(messages.asMessageChain()).recallIn(3600);
+		event.getGroup().sendMessage(messages.asMessageChain()).recallIn(60000);
 		return ListeningStatus.LISTENING;
 	}
 	
@@ -135,7 +135,7 @@ public class GroupMemberAdminEventListener extends SimpleListenerHost {
 					"(提醒消息将在1分钟内自动撤回)"
 			);
 		}};
-		event.getGroup().sendMessage(messages.asMessageChain()).recallIn(3600);
+		event.getGroup().sendMessage(messages.asMessageChain()).recallIn(60000);
 		return ListeningStatus.LISTENING;
 	}
 	

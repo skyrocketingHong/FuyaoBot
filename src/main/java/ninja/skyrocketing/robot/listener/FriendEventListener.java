@@ -28,7 +28,9 @@ public class FriendEventListener extends SimpleListenerHost {
 	@EventHandler
 	public ListeningStatus onAddFriend(FriendAddEvent event) {
 		event.getFriend().sendMessage(
-				"你好啊 \"" + event.getFriend().getNick() + "\"。\n" + "私聊同样可以触发功能哦，欢迎拉到别的群里去。"
+				"你好啊 \"" + event.getFriend().getNick() + "\"。\n" + "私聊同样可以触发功能哦，欢迎拉到别的群里去。" +
+						"发送 \"get func\" 或 \"扶摇bot功能列表\" 获取功能列表\n" +
+						"发送 \"get releasenote\" 或 \"扶摇bot更新日志\" 获取更新日志"
 		);
 		return ListeningStatus.LISTENING;
 	}

@@ -52,10 +52,6 @@ public class MessageUtil {
 	
 	//获取所有功能图片
 	public static Image getFunctionImage() throws MalformedURLException {
-		return RobotApplication.bot.getSelfQQ().uploadImage(
-				new URL("http://gchat.qpic.cn/gchatpic_new/0/0-0-" +
-						BotConfig.getConfigMap().get("func_image").replaceAll("-|\\{|\\}|\\.mirai", "") +
-						"/0?term=2")
-		);
+		return RobotApplication.bot.getSelfQQ().uploadImage(new URL(BotConfig.getConfigMap().get("func_image")));
 	}
 }

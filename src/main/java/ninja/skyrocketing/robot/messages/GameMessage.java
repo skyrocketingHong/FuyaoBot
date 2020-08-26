@@ -90,7 +90,7 @@ public class GameMessage {
 		return MessageUtil.atSomeone("\n" +
 						"⚙ 总 EXP 为 " + BotConfig.getUserExpMap().get(userExpIdsTmp).getExp() + "\n" +
 						TimeUtil.getClockEmoji(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate().getHours()) + " 下次签到时间 " + DateUtil.format(BotConfig.getUserExpMap().get(userExpIdsTmp).getNextSignDate(), "HH:mm:ss") + "\n" +
-						"🚩 其他指令 \"签到\" \"EXP排名\"",
+						"🚩 其他指令 1.\"签到\" 2.\"EXP排名\" (仅限群聊使用)",
 				messageEncapsulation
 		);
 	}
@@ -113,7 +113,7 @@ public class GameMessage {
 			}
 			messageChainBuilder.add((i + 1) + ". " + nameCard + "\n");
 		}
-		messageChainBuilder.add("🚩 其他指令 \"EXP查询\" \"签到\"");
+		messageChainBuilder.add("🚩 其他指令 1.\"EXP查询\" 2.\"签到\" (仅限群聊使用)");
 		return messageChainBuilder.asMessageChain();
 	}
 	

@@ -24,14 +24,15 @@ public class GroupMessageListener extends SimpleListenerHost {
 			if (event.getMessage().toString().matches(".*\\[mirai:at:" + event.getBot().getId() + ",.*\\].*") &&
 					!event.getMessage().toString().matches(".*\\[mirai:quote:\\d*,\\d*\\].*")) {
 				event.getGroup().sendMessage("别@我，没做人工智障回复。\n" +
-						"发送 \"get list func\" 获取功能列表\n" +
-						"发送 \"get list releasenote\" 获取更新日志");
+						"发送 \"get func\" 或 \"扶摇bot功能列表\" 获取功能列表\n" +
+						"发送 \"get releasenote\" 或 \"扶摇bot更新日志\" 获取更新日志");
 				return ListeningStatus.LISTENING;
 			}
 			if (message != null) {
 				event.getGroup().sendMessage(message);
 				return ListeningStatus.LISTENING;
 			}
+			
 		}
 		return ListeningStatus.LISTENING;
 	}

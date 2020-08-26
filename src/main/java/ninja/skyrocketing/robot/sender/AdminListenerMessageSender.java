@@ -25,4 +25,10 @@ public class AdminListenerMessageSender {
 		messages.add("[FATAL]" + "\n" + context.toString() + "\n" + exception.toString());
 		AdminMessageSender(messages, bot);
 	}
+	
+	public static void ErrorMessageSender(Exception e, Bot bot) {
+		MessageChainBuilder messages = new MessageChainBuilder();
+		messages.add("[FATAL]" + "\n" + e.getLocalizedMessage());
+		AdminMessageSender(messages, bot);
+	}
 }
