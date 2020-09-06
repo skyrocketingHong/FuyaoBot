@@ -22,7 +22,7 @@ public class EasterEggMessage {
 			messageEncapsulation.getGroupMessageEvent().getBot().getGroup(id).sendMessage(messages.asMessageChain());
 		}
 		//生成群提醒
-		return MessageUtil.atSomeone("发了一张闪照，gkd来康康。", messageEncapsulation);
+		return MessageUtil.AtSomeone("发了一张闪照，gkd来康康。", messageEncapsulation);
 	}
 	
 	/**
@@ -35,6 +35,6 @@ public class EasterEggMessage {
 			messages.add(new At(messageEncapsulation.getGroupMessageEvent().getBot().getGroup(id).getOwner()));
 			messageEncapsulation.getGroupMessageEvent().getBot().getGroup(id).sendMessage(messages.asMessageChain());
 		}
-		return MessageUtil.atSomeone("发了一个红包，gkd来白嫖。", messageEncapsulation);
+		return MessageUtil.AtSomeone("发了一个红包，gkd来白嫖。", messageEncapsulation);
 	}
 }

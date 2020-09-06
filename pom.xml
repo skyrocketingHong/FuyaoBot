@@ -11,7 +11,8 @@
     </parent>
     <groupId>ninja.skyrocketing</groupId>
     <artifactId>qqrobot</artifactId>
-    <version>3.3.2.35</version>
+    <version>3.3.3.36</version>
+
 
     <repositories>
         <repository>

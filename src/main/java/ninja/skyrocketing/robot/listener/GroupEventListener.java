@@ -32,7 +32,7 @@ public class GroupEventListener extends SimpleListenerHost {
 				"1. 解封时间：" + DateUtil.offsetSecond(new DateTime(), event.getDurationSeconds()) + "\n" +
 				"2. 群名：" + event.getGroup().getName() + "\n" +
 				"3. 群号：" + event.getGroup().getId() + "\n" +
-				"4. 操作人：" + MessageUtil.getNameOfMember(event.getOperator()) + " (" + event.getOperator().getId() + ")" + "\n");
+				"4. 操作人：" + MessageUtil.NameOfMember(event.getOperator()) + " (" + event.getOperator().getId() + ")" + "\n");
 		AdminMessageSender(messages, event.getBot());
 		return ListeningStatus.LISTENING;
 	}
@@ -44,7 +44,7 @@ public class GroupEventListener extends SimpleListenerHost {
 		messages.add("机器人被解除禁言" + "\n" +
 				"1. 群名：" + event.getGroup().getName() + "\n" +
 				"2. 群号：" + event.getGroup().getId() + "\n" +
-				"3. 操作人：" + MessageUtil.getNameOfMember(event.getOperator()) + " (" + event.getOperator().getId() + ")" + "\n");
+				"3. 操作人：" + MessageUtil.NameOfMember(event.getOperator()) + " (" + event.getOperator().getId() + ")" + "\n");
 		AdminMessageSender(messages, event.getBot());
 		return ListeningStatus.LISTENING;
 	}
@@ -68,7 +68,7 @@ public class GroupEventListener extends SimpleListenerHost {
 		messages.add("机器人加入群聊" + "\n" +
 				"1. 群名：" + event.getGroup().getName() + "\n" +
 				"2. 群号：" + event.getGroup().getId() + "\n" +
-				"3. 邀请人：" + MessageUtil.getNameOfMember(event.getInvitor()) + " (" + event.getInvitor().getId() + ")" + "\n");
+				"3. 邀请人：" + MessageUtil.NameOfMember(event.getInvitor()) + " (" + event.getInvitor().getId() + ")" + "\n");
 		event.getGroup().sendMessage("大家好，@我就能获取功能列表了哦。" + "\n" +
 				"想要啥新功能，可以私聊机器人，看到之后能做的功能会做的。"
 		);

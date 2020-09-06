@@ -39,7 +39,7 @@ public class GroupMemberAdminEventListener extends SimpleListenerHost {
 	
 	//群里来新人了
 	@EventHandler
-	public ListeningStatus onJoin(MemberJoinEvent event) throws MalformedURLException {
+	public ListeningStatus onJoin(MemberJoinEvent.Active event) throws MalformedURLException {
 		//上传头像
 		Image avatarImage = event.getGroup().uploadImage(new URL(event.getMember().getAvatarUrl()));
 		MessageChainBuilder messages = new MessageChainBuilder() {{
@@ -51,14 +51,29 @@ public class GroupMemberAdminEventListener extends SimpleListenerHost {
 		event.getGroup().sendMessage(messages.asMessageChain());
 		return ListeningStatus.LISTENING;
 	}
-
+	
+	//邀请新人进群了
+	@EventHandler
+	public ListeningStatus onInvite(MemberJoinEvent.Invite event) throws MalformedURLException {
+		//上传头像
+		Image avatarImage = event.getGroup().uploadImage(new URL(event.getMember().getAvatarUrl()));
+		MessageChainBuilder messages = new MessageChainBuilder() {{
+			add("👏 欢迎" + "第" + (event.getGroup().getMembers().size() + 1) + "名群员。" + "\n");
+			add(avatarImage);
+			add(new At(event.getMember()));
+			add("\n" + "记得阅读群公告（如果有的话）哦！");
+		}};
+		event.getGroup().sendMessage(messages.asMessageChain());
+		return ListeningStatus.LISTENING;
+	}
+	
 	//群里有人溜了
 	@EventHandler
 	public ListeningStatus onQuit(MemberLeaveEvent.Quit event) {
 		MessageChainBuilder messages = new MessageChainBuilder() {{
 			add("⚠ 群员减少提醒\n" +
 					"群员 \"" +
-					MessageUtil.getNameOfMember(event.getMember()) + "\" (" +
+					MessageUtil.NameOfMember(event.getMember()) + "\" (" +
 					event.getMember().getId() + ") " +
 					"悄悄地溜了...\n" +
 					"(提醒消息将在1分钟内自动撤回)"
@@ -75,10 +90,10 @@ public class GroupMemberAdminEventListener extends SimpleListenerHost {
 		MessageChainBuilder messages = new MessageChainBuilder() {{
 			add("⚠ 群员减少提醒\n" +
 					"群员 \"" +
-					MessageUtil.getNameOfMember(event.getMember()) + "\" (" +
+					MessageUtil.NameOfMember(event.getMember()) + "\" (" +
 					event.getMember().getId() + ") " +
 					"已被 \"" +
-					MessageUtil.getNameOfMember(event.getOperator()) + "\" (" +
+					MessageUtil.NameOfMember(event.getOperator()) + "\" (" +
 					event.getOperator().getId() + ") " +
 					"移出群聊。\n" +
 					"(提醒消息将在1分钟内自动撤回)"
@@ -95,7 +110,7 @@ public class GroupMemberAdminEventListener extends SimpleListenerHost {
 		MessageChainBuilder messages = new MessageChainBuilder() {{
 			add("⚠ 群员权限变动\n" +
 					"群员 \"" +
-					MessageUtil.getNameOfMember(event.getMember()) + "\" (" +
+					MessageUtil.NameOfMember(event.getMember()) + "\" (" +
 					event.getMember().getId() + ") " +
 					"已被设置为" +
 					event.getNew().name() +
@@ -112,9 +127,9 @@ public class GroupMemberAdminEventListener extends SimpleListenerHost {
 	public ListeningStatus onMute(MemberMuteEvent event) {
 		MessageChainBuilder messages = new MessageChainBuilder() {{
 			add("⚠ 群员被禁言提醒\n" +
-					"群员 \"" + MessageUtil.getNameOfMember(event.getMember()) + "\" (" +
+					"群员 \"" + MessageUtil.NameOfMember(event.getMember()) + "\" (" +
 					event.getMember().getId() + ") " +
-					"已被管理员 \"" + MessageUtil.getNameOfMember(event.getOperator()) + "\" (" + event.getOperator().getId() + ") " +
+					"已被管理员 \"" + MessageUtil.NameOfMember(event.getOperator()) + "\" (" + event.getOperator().getId() + ") " +
 					"禁言\n解封时间：" + DateUtil.offsetSecond(new DateTime(), event.getDurationSeconds()) + "\n" +
 					"(提醒消息将在1分钟内自动撤回)"
 			);
@@ -128,9 +143,9 @@ public class GroupMemberAdminEventListener extends SimpleListenerHost {
 	public ListeningStatus onUnmute(MemberUnmuteEvent event) {
 		MessageChainBuilder messages = new MessageChainBuilder() {{
 			add("⚠ 群员被解除禁言提醒\n" +
-					"群员 \"" + MessageUtil.getNameOfMember(event.getMember()) + "\" (" +
+					"群员 \"" + MessageUtil.NameOfMember(event.getMember()) + "\" (" +
 					event.getMember().getId() + ") " +
-					"已被管理员 \"" + MessageUtil.getNameOfMember(event.getOperator()) + "\" (" + event.getOperator().getId() + ") " +
+					"已被管理员 \"" + MessageUtil.NameOfMember(event.getOperator()) + "\" (" + event.getOperator().getId() + ") " +
 					"解除禁言。\n" +
 					"(提醒消息将在1分钟内自动撤回)"
 			);

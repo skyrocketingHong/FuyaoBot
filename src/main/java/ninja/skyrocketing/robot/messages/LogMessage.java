@@ -24,7 +24,7 @@ public class LogMessage {
 			 * 红包、闪照
 			 * **/
 			messageChainBuilder.add("红包、闪照消息\n");
-			messageChainBuilder.add("0. 时间: " + TimeUtil.reformatDateTimeOfTimestamp(messageEncapsulation[0].getGroupMessageEvent().getTime()) + "\n" +
+			messageChainBuilder.add("0. 时间: " + TimeUtil.ReformatDateTimeOfTimestamp(messageEncapsulation[0].getGroupMessageEvent().getTime()) + "\n" +
 					"1. 发送群: " + messageEncapsulation[0].getGroupMessageEvent().getGroup().getName() + "\n" +
 					"2. 发送群群号: " + messageEncapsulation[0].getGroupMessageEvent().getGroup().getId() + "\n" +
 					"3. 发送人: " + messageEncapsulation[0].getGroupMessageEvent().getSender().getNameCard() + "\n" +
@@ -36,7 +36,7 @@ public class LogMessage {
 			 * 机器人被触发要求复读消息
 			 * **/
 			messageChainBuilder.add("复读指令被触发\n");
-			messageChainBuilder.add("0. 时间" + TimeUtil.reformatDateTimeOfTimestamp(messageEncapsulation[0].getGroupMessageEvent().getTime()) + "\n" +
+			messageChainBuilder.add("0. 时间" + TimeUtil.ReformatDateTimeOfTimestamp(messageEncapsulation[0].getGroupMessageEvent().getTime()) + "\n" +
 					"1. 触发群: " + messageEncapsulation[0].getGroupMessageEvent().getGroup().getName() + "\n" +
 					"2. 触发群群号: " + messageEncapsulation[0].getGroupMessageEvent().getGroup().getId() + "\n" +
 					"3. 触发人: " + messageEncapsulation[0].getGroupMessageEvent().getSender().getNameCard() + "\n" +
@@ -52,7 +52,7 @@ public class LogMessage {
 			 * 机器人功能被触发
 			 * **/
 			messageChainBuilder.add("机器人功能被触发\n");
-			messageChainBuilder.add("0. 时间" + TimeUtil.reformatDateTimeOfTimestamp(messageEncapsulation[0].getGroupMessageEvent().getTime()) + "\n" +
+			messageChainBuilder.add("0. 时间" + TimeUtil.ReformatDateTimeOfTimestamp(messageEncapsulation[0].getGroupMessageEvent().getTime()) + "\n" +
 					"1. 触发群: " + messageEncapsulation[0].getGroupMessageEvent().getGroup().getName() + "\n" +
 					"2. 触发群群号: " + messageEncapsulation[0].getGroupMessageEvent().getGroup().getId() + "\n" +
 					"3. 触发人: " + messageEncapsulation[0].getGroupMessageEvent().getSender().getNameCard() + "\n" +

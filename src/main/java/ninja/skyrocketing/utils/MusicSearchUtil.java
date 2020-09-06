@@ -5,22 +5,22 @@ import cn.hutool.json.JSONObject;
 import java.io.IOException;
 
 public class MusicSearchUtil {
-	public static String neteaseMusic(String str) throws IOException {
-		return musicQuery(str, true);
+	public static String NeteaseMusic(String str) throws IOException {
+		return MusicQuery(str, true);
 	}
 	
-	public static String qqMusic(String str) throws IOException {
-		return musicQuery(str, false);
+	public static String QQMusic(String str) throws IOException {
+		return MusicQuery(str, false);
 	}
 	
-	public static String musicQuery(String str, boolean is163) throws IOException {
+	public static String MusicQuery(String str, boolean is163) throws IOException {
 		String musicSummary, jumpUrl, musicUrl, musicJpg, musicTitle, apiUrl, tag;
-		String searchStr = HttpUtil.chnAndSpaceReplace(str);
+		String searchStr = HttpUtil.ChnAndSpaceReplace(str);
 		if (is163) {
 			apiUrl = "https://music.163.com/api/search/get/web?csrf_token=hlpretag=&hlposttag=&type=1&offset=0&total=true&limit=1&s=";
 			tag = "网易云音乐";
 			
-			JSONObject jsonMusic = HttpUtil.readJsonFromUrl(apiUrl + searchStr);
+			JSONObject jsonMusic = HttpUtil.ReadJsonFromUrl(apiUrl + searchStr);
 			musicTitle = jsonMusic.getByPath("result.songs[0].name", String.class);
 			System.out.println(musicTitle);
 			if (musicTitle == null) {
@@ -31,14 +31,14 @@ public class MusicSearchUtil {
 				jumpUrl = "http://music.163.com/song/" + musicId;
 				musicUrl = "http://music.163.com/song/media/outer/url?id=" + musicId;
 				//获取封面
-				JSONObject jsonAlbum = HttpUtil.readJsonFromUrl("https://music.163.com/api/song/detail/?id=" + musicId + "&ids=%5B" + musicId + "%5D");
+				JSONObject jsonAlbum = HttpUtil.ReadJsonFromUrl("https://music.163.com/api/song/detail/?id=" + musicId + "&ids=%5B" + musicId + "%5D");
 				musicJpg = jsonAlbum.getByPath("songs[0].album.picUrl", String.class);
 			}
 		} else {
 			apiUrl = "https://c.y.qq.com/soso/fcgi-bin/client_search_cp?p=1&n=1&format=json&w=";
 			tag = "QQ音乐";
 			
-			JSONObject jsonMusic = HttpUtil.readJsonFromUrl(apiUrl + searchStr);
+			JSONObject jsonMusic = HttpUtil.ReadJsonFromUrl(apiUrl + searchStr);
 			musicTitle = jsonMusic.getByPath("data.song.list[0].songname", String.class);
 			if (musicTitle == null) {
 				return null;

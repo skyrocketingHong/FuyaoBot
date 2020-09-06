@@ -1,13 +1,20 @@
 package ninja.skyrocketing.robot.messages;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUnit;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
+import ninja.skyrocketing.RobotApplication;
 import ninja.skyrocketing.robot.entity.BotConfig;
 import ninja.skyrocketing.robot.entity.MessageEncapsulation;
 import ninja.skyrocketing.robot.entity.datebase.Trigger;
 import ninja.skyrocketing.robot.entity.datebase.UserExpIds;
 import ninja.skyrocketing.utils.MessageUtil;
+import ninja.skyrocketing.utils.TimeUtil;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryUsage;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -19,9 +26,9 @@ public class AdminMessage {
 	public static Message refreshConfigFile(MessageEncapsulation messageEncapsulation) {
 		if (BotConfig.getAdminUsers().contains(messageEncapsulation.getUserId())) {
 			BotConfig.refresh();
-			return MessageUtil.stringToMessage("Refresh done.");
+			return MessageUtil.StringToMessage("Refresh done.");
 		} else {
-			return MessageUtil.notSudo(messageEncapsulation);
+			return MessageUtil.NotSudo(messageEncapsulation);
 		}
 	}
 	
@@ -32,10 +39,10 @@ public class AdminMessage {
 	 **/
 	public static Message getRandomRate(MessageEncapsulation messageEncapsulation) {
 		if (BotConfig.getAdminUsers().contains(messageEncapsulation.getUserId())) {
-			return MessageUtil.stringToMessage("Random rate is " +
+			return MessageUtil.StringToMessage("Random rate is " +
 					(100 - Long.parseLong(BotConfig.getConfigMap().get("random"))) / 100.00 + " now.");
 		} else {
-			return MessageUtil.notSudo(messageEncapsulation);
+			return MessageUtil.NotSudo(messageEncapsulation);
 		}
 	}
 	
@@ -49,13 +56,13 @@ public class AdminMessage {
 			String num = messageEncapsulation.getMsg().substring(32);
 			System.out.println(Integer.parseInt(num));
 			if (Integer.parseInt(num) <= 0 || Integer.parseInt(num) >= 100) {
-				return MessageUtil.stringToMessage("Random rate must between 0 (include) and 100 (include).");
+				return MessageUtil.StringToMessage("Random rate must between 0 (include) and 100 (include).");
 			} else {
 				BotConfig.setConfigMap(1, "random", num);
 				return getRandomRate(messageEncapsulation);
 			}
 		} else {
-			return MessageUtil.notSudo(messageEncapsulation);
+			return MessageUtil.NotSudo(messageEncapsulation);
 		}
 	}
 	
@@ -75,7 +82,7 @@ public class AdminMessage {
 			}
 			return messageChainBuilder.asMessageChain();
 		} else {
-			return MessageUtil.notSudo(messageEncapsulation);
+			return MessageUtil.NotSudo(messageEncapsulation);
 		}
 	}
 	
@@ -104,7 +111,7 @@ public class AdminMessage {
 			
 			return messageChainBuilder.asMessageChain();
 		} else {
-			return MessageUtil.notSudo(messageEncapsulation);
+			return MessageUtil.NotSudo(messageEncapsulation);
 		}
 	}
 	
@@ -125,6 +132,34 @@ public class AdminMessage {
 				++i;
 			}
 		}
-		return MessageUtil.stringToMessage("已清理" + i);
+		return MessageUtil.StringToMessage("已清理" + i);
+	}
+	
+	/**
+	 * 获取机器人运行信息
+	 * sudo get botinfo
+	 **/
+	public static Message getBotInfo(MessageEncapsulation messageEncapsulation) {
+		if (BotConfig.getAdminUsers().contains(messageEncapsulation.getUserId())) {
+			//获取运行内存
+			MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+			MemoryMXBean bean = ManagementFactory.getMemoryMXBean();
+			MemoryUsage memoryUsage = bean.getHeapMemoryUsage();
+			messageChainBuilder.add("占用内存: " + memoryUsage.getUsed() + "\n");
+			
+			//获取运行时间
+			String now = TimeUtil.DateTimeString();
+			messageChainBuilder.add("运行时间: " +
+					DateTime.of(RobotApplication.startTime,
+							"YYYY年MM月dd日 HH:mm:ss").between(
+							DateTime.of(now,
+									"YYYY年MM月dd日 HH:mm:ss"),
+							DateUnit.MINUTE) +
+					"分钟");
+			
+			return messageChainBuilder.asMessageChain();
+		} else {
+			return MessageUtil.NotSudo(messageEncapsulation);
+		}
 	}
 }

@@ -9,10 +9,10 @@ import java.io.IOException;
  * @Date 2020-07-09 009 12:12:32
  */
 public class VideoSearchUtil {
-	public static String bilibiliVideo(String str) throws IOException {
-		String searchStr = HttpUtil.chnAndSpaceReplace(str);
+	public static String BilibiliVideo(String str) throws IOException {
+		String searchStr = HttpUtil.ChnAndSpaceReplace(str);
 		//根据搜索结果，获取第一个结果的bvid
-		JSONObject bilibiliSearch = HttpUtil.readJsonFromUrl("https://api.bilibili.com/x/web-interface/search/all/v2?keyword=" +
+		JSONObject bilibiliSearch = HttpUtil.ReadJsonFromUrl("https://api.bilibili.com/x/web-interface/search/all/v2?keyword=" +
 				searchStr + "&page=1&pagesize=0");
 		String desc, preview, url, author;
 		desc = bilibiliSearch.getByPath("data.result[8].data[0].title", String.class).replaceAll("<em class=\"keyword\">|</em>", "").replaceAll("&amp;", " ");

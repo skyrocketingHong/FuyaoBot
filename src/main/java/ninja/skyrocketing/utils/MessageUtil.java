@@ -17,12 +17,12 @@ import java.net.URL;
  */
 public class MessageUtil {
 	//当群名片为空时返回昵称
-	public static String getNameOfMember(Member member) {
+	public static String NameOfMember(Member member) {
 		return member.getNameCard().isEmpty() ? member.getNick() : member.getNameCard();
 	}
 	
 	//@群员
-	public static Message atSomeone(String resultMsg, MessageEncapsulation messageEncapsulation) {
+	public static Message AtSomeone(String resultMsg, MessageEncapsulation messageEncapsulation) {
 		if (messageEncapsulation.getGroupId() == 1L) {
 			MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
 			messageChainBuilder.add("@" + messageEncapsulation.getFriendMessageEvent().getSender().getNick());
@@ -32,26 +32,26 @@ public class MessageUtil {
 	}
 	
 	//String转Message
-	public static Message stringToMessage(String resultMsg) {
+	public static Message StringToMessage(String resultMsg) {
 		MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
 		messageChainBuilder.add(resultMsg);
 		return messageChainBuilder.asMessageChain();
 	}
 	
 	//非管理员用户提示
-	public static Message notSudo(MessageEncapsulation messageEncapsulation) {
+	public static Message NotSudo(MessageEncapsulation messageEncapsulation) {
 		return new PlainText(messageEncapsulation.getGroupId() + " is not in the sudoers file. This incident will be reported.");
 	}
 	
 	//等待API返回数据
-	public static MessageReceipt<Contact> waitingForAPI(MessageEncapsulation messageEncapsulation) {
+	public static MessageReceipt<Contact> WaitingForAPI(MessageEncapsulation messageEncapsulation) {
 		return messageEncapsulation.getGroupId() == 1L ?
 				messageEncapsulation.getFriendMessageEvent().getSender().sendMessage("等待API返回数据...") :
 				messageEncapsulation.getGroupMessageEvent().getGroup().sendMessage("等待API返回数据...");
 	}
 	
 	//获取所有功能图片
-	public static Image getFunctionImage() throws MalformedURLException {
+	public static Image FunctionImage() throws MalformedURLException {
 		return RobotApplication.bot.getSelfQQ().uploadImage(new URL(BotConfig.getConfigMap().get("func_image")));
 	}
 }

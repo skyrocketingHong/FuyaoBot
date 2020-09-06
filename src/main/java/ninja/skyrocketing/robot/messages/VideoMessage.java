@@ -16,8 +16,8 @@ import java.io.IOException;
  */
 public class VideoMessage {
 	public static Message bilibiliVideo(MessageEncapsulation messageEncapsulation) throws IOException {
-		MessageReceipt<Contact> messageReceipt = MessageUtil.waitingForAPI(messageEncapsulation);
-		String json = VideoSearchUtil.bilibiliVideo(messageEncapsulation.getMsg().replaceAll("^来.*个视频\\s*", ""));
+		MessageReceipt<Contact> messageReceipt = MessageUtil.WaitingForAPI(messageEncapsulation);
+		String json = VideoSearchUtil.BilibiliVideo(messageEncapsulation.getMsg().replaceAll("^来.*个视频\\s*", ""));
 		messageReceipt.recall();
 		return new LightApp(json);
 	}

@@ -42,6 +42,6 @@ public class FriendMessageSender {
 	 * 根据实现类字符串执行对应的代码
 	 **/
 	public static Message runByInvoke(String str, MessageEncapsulation messageEncapsulation) throws Exception {
-		return InvokeUtil.runByInvoke(str, messageEncapsulation);
+		return InvokeUtil.RunByInvoke(str, messageEncapsulation);
 	}
 }

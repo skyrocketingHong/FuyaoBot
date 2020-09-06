@@ -17,7 +17,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.annotation.Resource;
-import java.io.File;
 
 /**
  * @Author skyrocketing Hong
@@ -27,7 +26,7 @@ import java.io.File;
 @SpringBootApplication
 public class RobotApplication implements CommandLineRunner {
 	public static Bot bot;
-	public static String startTime = TimeUtil.getDateTimeString();
+	public static String startTime = TimeUtil.DateTimeString();
 	
 	@Resource
 	private ConfigDao configDao;
@@ -92,7 +91,7 @@ public class RobotApplication implements CommandLineRunner {
 		Events.registerEvents(bot, new GroupEventListener());
 		
 		// 发送启动成功提示消息
-		String endTime = TimeUtil.getDateTimeString();
+		String endTime = TimeUtil.DateTimeString();
 		for (Long groupId : BotConfig.getAdminGroups()) {
 			bot.getGroup(groupId).sendMessage("[INFO] " + " 启动成功" + "\n" +
 					"开始启动时间: " + startTime + "\n" +

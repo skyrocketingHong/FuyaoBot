@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
  * @Date 2020-08-22 022 11:24:55
  */
 public class InvokeUtil {
-	public static Message runByInvoke(String str, MessageEncapsulation messageEncapsulation) throws Exception {
+	public static Message RunByInvoke(String str, MessageEncapsulation messageEncapsulation) throws Exception {
 		String[] className = str.split("\\.");
 		Class<?> clz = Class.forName("ninja.skyrocketing.robot.messages." + className[0]);
 		Method method = clz.getMethod(className[1], MessageEncapsulation.class);

@@ -23,7 +23,7 @@ public class FriendMessageListener extends SimpleListenerHost {
 	public ListeningStatus onMessage(FriendMessageEvent event) throws Exception {
 		if (!BotConfig.getBannedUsers().contains(event.getSender().getId())) {
 			if (event.getMessage().contentToString().equals("get list func")) {
-				event.getSender().sendMessage(MessageUtil.getFunctionImage());
+				event.getSender().sendMessage(MessageUtil.FunctionImage());
 			} else if (event.getMessage().contentToString().matches("^(EXP|exp)排名$")) {
 				event.getSender().sendMessage("EXP排名仅限群聊中使用");
 			} else {
