@@ -41,19 +41,15 @@ public class RepeaterMessage {
 		MessageChain messageChain =
 				messageEncapsulation.getGroupId() == 1L ?
 						messageEncapsulation.getFriendMessageEvent().getMessage() : messageEncapsulation.getGroupMessageEvent().getMessage();
-		if (messageChain.size() <= 2) {
-			String msg = messageChain.contentToString();
-			if (msg.matches("复读")) {
-				return null;
+		MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+		for (int i = 1; i < messageChain.size(); i++) {
+			System.out.println(messageChain.get(i));
+			if (i == 1) {
+				messageChainBuilder.add(messageChain.get(i).contentToString().replaceFirst("复读", ""));
+				continue;
 			}
-			return new MessageChainBuilder().asMessageChain().plus(msg.replaceFirst("复读", ""));
-		} else {
-			MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-			for (int i = 2; i < messageChain.size(); i++) {
-				System.out.println(messageChain.get(i));
-				messageChainBuilder.append(messageChain.get(i));
-			}
-			return messageChainBuilder.asMessageChain();
+			messageChainBuilder.add(messageChain.get(i));
 		}
+		return messageChainBuilder.asMessageChain();
 	}
 }

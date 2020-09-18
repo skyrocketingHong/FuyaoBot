@@ -166,6 +166,7 @@ public class TimeMessage {
 				return null;
 			}
 			case "深夜" -> {
+				front.plus("深夜");
 				if (goodMorning) {
 					return front.plus("早？早，都可以早。");
 				}

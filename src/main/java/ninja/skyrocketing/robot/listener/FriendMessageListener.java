@@ -30,6 +30,8 @@ public class FriendMessageListener extends SimpleListenerHost {
 				Message message = FriendMessageSender.Sender(event);
 				if (message != null) {
 					event.getSender().sendMessage(message);
+				} else if (event.getMessage().contentToString().matches("^戳一戳我$|^戳我$|^拍一拍我$|^戳自己$|^拍自己$")) {
+					return ListeningStatus.LISTENING;
 				} else {
 					event.getSender().sendMessage("不要发没做的功能指令哦。\n" +
 							"发送 \"get list func\" 获取功能列表\n" +

@@ -7,6 +7,7 @@ import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
+import ninja.skyrocketing.RobotApplication;
 import ninja.skyrocketing.robot.entity.BotConfig;
 import ninja.skyrocketing.robot.entity.MessageEncapsulation;
 import ninja.skyrocketing.robot.entity.datebase.UserExp;
@@ -159,5 +160,27 @@ public class GameMessage {
 		}
 		messageReceipt.recall();
 		return messages.asMessageChain();
+	}
+	
+	/*
+	 * 戳一戳
+	 * */
+	public static void nudge(MessageEncapsulation messageEncapsulation) {
+		if (messageEncapsulation.getGroupId() == 1L) {
+			messageEncapsulation.getFriendMessageEvent().getSender().nudge().sendTo(messageEncapsulation.getContact());
+		} else {
+			messageEncapsulation.getGroupMessageEvent().getSender().nudge().sendTo(messageEncapsulation.getContact());
+		}
+	}
+	
+	/*
+	 * 戳一戳bot
+	 * */
+	public static void nudgeBot(MessageEncapsulation messageEncapsulation) {
+		if (messageEncapsulation.getGroupId() == 1L) {
+			messageEncapsulation.getFriendMessageEvent().getSender().nudge().sendTo(RobotApplication.bot.getSelfQQ());
+		} else {
+			messageEncapsulation.getGroupMessageEvent().getSender().nudge().sendTo(RobotApplication.bot.getSelfQQ());
+		}
 	}
 }

@@ -1,10 +1,12 @@
 package ninja.skyrocketing.robot.listener;
 
 import kotlin.coroutines.CoroutineContext;
+import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.ListeningStatus;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.message.GroupMessageEvent;
+import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Message;
 import ninja.skyrocketing.RobotApplication;
 import ninja.skyrocketing.robot.entity.BotConfig;
@@ -29,10 +31,9 @@ public class GroupMessageListener extends SimpleListenerHost {
 				return ListeningStatus.LISTENING;
 			}
 			if (message != null) {
-				event.getGroup().sendMessage(message);
+				MessageReceipt<Contact> messageReceipt = event.getGroup().sendMessage(message);
 				return ListeningStatus.LISTENING;
 			}
-			
 		}
 		return ListeningStatus.LISTENING;
 	}

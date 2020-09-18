@@ -27,6 +27,10 @@ A QQ robot based on [Mirai](https://github.com/mamoe/mirai).
 咕咕咕
 ```
 # 4. 更新日志
+## 2020-09-18
+#### 3.4.0.37
+* 更新为 Mirai 1.3.0
+* 添加戳一戳
 ## 2020-09-06
 #### 3.3.3.36
 * 更新早午晚问候文案和时间划分，来自[维基百科](https://zh.wikipedia.org/zh-cn/Template:一天里的时间细分)

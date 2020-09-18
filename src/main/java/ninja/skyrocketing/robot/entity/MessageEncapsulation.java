@@ -1,5 +1,6 @@
 package ninja.skyrocketing.robot.entity;
 
+import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.message.FriendMessageEvent;
 import net.mamoe.mirai.message.GroupMessageEvent;
 
@@ -50,5 +51,9 @@ public class MessageEncapsulation {
 	
 	public FriendMessageEvent getFriendMessageEvent() {
 		return this.friendMessageEvent;
+	}
+	
+	public Contact getContact() {
+		return getGroupId() == 1L ? getFriendMessageEvent().getSender() : getGroupMessageEvent().getGroup();
 	}
 }
