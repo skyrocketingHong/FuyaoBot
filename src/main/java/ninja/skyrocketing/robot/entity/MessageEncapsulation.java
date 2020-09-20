@@ -1,8 +1,11 @@
 package ninja.skyrocketing.robot.entity;
 
 import net.mamoe.mirai.contact.Contact;
+import net.mamoe.mirai.contact.Friend;
+import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.message.FriendMessageEvent;
 import net.mamoe.mirai.message.GroupMessageEvent;
+import net.mamoe.mirai.message.data.MessageChain;
 
 public class MessageEncapsulation {
 	String msg;
@@ -54,6 +57,18 @@ public class MessageEncapsulation {
 	}
 	
 	public Contact getContact() {
-		return getGroupId() == 1L ? getFriendMessageEvent().getSender() : getGroupMessageEvent().getGroup();
+		return getGroupId() == 1L ? getFriend() : getGroup();
+	}
+	
+	public MessageChain getGroupMessageChain() {
+		return this.getGroupMessageEvent().getMessage();
+	}
+	
+	public Group getGroup() {
+		return this.groupMessageEvent.getGroup();
+	}
+	
+	public Friend getFriend() {
+		return this.friendMessageEvent.getFriend();
 	}
 }

@@ -27,6 +27,9 @@ A QQ robot based on [Mirai](https://github.com/mamoe/mirai).
 咕咕咕
 ```
 # 4. 更新日志
+## 2020-09-19
+#### 3.4.1.38
+* 优化戳一戳
 ## 2020-09-18
 #### 3.4.0.37
 * 更新为 Mirai 1.3.0

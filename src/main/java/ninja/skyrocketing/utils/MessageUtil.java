@@ -54,4 +54,14 @@ public class MessageUtil {
 	public static Image FunctionImage() throws MalformedURLException {
 		return RobotApplication.bot.getSelfQQ().uploadImage(new URL(BotConfig.getConfigMap().get("func_image")));
 	}
+	
+	//根据@获取QQ号
+	public static Long GetQQNumberFromAt(MessageChain messageChain) {
+		for (SingleMessage singleMessage : messageChain) {
+			if (singleMessage.toString().contains("mirai:at:")) {
+				return Long.parseLong(singleMessage.toString().split(",")[0].split(":")[2]);
+			}
+		}
+		return 1L;
+	}
 }

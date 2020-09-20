@@ -7,7 +7,6 @@ import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
-import ninja.skyrocketing.RobotApplication;
 import ninja.skyrocketing.robot.entity.BotConfig;
 import ninja.skyrocketing.robot.entity.MessageEncapsulation;
 import ninja.skyrocketing.robot.entity.datebase.UserExp;
@@ -163,24 +162,20 @@ public class GameMessage {
 	}
 	
 	/*
-	 * 戳一戳
+	 * 戳一戳发消息的人
 	 * */
 	public static void nudge(MessageEncapsulation messageEncapsulation) {
 		if (messageEncapsulation.getGroupId() == 1L) {
-			messageEncapsulation.getFriendMessageEvent().getSender().nudge().sendTo(messageEncapsulation.getContact());
+			messageEncapsulation.getFriendMessageEvent().getSender().nudge().sendTo(messageEncapsulation.getFriend());
 		} else {
 			messageEncapsulation.getGroupMessageEvent().getSender().nudge().sendTo(messageEncapsulation.getContact());
 		}
 	}
 	
 	/*
-	 * 戳一戳bot
+	 * 戳特定人
 	 * */
-	public static void nudgeBot(MessageEncapsulation messageEncapsulation) {
-		if (messageEncapsulation.getGroupId() == 1L) {
-			messageEncapsulation.getFriendMessageEvent().getSender().nudge().sendTo(RobotApplication.bot.getSelfQQ());
-		} else {
-			messageEncapsulation.getGroupMessageEvent().getSender().nudge().sendTo(RobotApplication.bot.getSelfQQ());
-		}
+	public static void nudgeSomeone(MessageEncapsulation messageEncapsulation) {
+		messageEncapsulation.getGroup().get(MessageUtil.GetQQNumberFromAt(messageEncapsulation.getGroupMessageChain())).nudge().sendTo(messageEncapsulation.getContact());
 	}
 }
