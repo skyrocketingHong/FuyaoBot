@@ -176,6 +176,17 @@ public class GameMessage {
 	 * 戳特定人
 	 * */
 	public static void nudgeSomeone(MessageEncapsulation messageEncapsulation) {
-		messageEncapsulation.getGroup().get(MessageUtil.GetQQNumberFromAt(messageEncapsulation.getGroupMessageChain())).nudge().sendTo(messageEncapsulation.getContact());
+		for (Long id : MessageUtil.GetQQNumberFromAt(messageEncapsulation.getGroupMessageChain())) {
+			messageEncapsulation.getGroup().get(id).nudge().sendTo(messageEncapsulation.getContact());
+		}
+	}
+	
+	/*
+	 * 获取群荣耀
+	 * */
+	public static void getHonor(MessageEncapsulation messageEncapsulation) {
+//		String str = (String) RobotApplication.bot._lowLevelGetGroupHonorListData(
+//				messageEncapsulation.getGroup().getId(),
+//				GroupHonorType.TALKATIVE, );
 	}
 }

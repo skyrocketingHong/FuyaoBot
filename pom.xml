@@ -11,7 +11,7 @@
     </parent>
     <groupId>ninja.skyrocketing</groupId>
     <artifactId>qqrobot</artifactId>
-    <version>3.4.1.38</version>
+    <version>3.4.2.39</version>
 
     <repositories>
         <repository>
@@ -21,25 +21,43 @@
     </repositories>
 
     <dependencies>
+        <!--Mirai框架-->
         <dependency>
             <groupId>net.mamoe</groupId>
             <artifactId>mirai-core-qqandroid</artifactId>
-            <version>1.3.0</version> <!-- 替换版本为最新版本 -->
+            <version>1.3.1</version> <!-- 替换版本为最新版本 -->
         </dependency>
+        <!--redis-->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>3.3.0</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <!--MySQL-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.21</version>
         </dependency>
+        <!--druid连接池-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
             <version>1.1.23</version>
         </dependency>
+        <!--hutool工具包-->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>5.4.0</version>
+        </dependency>
+        <!--中文工具集，包括中文简繁体转换、拼音转换以及中文分词。-->
+        <dependency>
+            <groupId>org.nlpcn</groupId>
+            <artifactId>nlp-lang</artifactId>
+            <version>1.7.6</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -128,7 +146,7 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
-                <version>1.4.0</version>
+                <version>1.4.10</version>
                 <executions>
                     <execution>
                         <id>compile</id>
