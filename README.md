@@ -31,6 +31,13 @@ A QQ robot based on [Mirai](https://github.com/mamoe/mirai).
 
 # 4. 更新日志
 
+## 2020-10-05
+
+#### 3.4.3.40
+
+* 更新为 Mirai 1.3.2
+* 去除闪照@提醒
+
 ## 2020-09-25
 
 #### 3.4.2.39

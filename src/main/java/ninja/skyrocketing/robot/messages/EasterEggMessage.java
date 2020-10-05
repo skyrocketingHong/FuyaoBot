@@ -1,6 +1,9 @@
 package ninja.skyrocketing.robot.messages;
 
-import net.mamoe.mirai.message.data.*;
+import net.mamoe.mirai.message.data.FlashImage;
+import net.mamoe.mirai.message.data.Image;
+import net.mamoe.mirai.message.data.Message;
+import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.robot.entity.BotConfig;
 import ninja.skyrocketing.robot.entity.MessageEncapsulation;
 import ninja.skyrocketing.utils.MessageUtil;
@@ -18,7 +21,7 @@ public class EasterEggMessage {
 		messages.add("5. 图片链接: " + messageEncapsulation.getGroupMessageEvent().getBot().queryImageUrl(flashImage) + "\n");
 		//向群内转发闪照图片
 		for (Long id : BotConfig.getFlashImageGroups()) {
-			messages.add(new At(messageEncapsulation.getGroupMessageEvent().getBot().getGroup(id).getOwner()));
+//			messages.add(new At(messageEncapsulation.getGroupMessageEvent().getBot().getGroup(id).getOwner()));
 			messageEncapsulation.getGroupMessageEvent().getBot().getGroup(id).sendMessage(messages.asMessageChain());
 		}
 		//生成群提醒
@@ -32,7 +35,7 @@ public class EasterEggMessage {
 		MessageChainBuilder messages = LogMessage.logMessage("ERROR", messageEncapsulation);
 		messages.add("5. 红包来了，gkd！");
 		for (Long id : BotConfig.getFlashImageGroups()) {
-			messages.add(new At(messageEncapsulation.getGroupMessageEvent().getBot().getGroup(id).getOwner()));
+//			messages.add(new At(messageEncapsulation.getGroupMessageEvent().getBot().getGroup(id).getOwner()));
 			messageEncapsulation.getGroupMessageEvent().getBot().getGroup(id).sendMessage(messages.asMessageChain());
 		}
 		return MessageUtil.AtSomeone("发了一个红包，gkd来白嫖。", messageEncapsulation);
