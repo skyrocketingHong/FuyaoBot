@@ -31,6 +31,15 @@ A QQ robot based on [Mirai](https://github.com/mamoe/mirai).
 
 # 4. 更新日志
 
+## 2020-11-10
+
+#### 3.4.4.41
+
+* 更新为 Mirai 1.3.3
+* 更新Springboot、hutool等依赖版本
+* 去除部分消息提醒
+* 暂时关闭点歌功能
+
 ## 2020-10-05
 
 #### 3.4.3.40

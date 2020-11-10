@@ -32,12 +32,12 @@ public class EasterEggMessage {
 	 * 红包提醒
 	 **/
 	public static Message RedEnvelope(MessageEncapsulation messageEncapsulation) {
-		MessageChainBuilder messages = LogMessage.logMessage("ERROR", messageEncapsulation);
-		messages.add("5. 红包来了，gkd！");
-		for (Long id : BotConfig.getFlashImageGroups()) {
+//		MessageChainBuilder messages = LogMessage.logMessage("ERROR", messageEncapsulation);
+//		messages.add("5. 红包来了，gkd！");
+//		for (Long id : BotConfig.getFlashImageGroups()) {
 //			messages.add(new At(messageEncapsulation.getGroupMessageEvent().getBot().getGroup(id).getOwner()));
-			messageEncapsulation.getGroupMessageEvent().getBot().getGroup(id).sendMessage(messages.asMessageChain());
-		}
+//			messageEncapsulation.getGroupMessageEvent().getBot().getGroup(id).sendMessage(messages.asMessageChain());
+//		}
 		return MessageUtil.AtSomeone("发了一个红包，gkd来白嫖。", messageEncapsulation);
 	}
 }

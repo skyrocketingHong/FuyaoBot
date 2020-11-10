@@ -82,4 +82,8 @@ public class TimeUtil {
 			return "error";
 		}
 	}
+
+	public static Long Timestamp() {
+		return System.currentTimeMillis();
+	}
 }

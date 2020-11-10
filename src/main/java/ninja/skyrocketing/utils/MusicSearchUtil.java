@@ -1,6 +1,8 @@
 package ninja.skyrocketing.utils;
 
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONObject;
+import ninja.skyrocketing.RobotApplication;
 
 import java.io.IOException;
 
@@ -16,10 +18,12 @@ public class MusicSearchUtil {
 	public static String MusicQuery(String str, boolean is163) throws IOException {
 		String musicSummary, jumpUrl, musicUrl, musicJpg, musicTitle, apiUrl, tag;
 		String searchStr = HttpUtil.ChnAndSpaceReplace(str);
+		String timestamp = TimeUtil.Timestamp().toString();
+		String token = IdUtil.simpleUUID();
 		if (is163) {
 			apiUrl = "https://music.163.com/api/search/get/web?csrf_token=hlpretag=&hlposttag=&type=1&offset=0&total=true&limit=1&s=";
 			tag = "网易云音乐";
-			
+
 			JSONObject jsonMusic = HttpUtil.ReadJsonFromUrl(apiUrl + searchStr);
 			musicTitle = jsonMusic.getByPath("result.songs[0].name", String.class);
 			System.out.println(musicTitle);
@@ -53,6 +57,7 @@ public class MusicSearchUtil {
 						".jpg?max_age=2592000";
 			}
 		}
-		return "{\"app\":\"com.tencent.structmsg\",\"config\":{\"autosize\":true,\"forward\":true,\"type\":\"normal\"},\"desc\":\"音乐\",\"extra\":{\"app_type\":1},\"meta\":{\"music\":{\"action\":\"\",\"android_pkg_name\":\"\",\"app_type\":1,\"appid\":100497308,\"desc\":\"" + musicSummary + "\",\"jumpUrl\":\"" + jumpUrl + "\",\"musicUrl\":\"" + musicUrl + "\",\"preview\":\"" + musicJpg + "\",\"sourceMsgId\":\"0\",\"source_icon\":\"\",\"source_url\":\"\",\"tag\":\"" + tag + "\",\"title\":\"" + musicTitle + "\"}},\"prompt\":\"" + "[分享]" + musicTitle + "\",\"ver\":\"0.0.0.1\",\"view\":\"music\"}";
+
+		return "{\"app\":\"com.tencent.structmsg\",\"config\":{\"autosize\":true,\"ctime\":" + timestamp + ",\"forward\":true,\"token\":\"2243f7bad4b630e565fa2671a2695e29\",\"type\":\"normal\"},\"desc\":\"新闻\",\"extra\":{\"app_type\":1,\"appid\":100497308,\"uin\":" + RobotApplication.bot.getId() + "},\"meta\":{\"news\":{\"action\":\"\",\"android_pkg_name\":\"\",\"app_type\":1,\"appid\":100497308,\"desc\":\"" + musicSummary + "\",\"jumpUrl\":\"" + jumpUrl + "\",\"preview\":\"" + musicJpg + "\",\"source_icon\":\"\",\"source_url\":\"\",\"tag\":\"" + tag + "\",\"title\":\"" + musicTitle + "\"}},\"prompt\":\"[分享]" + musicTitle + "\",\"ver\":\"0.0.0.1\",\"view\":\"news\"}";
 	}
 }

@@ -2,7 +2,6 @@ package ninja.skyrocketing.robot.sender;
 
 import kotlin.coroutines.CoroutineContext;
 import net.mamoe.mirai.Bot;
-import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.robot.entity.BotConfig;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 public class AdminListenerMessageSender {
 	public static void AdminMessageSender(MessageChainBuilder messages, Bot bot) {
 		for (Long id : BotConfig.getAdminGroups()) {
-			messages.add(new At(bot.getGroup(id).getOwner()));
+//			messages.add(new At(bot.getGroup(id).getOwner()));
 			bot.getGroup(id).sendMessage(messages.asMessageChain());
 		}
 	}

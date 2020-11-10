@@ -146,17 +146,24 @@ public class AdminMessage {
 			MemoryMXBean bean = ManagementFactory.getMemoryMXBean();
 			MemoryUsage memoryUsage = bean.getHeapMemoryUsage();
 			messageChainBuilder.add("占用内存: " + memoryUsage.getUsed() + "\n");
-			
+
 			//获取运行时间
 			String now = TimeUtil.DateTimeString();
-			messageChainBuilder.add("运行时间: " +
+			messageChainBuilder.add("稳定运行: " +
 					DateTime.of(RobotApplication.startTime,
 							"YYYY年MM月dd日 HH:mm:ss").between(
 							DateTime.of(now,
 									"YYYY年MM月dd日 HH:mm:ss"),
 							DateUnit.MINUTE) +
-					"分钟");
-			
+					"分钟" + "\n");
+
+			//获取加群数量
+			int groupNums = RobotApplication.bot.getGroups().size();
+			messageChainBuilder.add("已加群 " + groupNums + " 个\n");
+			//获取好友人数
+			int friendNums = RobotApplication.bot.getFriends().size();
+			messageChainBuilder.add("已好友 " + groupNums + " 个");
+
 			return messageChainBuilder.asMessageChain();
 		} else {
 			return MessageUtil.NotSudo(messageEncapsulation);
