@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ninja.skyrocketing.bot.fuyao.mapper.group.GroupExpMapper">
+  <resultMap id="BaseResultMap" type="ninja.skyrocketing.bot.fuyao.pojo.group.GroupExp">
+    <constructor>
+      <idArg column="user_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <idArg column="group_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="exp" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="sign_in_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    user_id, group_id, exp, sign_in_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="ninja.skyrocketing.bot.fuyao.pojo.group.GroupKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from group_exp
+    where user_id = #{userId,jdbcType=BIGINT}
+      and group_id = #{groupId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="ninja.skyrocketing.bot.fuyao.pojo.group.GroupKey">
+    delete from group_exp
+    where user_id = #{userId,jdbcType=BIGINT}
+      and group_id = #{groupId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="ninja.skyrocketing.bot.fuyao.pojo.group.GroupExp">
+    insert into group_exp (user_id, group_id, exp, 
+      sign_in_date)
+    values (#{userId,jdbcType=BIGINT}, #{groupId,jdbcType=BIGINT}, #{exp,jdbcType=BIGINT}, 
+      #{signInDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="ninja.skyrocketing.bot.fuyao.pojo.group.GroupExp">
+    insert into group_exp
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="groupId != null">
+        group_id,
+      </if>
+      <if test="exp != null">
+        exp,
+      </if>
+      <if test="signInDate != null">
+        sign_in_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="groupId != null">
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="exp != null">
+        #{exp,jdbcType=BIGINT},
+      </if>
+      <if test="signInDate != null">
+        #{signInDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="ninja.skyrocketing.bot.fuyao.pojo.group.GroupExp">
+    update group_exp
+    <set>
+      <if test="exp != null">
+        exp = #{exp,jdbcType=BIGINT},
+      </if>
+      <if test="signInDate != null">
+        sign_in_date = #{signInDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=BIGINT}
+      and group_id = #{groupId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="ninja.skyrocketing.bot.fuyao.pojo.group.GroupExp">
+    update group_exp
+    set exp = #{exp,jdbcType=BIGINT},
+      sign_in_date = #{signInDate,jdbcType=TIMESTAMP}
+    where user_id = #{userId,jdbcType=BIGINT}
+      and group_id = #{groupId,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ninja.skyrocketing.bot.fuyao.mapper.bot.BotReplyMessageMapper">
+  <resultMap id="BaseResultMap" type="ninja.skyrocketing.bot.fuyao.pojo.bot.BotReplyMessage">
+    <constructor>
+      <idArg column="reply_key" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="reply_value" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="add_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    reply_key, reply_value, add_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bot_reply_message
+    where reply_key = #{replyKey,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from bot_reply_message
+    where reply_key = #{replyKey,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="ninja.skyrocketing.bot.fuyao.pojo.bot.BotReplyMessage">
+    insert into bot_reply_message (reply_key, reply_value, add_date
+      )
+    values (#{replyKey,jdbcType=VARCHAR}, #{replyValue,jdbcType=VARCHAR}, #{addDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="ninja.skyrocketing.bot.fuyao.pojo.bot.BotReplyMessage">
+    insert into bot_reply_message
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="replyKey != null">
+        reply_key,
+      </if>
+      <if test="replyValue != null">
+        reply_value,
+      </if>
+      <if test="addDate != null">
+        add_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="replyKey != null">
+        #{replyKey,jdbcType=VARCHAR},
+      </if>
+      <if test="replyValue != null">
+        #{replyValue,jdbcType=VARCHAR},
+      </if>
+      <if test="addDate != null">
+        #{addDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="ninja.skyrocketing.bot.fuyao.pojo.bot.BotReplyMessage">
+    update bot_reply_message
+    <set>
+      <if test="replyValue != null">
+        reply_value = #{replyValue,jdbcType=VARCHAR},
+      </if>
+      <if test="addDate != null">
+        add_date = #{addDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where reply_key = #{replyKey,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="ninja.skyrocketing.bot.fuyao.pojo.bot.BotReplyMessage">
+    update bot_reply_message
+    set reply_value = #{replyValue,jdbcType=VARCHAR},
+      add_date = #{addDate,jdbcType=TIMESTAMP}
+    where reply_key = #{replyKey,jdbcType=VARCHAR}
+  </update>
+</mapper>
