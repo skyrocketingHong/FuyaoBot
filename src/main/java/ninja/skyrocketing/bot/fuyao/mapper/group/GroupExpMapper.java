@@ -1,16 +1,18 @@
 package ninja.skyrocketing.bot.fuyao.mapper.group;
 
 import ninja.skyrocketing.bot.fuyao.pojo.group.GroupExp;
-import ninja.skyrocketing.bot.fuyao.pojo.group.GroupKey;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
+@Mapper
 public interface GroupExpMapper {
-    int deleteByPrimaryKey(GroupKey key);
+    int deleteByPrimaryKey(@Param("userId") Long userId, @Param("groupId") Long groupId);
 
     int insert(GroupExp record);
 
     int insertSelective(GroupExp record);
 
-    GroupExp selectByPrimaryKey(GroupKey key);
+    GroupExp selectByPrimaryKey(@Param("userId") Long userId, @Param("groupId") Long groupId);
 
     int updateByPrimaryKeySelective(GroupExp record);
 

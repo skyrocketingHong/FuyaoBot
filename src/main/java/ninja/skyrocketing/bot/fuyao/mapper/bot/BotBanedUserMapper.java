@@ -1,7 +1,9 @@
 package ninja.skyrocketing.bot.fuyao.mapper.bot;
 
 import ninja.skyrocketing.bot.fuyao.pojo.bot.BotBanedUser;
+import org.apache.ibatis.annotations.Mapper;
 
+@Mapper
 public interface BotBanedUserMapper {
     int deleteByPrimaryKey(Long userId);
 

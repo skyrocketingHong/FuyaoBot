@@ -1,7 +1,9 @@
 package ninja.skyrocketing.bot.fuyao.mapper.bot;
 
 import ninja.skyrocketing.bot.fuyao.pojo.bot.BotConfig;
+import org.apache.ibatis.annotations.Mapper;
 
+@Mapper
 public interface BotConfigMapper {
     int deleteByPrimaryKey(String configName);
 

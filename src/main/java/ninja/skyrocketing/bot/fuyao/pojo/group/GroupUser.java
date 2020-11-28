@@ -2,16 +2,14 @@ package ninja.skyrocketing.bot.fuyao.pojo.group;
 
 import lombok.*;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
-public class GroupKey {
+public class GroupUser {
     private Long groupId;
 
     private Long userId;
-
-    public GroupKey(Long groupId, Long userId) {
-        this.groupId = groupId;
-        this.userId = userId;
-    }
 }

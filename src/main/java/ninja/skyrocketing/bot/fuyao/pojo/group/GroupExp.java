@@ -4,17 +4,31 @@ import lombok.*;
 
 import java.util.Date;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
-public class GroupExp extends GroupKey {
+public class GroupExp {
+    private Long userId;
+
+    private Long groupId;
+
     private Long exp;
 
     private Date signInDate;
 
-    public GroupExp(Long userId, Long groupId, Long exp, Date signInDate) {
-        super(userId, groupId);
+    public GroupExp(GroupUser groupUser, long exp) {
+        this.userId = groupUser.getUserId();
+        this.groupId = groupUser.getGroupId();
         this.exp = exp;
-        this.signInDate = signInDate;
+    }
+
+    public GroupExp(GroupUser groupUser, long exp, Date date) {
+        this.userId = groupUser.getUserId();
+        this.groupId = groupUser.getGroupId();
+        this.exp = exp;
+        this.signInDate = date;
     }
 }

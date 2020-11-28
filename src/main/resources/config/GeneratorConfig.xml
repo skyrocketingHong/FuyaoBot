@@ -5,7 +5,7 @@
 <!-- 配置生成器 -->
 <generatorConfiguration>
     <!--配置数据库信息 -->
-    <context id="DB2Tables" targetRuntime="MyBatis3">
+    <context id="DB2Tables" targetRuntime="MyBatis3" defaultModelType="flat">
         <!-- optional，旨在创建class时，对注释进行控制 -->
         <commentGenerator>
             <!--是否去掉自动生成的注释 true:是-->
@@ -28,7 +28,7 @@
 
         <!-- targetProject：生成POJO类的位置 -->
         <javaModelGenerator
-                targetPackage="ninja.skyrocketing.bot.fuyao.pojo.bot"
+                targetPackage="ninja.skyrocketing.bot.fuyao.pojo.group"
                 targetProject=".\src\main\java">
             <!-- 是否允许子包，即targetPackage.schemaName.tableName -->
             <property name="enableSubPackages" value="false" />
@@ -41,19 +41,19 @@
         </javaModelGenerator>
 
         <!--Mapper映射文件生成所在的目录 为每一个数据库的表生成对应的SqlMap文件 -->
-        <sqlMapGenerator targetPackage="bot"
+        <sqlMapGenerator targetPackage="group"
                          targetProject=".\src\main\resources\mapper">
             <property name="enableSubPackages" value="false" />
         </sqlMapGenerator>
 
         <javaClientGenerator type="MAPPER"
-                             targetPackage="ninja.skyrocketing.bot.fuyao.mapper.bot"
+                             targetPackage="ninja.skyrocketing.bot.fuyao.mapper.group"
                              targetProject=".\src\main\java">
             <!-- enableSubPackages:是否让schema作为包的后缀 -->
             <property name="enableSubPackages" value="false" />
         </javaClientGenerator>
 
-        <table tableName=""
+        <table tableName="group_coin"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"

@@ -18,7 +18,7 @@ public class Generator {
     public void generator() throws Exception{
         List<String> warnings = new ArrayList<>();
         /* 指向逆向工程的配置文件 */
-        File configFile = new File("");
+        File configFile = new File("./src/main/resources/config/GeneratorConfig.xml");
         ConfigurationParser parser = new ConfigurationParser(warnings);
         Configuration config = parser.parseConfiguration(configFile);
         DefaultShellCallback callback = new DefaultShellCallback(true);

@@ -21,4 +21,9 @@ public class BotConfigServiceImpl implements BotConfigService {
     public BotConfig GetConfigByKey(String key) {
         return botConfigMapper.selectByPrimaryKey(key);
     }
+
+    @Override
+    public String GetConfigValueByKey(String key) {
+        return botConfigMapper.selectByPrimaryKey(key).getConfigValue();
+    }
 }

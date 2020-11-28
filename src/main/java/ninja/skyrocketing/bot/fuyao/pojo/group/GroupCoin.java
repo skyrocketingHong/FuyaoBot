@@ -4,17 +4,31 @@ import lombok.*;
 
 import java.util.Date;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
-public class GroupCoin extends GroupKey {
+public class GroupCoin {
+    private Long groupId;
+
+    private Long userId;
+
     private Long coin;
 
     private Date getDate;
 
-    public GroupCoin(Long groupId, Long userId, Long coin, Date getDate) {
-        super(groupId, userId);
+    public GroupCoin(GroupUser groupUser, Long coin) {
+        this.groupId = groupUser.getGroupId();
+        this.userId = groupUser.getUserId();
         this.coin = coin;
-        this.getDate = getDate;
+    }
+
+    public GroupCoin(GroupUser groupUser, Long coin, Date nowDate) {
+        this.groupId = groupUser.getGroupId();
+        this.userId = groupUser.getUserId();
+        this.coin = coin;
+        this.getDate = nowDate;
     }
 }

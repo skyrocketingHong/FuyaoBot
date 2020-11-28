@@ -1,33 +1,38 @@
 package ninja.skyrocketing.bot.fuyao;
 
 import net.mamoe.mirai.Bot;
-import net.mamoe.mirai.BotFactoryJvm;
-import net.mamoe.mirai.utils.BotConfiguration;
-import ninja.skyrocketing.bot.fuyao.service.bot.BotConfigService;
+import ninja.skyrocketing.bot.fuyao.config.MiraiBotConfig;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.context.annotation.Configuration;
 
 @SpringBootApplication
-@MapperScan("ninja.skyrocketing.bot.fuyao.mapper")
+@Configuration
+@MapperScan("ninja.skyrocketing.bot.fuyao.mapper.*")
 public class FuyaoBotApplication implements CommandLineRunner {
-	public static Bot bot;
-	@Autowired
-	private BotConfigService botConfigService;
+	//是否为开发环境
+	public static boolean DevMode = false;
 
+	//机器人实例
+	public static Bot bot;
+
+	//主函数，不运行Springboot的web模块
 	public static void main(String[] args) {
 		SpringApplication app = new SpringApplication(FuyaoBotApplication.class);
 		app.setBannerMode(Banner.Mode.OFF);
 		app.run();
 	}
 
+	//覆盖run方法
 	@Override
 	public void run(String... args) throws Exception {
-		return;
+		//运行机器人
+		MiraiBotConfig.RunBot(DevMode);
+
+		// Spring线程阻塞
+		Thread.currentThread().join();
 	}
 }

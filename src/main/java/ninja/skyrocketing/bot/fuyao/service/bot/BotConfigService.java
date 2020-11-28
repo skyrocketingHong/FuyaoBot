@@ -9,4 +9,5 @@ import ninja.skyrocketing.bot.fuyao.pojo.bot.BotConfig;
  */
 public interface BotConfigService {
     BotConfig GetConfigByKey(String key);
+    String GetConfigValueByKey(String key);
 }
