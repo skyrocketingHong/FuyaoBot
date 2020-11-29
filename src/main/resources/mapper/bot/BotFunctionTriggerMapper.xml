@@ -16,7 +16,7 @@
   <sql id="Base_Column_List">
     id, char_id, trigger_name, trigger_comment, keyword, impl_class, enabled, shown
   </sql>
-  <select id="selectAllFunctionTrigger"  resultType="ninja.skyrocketing.bot.fuyao.pojo.bot.BotFunctionTrigger">
+  <select id="selectAllFunctionTrigger" resultType="ninja.skyrocketing.bot.fuyao.pojo.bot.BotFunctionTrigger">
     select *
     from bot_function_trigger
   </select>

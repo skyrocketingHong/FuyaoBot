@@ -1,0 +1,84 @@
+package ninja.skyrocketing.bot.fuyao.pojo.group;
+
+import lombok.*;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+public class GroupFishing {
+    private Long groupId;
+
+    private Long userId;
+
+    private String fish1;
+
+    private String fish2;
+
+    private String fish3;
+
+    private String fish4;
+
+    private String fish5;
+
+    public GroupFishing(GroupUser groupUser, String fishId, int slotId) {
+        this.groupId = groupUser.getGroupId();
+        this.userId = groupUser.getUserId();
+        switch (slotId) {
+            case 0, 1 -> this.fish1 = fishId;
+            case 2 -> this.fish2 = fishId;
+            case 3 -> this.fish3 = fishId;
+            case 4 -> this.fish4 = fishId;
+            case 5 -> this.fish5 = fishId;
+        }
+    }
+
+    //获取空的鱼筐坑位序号，如果都不为空，则返回0
+    public int getNullSlot() {
+        if (fish1 == null) {
+            return 1;
+        } else if (fish2 == null) {
+            return 2;
+        } else if (fish3 == null) {
+            return 3;
+        } else if (fish4 == null) {
+            return 4;
+        } else if (fish5 == null) {
+            return 5;
+        } else {
+            return 0;
+        }
+    }
+
+    //根据鱼筐坑位插入
+    public void setFishBySlotId(int slotId, String fishId) {
+        switch (slotId) {
+            case 0, 1 -> this.fish1 = fishId;
+            case 2 -> this.fish2 = fishId;
+            case 3 -> this.fish3 = fishId;
+            case 4 -> this.fish4 = fishId;
+            case 5 -> this.fish5 = fishId;
+        }
+    }
+
+    //获取鱼筐占用的坑位数
+    public int getSlotCount() {
+        int count = 0;
+        if (fish1 != null) {
+            ++count;
+        } if (fish2 != null) {
+            ++count;
+        } if (fish3 != null) {
+            ++count;
+        } if (fish4 != null) {
+            ++count;
+        } if (fish5 != null) {
+            ++count;
+        } else {
+            return 0;
+        }
+        return count;
+    }
+}

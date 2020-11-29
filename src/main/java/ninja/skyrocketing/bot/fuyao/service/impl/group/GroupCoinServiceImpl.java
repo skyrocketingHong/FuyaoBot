@@ -2,7 +2,6 @@ package ninja.skyrocketing.bot.fuyao.service.impl.group;
 
 import ninja.skyrocketing.bot.fuyao.mapper.group.GroupCoinMapper;
 import ninja.skyrocketing.bot.fuyao.pojo.group.GroupCoin;
-import ninja.skyrocketing.bot.fuyao.pojo.group.GroupExp;
 import ninja.skyrocketing.bot.fuyao.pojo.group.GroupUser;
 import ninja.skyrocketing.bot.fuyao.service.group.GroupCoinService;
 import org.springframework.beans.factory.annotation.Autowired;

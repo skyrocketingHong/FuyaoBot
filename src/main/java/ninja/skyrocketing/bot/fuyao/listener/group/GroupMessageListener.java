@@ -7,9 +7,11 @@ import net.mamoe.mirai.event.ListeningStatus;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.message.GroupMessageEvent;
 import net.mamoe.mirai.message.data.Message;
+import ninja.skyrocketing.bot.fuyao.FuyaoBotApplication;
 import ninja.skyrocketing.bot.fuyao.sender.group.GroupMessageSender;
 import ninja.skyrocketing.bot.fuyao.service.bot.BotBanedGroupService;
 import ninja.skyrocketing.bot.fuyao.service.bot.BotConfigService;
+import ninja.skyrocketing.bot.fuyao.service.bot.BotReplyMessageService;
 import ninja.skyrocketing.bot.fuyao.service.user.BotBanedUserService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,15 +29,18 @@ public class GroupMessageListener extends SimpleListenerHost {
     private static BotBanedGroupService botBanedGroupService;
     private static BotBanedUserService botBanedUserService;
     private static BotConfigService botConfigService;
+    private static BotReplyMessageService botReplyMessageService;
     @Autowired
     public GroupMessageListener(
             BotBanedGroupService botBanedGroupService,
             BotBanedUserService botBanedUserService,
-            BotConfigService botConfigService
+            BotConfigService botConfigService,
+            BotReplyMessageService botReplyMessageService
     ) {
         GroupMessageListener.botBanedGroupService = botBanedGroupService;
         GroupMessageListener.botBanedUserService = botBanedUserService;
         GroupMessageListener.botConfigService = botConfigService;
+        GroupMessageListener.botReplyMessageService = botReplyMessageService;
     }
 
     @EventHandler
@@ -58,6 +63,12 @@ public class GroupMessageListener extends SimpleListenerHost {
                         event.getGroup().sendMessage(message);
                         return ListeningStatus.LISTENING;
                     }
+                }
+            }
+            //非~开头的消息
+            else {
+                if (FuyaoBotApplication.botReplyMessageList == null) {
+                    FuyaoBotApplication.botReplyMessageList = botReplyMessageService.GetAllReplyMessage();
                 }
             }
         }

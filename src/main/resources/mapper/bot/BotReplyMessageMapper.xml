@@ -11,6 +11,11 @@
   <sql id="Base_Column_List">
     reply_key, reply_value, add_date
   </sql>
+  <select id="selectAllBotReplyMessage" resultType="ninja.skyrocketing.bot.fuyao.pojo.bot.BotReplyMessage">
+    select
+    reply_key, reply_value
+    from bot_reply_message
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

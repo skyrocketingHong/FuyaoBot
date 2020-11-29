@@ -16,4 +16,9 @@ public class BotReplyMessage {
     private String replyValue;
 
     private Date addDate;
+
+    public BotReplyMessage(String replyKey, String replyValue) {
+        this.replyKey = replyKey;
+        this.replyValue = replyValue;
+    }
 }

@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
-import net.mamoe.mirai.message.data.SingleMessage;
 import ninja.skyrocketing.bot.fuyao.pojo.group.GroupCoin;
 import ninja.skyrocketing.bot.fuyao.pojo.group.GroupMessage;
 import ninja.skyrocketing.bot.fuyao.pojo.group.GroupUser;
@@ -118,7 +117,7 @@ public class Coin {
         MessageChain messageChain = groupMessage.getGroupMessageEvent().getMessage();
 
         //获取转移金币的数量，接受账户和转出账户
-        transformCoin = Long.parseLong(messageChain.get(1).toString().replace("~金币转移 ", "").replace(" ", ""));
+        transformCoin = Long.parseLong(messageChain.get(1).toString().replaceAll("^(~|～)金币转移\s*|\s*", ""));
         transformId = Long.parseLong(messageChain.get(2).toString().replaceAll("\\[mirai:at:|,@.+\\]", ""));
 
         //转移前，转出账户数据

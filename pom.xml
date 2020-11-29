@@ -16,6 +16,7 @@
 
 	<properties>
 		<java.version>15</java.version>
+		<start-class>ninja.skyrocketing.bot.fuyao.FuyaoBotApplication</start-class>
 	</properties>
 
 	<repositories>
@@ -134,7 +135,7 @@
 						<addMavenDescriptor>false</addMavenDescriptor>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>ninja.skyrocketing.RobotApplication</mainClass>
+							<mainClass>ninja.skyrocketing.bot.fuyao.FuyaoBotApplication</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

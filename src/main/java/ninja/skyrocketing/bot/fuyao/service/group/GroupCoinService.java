@@ -1,7 +1,6 @@
 package ninja.skyrocketing.bot.fuyao.service.group;
 
 import ninja.skyrocketing.bot.fuyao.pojo.group.GroupCoin;
-import ninja.skyrocketing.bot.fuyao.pojo.group.GroupExp;
 import ninja.skyrocketing.bot.fuyao.pojo.group.GroupUser;
 
 /**
