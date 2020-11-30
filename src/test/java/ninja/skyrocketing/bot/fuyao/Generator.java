@@ -12,7 +12,6 @@ import java.util.List;
 /**
  * @Author skyrocketing Hong
  * @Date 2020-11-23 023 15:45:46
- * @Version 1.0
  */
 public class Generator {
     public void generator() throws Exception{

@@ -5,8 +5,7 @@ import net.mamoe.mirai.message.GroupMessageEvent;
 
 /**
  * @Author skyrocketing Hong
- * @Date 2020-11-28 028 15:15:48
- * @Version 1.0
+ * @Date 2020-11-28 15:15:48
  */
 
 @Data

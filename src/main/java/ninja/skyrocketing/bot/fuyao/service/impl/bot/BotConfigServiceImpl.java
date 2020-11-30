@@ -9,8 +9,7 @@ import javax.annotation.Resource;
 
 /**
  * @Author skyrocketing Hong
- * @Date 2020-11-28 028 00:58:18
- * @Version 1.0
+ * @Date 2020-11-28 00:58:18
  */
 @Service
 public class BotConfigServiceImpl implements BotConfigService {

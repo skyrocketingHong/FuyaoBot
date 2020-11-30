@@ -8,8 +8,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * @Author skyrocketing Hong
- * @Date 2020-11-28 028 15:08:20
- * @Version 1.0
+ * @Date 2020-11-28 15:08:20
  */
 @Service
 public class BotBanedUserServiceImpl implements BotBanedUserService {

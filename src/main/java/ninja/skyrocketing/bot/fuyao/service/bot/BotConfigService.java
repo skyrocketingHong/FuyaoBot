@@ -4,8 +4,7 @@ import ninja.skyrocketing.bot.fuyao.pojo.bot.BotConfig;
 
 /**
  * @Author skyrocketing Hong
- * @Date 2020-11-28 028 00:29:33
- * @Version 1.0
+ * @Date 2020-11-28 00:29:33
  */
 public interface BotConfigService {
     BotConfig GetConfigByKey(String key);

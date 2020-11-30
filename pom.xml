@@ -8,10 +8,10 @@
 		<version>2.4.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>ninja.skyrocketing.bot</groupId>
-	<artifactId>fuyao</artifactId>
+	<groupId>ninja.skyrocketing.bot.fuyao</groupId>
+	<artifactId>fuyao-bot</artifactId>
 	<version>4.0.0.42</version>
-	<name>Fuyao Bot</name>
+	<name>Fuyao bot</name>
 	<description>A QQ bot.</description>
 
 	<properties>

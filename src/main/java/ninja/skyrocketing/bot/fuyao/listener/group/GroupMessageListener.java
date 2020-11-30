@@ -7,7 +7,6 @@ import net.mamoe.mirai.event.ListeningStatus;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.message.GroupMessageEvent;
 import net.mamoe.mirai.message.data.Message;
-import ninja.skyrocketing.bot.fuyao.FuyaoBotApplication;
 import ninja.skyrocketing.bot.fuyao.sender.group.GroupMessageSender;
 import ninja.skyrocketing.bot.fuyao.service.bot.BotBanedGroupService;
 import ninja.skyrocketing.bot.fuyao.service.bot.BotConfigService;
@@ -19,8 +18,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * @Author skyrocketing Hong
- * @Date 2020-11-28 028 14:55:32
- * @Version 1.0
+ * @Date 2020-11-28 14:55:32
  */
 
 @Component
@@ -67,9 +65,9 @@ public class GroupMessageListener extends SimpleListenerHost {
             }
             //非~开头的消息
             else {
-                if (FuyaoBotApplication.botReplyMessageList == null) {
-                    FuyaoBotApplication.botReplyMessageList = botReplyMessageService.GetAllReplyMessage();
-                }
+//                if (FuyaoBotApplication.botReplyMessageList == null) {
+//                    FuyaoBotApplication.botReplyMessageList = botReplyMessageService.GetAllReplyMessage();
+//                }
             }
         }
         return ListeningStatus.LISTENING;

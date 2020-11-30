@@ -10,8 +10,7 @@ import java.util.List;
 
 /**
  * @Author skyrocketing Hong
- * @Date 2020-11-28 028 15:28:58
- * @Version 1.0
+ * @Date 2020-11-28 15:28:58
  */
 @Service
 public class BotFunctionTriggerServiceImpl implements BotFunctionTriggerService {

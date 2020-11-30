@@ -9,8 +9,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * @Author skyrocketing Hong
- * @Date 2020-11-28 028 14:50:05
- * @Version 1.0
+ * @Date 2020-11-28 14:50:05
  */
 @Service
 public class GroupExpServiceImpl implements GroupExpService {

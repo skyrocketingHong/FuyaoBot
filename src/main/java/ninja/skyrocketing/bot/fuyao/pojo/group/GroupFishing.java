@@ -23,6 +23,7 @@ public class GroupFishing {
 
     private String fish5;
 
+    //根据坑位ID插入鱼
     public GroupFishing(GroupUser groupUser, String fishId, int slotId) {
         this.groupId = groupUser.getGroupId();
         this.userId = groupUser.getUserId();
@@ -76,9 +77,29 @@ public class GroupFishing {
             ++count;
         } if (fish5 != null) {
             ++count;
-        } else {
-            return 0;
         }
         return count;
+    }
+
+    //根据坑位获取对应坑位的鱼
+    public String getFishBySlot(int slotId) {
+        switch (slotId) {
+            case 0, 1 -> {
+                return fish1;
+            }
+            case 2 ->  {
+                return fish2;
+            }
+            case 3 ->  {
+                return fish3;
+            }
+            case 4 ->  {
+                return fish4;
+            }
+            case 5 ->  {
+                return fish5;
+            }
+        }
+        return null;
     }
 }

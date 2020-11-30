@@ -10,8 +10,7 @@ import java.util.List;
 
 /**
  * @Author skyrocketing Hong
- * @Date 2020-11-29 029 13:21:30
- * @Version 1.0
+ * @Date 2020-11-29 13:21:30
  */
 
 @Service
@@ -22,5 +21,10 @@ public class BotGameFishingServiceImpl implements BotGameFishingService {
     @Override
     public List<BotGameFishing> GetAllFish() {
         return botGameFishingMapper.getAllFish();
+    }
+
+    @Override
+    public String GetFishNameById(String id) {
+        return botGameFishingMapper.selectFishNameByPrimaryKey(id);
     }
 }

@@ -8,8 +8,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * @Author skyrocketing Hong
- * @Date 2020-11-28 028 20:22:12
- * @Version 1.0
+ * @Date 2020-11-28 20:22:12
  */
 @Service
 public class GroupExpRankNameServiceImpl implements GroupExpRankNameService {

@@ -6,9 +6,9 @@ import java.util.List;
 
 /**
  * @Author skyrocketing Hong
- * @Date 2020-11-29 029 13:20:23
- * @Version 1.0
+ * @Date 2020-11-29 13:20:23
  */
 public interface BotGameFishingService {
     List<BotGameFishing> GetAllFish();
+    String GetFishNameById(String id);
 }

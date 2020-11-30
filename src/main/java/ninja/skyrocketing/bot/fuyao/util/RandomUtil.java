@@ -5,8 +5,7 @@ import java.util.Random;
 
 /**
  * @Author skyrocketing Hong
- * @Date 2020-11-28 028 16:53:39
- * @Version 1.0
+ * @Date 2020-11-28 16:53:39
  */
 
 public class RandomUtil {

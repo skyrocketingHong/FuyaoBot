@@ -18,11 +18,11 @@
     select
     *
     from bot_game_fishing
-    order by fish_probability desc;
+    order by fish_probability asc;
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
+  <select id="selectFishNameByPrimaryKey" parameterType="java.lang.String" resultType="java.lang.String">
+    select
+    fish_name
     from bot_game_fishing
     where fish_id = #{fishId,jdbcType=VARCHAR}
   </select>

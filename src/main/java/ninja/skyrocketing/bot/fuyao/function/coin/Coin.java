@@ -19,8 +19,7 @@ import java.util.Date;
 
 /**
  * @Author skyrocketing Hong
- * @Date 2020-11-28 028 21:18:23
- * @Version 1.0
+ * @Date 2020-11-28 21:18:23
  */
 
 @Component
@@ -157,6 +156,30 @@ public class Coin {
             originGroupCoin.setCoin(originGroupCoin.getCoin() - transformCoin);
             groupCoinService.UpdateCoin(originGroupCoin);
             messageChainBuilder.add("✔ 转移成功，他在本群的账户中有 " + tmpCoin + " 金币");
+        }
+        return messageChainBuilder.asMessageChain();
+    }
+
+    //福利金币
+    public static Message BonusCoin(GroupMessage groupMessage) {
+        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+        GroupCoin groupCoin = groupCoinService.GetCoinByGroupUser(groupMessage.getGroupUser());
+        if (groupCoin == null) {
+            messageChainBuilder.add("❌ 从未领金币");
+        } else {
+            if (groupCoin.getCoin() >= 1000) {
+                messageChainBuilder.add("❌ 你金币太多了");
+            } else {
+                groupCoin.setCoin(groupCoin.getCoin() + 1000);
+                int status = groupCoinService.UpdateCoin(groupCoin);
+                if (status == 0) {
+                    //插入失败提示
+                    messageChainBuilder.add("❌ 领取福利金币失败，请联系开发者查看数据库连接问题");
+                } else {
+                    messageChainBuilder.add("✔ 成功领到了 1000 金币" + "\n" +
+                            "快去消费吧");
+                }
+            }
         }
         return messageChainBuilder.asMessageChain();
     }

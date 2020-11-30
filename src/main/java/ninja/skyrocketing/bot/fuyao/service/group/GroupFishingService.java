@@ -5,8 +5,7 @@ import ninja.skyrocketing.bot.fuyao.pojo.group.GroupUser;
 
 /**
  * @Author skyrocketing Hong
- * @Date 2020-11-29 029 14:50:36
- * @Version 1.0
+ * @Date 2020-11-29 14:50:36
  */
 public interface GroupFishingService {
     GroupFishing GetGroupFishingByGroupUser(GroupUser groupUser);

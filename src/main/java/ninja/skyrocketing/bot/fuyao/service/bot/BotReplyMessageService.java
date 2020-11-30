@@ -6,8 +6,7 @@ import java.util.List;
 
 /**
  * @Author skyrocketing Hong
- * @Date 2020-11-29 029 02:31:23
- * @Version 1.0
+ * @Date 2020-11-29 02:31:23
  */
 public interface BotReplyMessageService {
     List<BotReplyMessage> GetAllReplyMessage();

@@ -12,8 +12,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * @Author skyrocketing Hong
- * @Date 2020-11-28 028 11:29:59
- * @Version 1.0
+ * @Date 2020-11-28 11:29:59
  */
 
 @Component

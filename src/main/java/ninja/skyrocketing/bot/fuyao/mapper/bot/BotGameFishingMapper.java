@@ -20,4 +20,6 @@ public interface BotGameFishingMapper {
     int updateByPrimaryKey(BotGameFishing record);
 
     List<BotGameFishing> getAllFish();
+
+    String selectFishNameByPrimaryKey(String fishId);
 }

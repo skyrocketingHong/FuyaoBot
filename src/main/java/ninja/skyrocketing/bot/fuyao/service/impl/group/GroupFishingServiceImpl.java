@@ -9,8 +9,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * @Author skyrocketing Hong
- * @Date 2020-11-29 029 14:53:45
- * @Version 1.0
+ * @Date 2020-11-29 14:53:45
  */
 @Service
 public class GroupFishingServiceImpl implements GroupFishingService {
