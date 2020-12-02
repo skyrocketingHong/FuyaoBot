@@ -4,6 +4,7 @@ import net.mamoe.mirai.BotFactoryJvm;
 import net.mamoe.mirai.event.Events;
 import net.mamoe.mirai.utils.BotConfiguration;
 import ninja.skyrocketing.bot.fuyao.FuyaoBotApplication;
+import ninja.skyrocketing.bot.fuyao.function.timely.Timely;
 import ninja.skyrocketing.bot.fuyao.listener.group.GroupMessageListener;
 import ninja.skyrocketing.bot.fuyao.pojo.bot.BotQQ;
 import ninja.skyrocketing.bot.fuyao.service.bot.BotConfigService;
@@ -52,6 +53,9 @@ public class MiraiBotConfig {
 
         // 注册监听事件
         Events.registerEvents(FuyaoBotApplication.bot, new GroupMessageListener());
+
+        // 运行定时消息模块
+        Timely.TimelyMessage();
 
         // 挂载该机器人的线程
         FuyaoBotApplication.bot.join();

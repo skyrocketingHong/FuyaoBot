@@ -117,7 +117,7 @@ public class Fishing {
             } else {
                 //拼接回复消息
                 messageChainBuilder.add("🤔 你啥都没钓到 扣除 10 金币");
-                messageChainBuilder.add(groupImage);
+//                messageChainBuilder.add(groupImage);
                 return messageChainBuilder.asMessageChain();
             }
         }
