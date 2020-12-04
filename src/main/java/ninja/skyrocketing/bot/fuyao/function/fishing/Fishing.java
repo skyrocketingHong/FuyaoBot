@@ -87,7 +87,6 @@ public class Fishing {
             }
             //根据随机数，取第一个随机数比概率值小的鱼
             if (10000 - randomNum < botGameFishing.getFishProbability() * 100) {
-                System.out.println(randomNum);;
                 return botGameFishing;
             }
         }
@@ -104,12 +103,8 @@ public class Fishing {
         BotGameFishing botGameFishing = GetFish(groupMessage);
         //如果为空，则直接返回没钓到
         if (botGameFishing == null) {
-            //图片路径
-            File image = new File("./src/main/resources/image/no_fish.jpg");
-            //上传图片
-            Image groupImage = groupMessage.getGroupMessageEvent().getGroup().uploadImage(image);
             //扣除金币
-            groupCoin.setCoin(groupCoin.getCoin() - 10);
+            groupCoin.minusCoin(10L);
             int status = groupCoinService.UpdateCoin(groupCoin);
             if (status == 0) {
                 //插入失败提示
@@ -117,9 +112,8 @@ public class Fishing {
             } else {
                 //拼接回复消息
                 messageChainBuilder.add("🤔 你啥都没钓到 扣除 10 金币");
-//                messageChainBuilder.add(groupImage);
-                return messageChainBuilder.asMessageChain();
             }
+            return messageChainBuilder.asMessageChain();
         }
         //判断数据库中是否有这个人的鱼筐
         if (groupFishing == null) {
@@ -132,7 +126,7 @@ public class Fishing {
                 messageChainBuilder.add("❌ 首次钓鱼失败，请联系开发者查看数据库连接问题");
             } else {
                 //扣除金币
-                groupCoin.setCoin(groupCoin.getCoin() - 10);
+                groupCoin.minusCoin(10L);
                 int statusCost = groupCoinService.UpdateCoin(groupCoin);
                 if (statusCost == 0) {
                     //插入失败提示
@@ -157,7 +151,7 @@ public class Fishing {
                 messageChainBuilder.add("❌ 钓鱼失败，请联系开发者查看数据库连接问题");
             } else {
                 //扣除金币
-                groupCoin.setCoin(groupCoin.getCoin() - 10);
+                groupCoin.minusCoin(10L);
                 int statusCost = groupCoinService.UpdateCoin(groupCoin);
                 if (statusCost == 0) {
                     //插入失败提示

@@ -56,7 +56,7 @@ public class Exp {
                 return messageChainBuilder.asMessageChain();
             }
             //签到成功
-            messageChainBuilder.add("✔ 签到成功" + "\n" +
+            messageChainBuilder.add("✔ 首次签到成功" + "\n" +
                     "获取 " + exp + " 经验值" + "\n" +
                     "下次签到时间 " + TimeUtil.DateFormatter(new Date(nowDate.getTime() + 28800000))
             );
@@ -69,13 +69,14 @@ public class Exp {
             //如果上次签到时间与当前时间间隔小于8小时，则直接返回消息
             if (nowDate.getTime() - lastSignInDate.getTime() <= 28800000) {
                 messageChainBuilder.add("❌ 签到失败" + "\n" +
-                        "下次签到时间 " + TimeUtil.DateFormatter(new Date(nowDate.getTime() + 28800000))
+                        "下次签到时间 " + TimeUtil.DateFormatter(new Date(lastSignInDate.getTime() + 28800000))
                 );
                 return messageChainBuilder.asMessageChain();
             }
-            //直接签到
+            //所有条件满足后，直接签到
             else {
-                groupExp = new GroupExp(groupUser, exp, nowDate);
+                //将对象的值改为下一次需要写回数据库的值
+                groupExp.nextExp(exp, nowDate);
                 int status = groupExpService.UpdateExp(groupExp);
                 //数据库问题，插入失败
                 if (status == 0) {
@@ -87,7 +88,7 @@ public class Exp {
         //签到成功
         messageChainBuilder.add("✔ 签到成功" + "\n" +
                 "获取 " + exp + " 经验值" + "\n" +
-                "下次签到时间 " + TimeUtil.DateFormatter(new Date(nowDate.getTime() + 28800000))
+                "下次签到时间 " + TimeUtil.DateFormatter(new Date(groupExp.getSignInDate().getTime() + 28800000))
         );
         return messageChainBuilder.asMessageChain();
     }

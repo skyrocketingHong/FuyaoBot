@@ -67,13 +67,13 @@ public class Coin {
             //如果上次领取时间与当前时间间隔小于8小时，则直接返回消息
             if (nowDate.getTime() - lastGetDate.getTime() <= 28800000) {
                 messageChainBuilder.add("❌ 领金币失败" + "\n" +
-                        "下次领取时间 " + TimeUtil.DateFormatter(new Date(nowDate.getTime() + 28800000))
+                        "下次领取时间 " + TimeUtil.DateFormatter(new Date(lastGetDate.getTime() + 28800000))
                 );
                 return messageChainBuilder.asMessageChain();
             }
             //直接领金币
             else {
-                groupCoin = new GroupCoin(groupUser, coin, nowDate);
+                groupCoin.nextCoin(coin, nowDate);
                 int status = groupCoinService.UpdateCoin(groupCoin);
                 //数据库问题，插入失败
                 if (status == 0) {

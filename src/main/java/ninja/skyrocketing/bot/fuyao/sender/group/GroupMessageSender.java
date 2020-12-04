@@ -1,7 +1,10 @@
 package ninja.skyrocketing.bot.fuyao.sender.group;
 
+import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.message.GroupMessageEvent;
+import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Message;
+import ninja.skyrocketing.bot.fuyao.FuyaoBotApplication;
 import ninja.skyrocketing.bot.fuyao.pojo.bot.BotFunctionTrigger;
 import ninja.skyrocketing.bot.fuyao.pojo.group.GroupMessage;
 import ninja.skyrocketing.bot.fuyao.service.bot.BotFunctionTriggerService;
@@ -27,9 +30,9 @@ public class GroupMessageSender {
      * **/
     public static Message Sender(GroupMessageEvent event) throws Exception {
         GroupMessage groupMessage = new GroupMessage(event);
-        String className = matchedClass(groupMessage);
+        String className = MatchedClass(groupMessage);
         if (className != null) {
-            return runByInvoke(className, groupMessage);
+            return RunByInvoke(className, groupMessage);
         }
         return null;
     }
@@ -37,7 +40,7 @@ public class GroupMessageSender {
     /**
      * 根据消息获取对应的实现类
      * **/
-    public static String matchedClass(GroupMessage groupMessage) {
+    public static String MatchedClass(GroupMessage groupMessage) {
         String msg = groupMessage.getMessage();
         //提前判断闪照，并将消息转换为数据库中对应的实现类的关键词
         if (msg.contains("[闪照]")) {
@@ -66,7 +69,20 @@ public class GroupMessageSender {
     /**
      * 根据实现类字符串执行对应的代码
      **/
-    public static Message runByInvoke(String str, GroupMessage groupMessage) throws Exception {
+    public static Message RunByInvoke(String str, GroupMessage groupMessage) throws Exception {
         return InvokeUtil.RunByInvoke(str, groupMessage);
+    }
+
+    /**
+     * 根据群号发消息
+     * **/
+    public static boolean SendMessageByGroupId(Message message, Long groupId) {
+        MessageReceipt<Contact> messageReceipt = FuyaoBotApplication.bot.getGroup(groupId).sendMessage(message);
+        return messageReceipt.isToGroup();
+    }
+
+    public static boolean SendMessageByGroupId(String message, Long groupId) {
+        MessageReceipt<Contact> messageReceipt = FuyaoBotApplication.bot.getGroup(groupId).sendMessage(message);
+        return messageReceipt.isToGroup();
     }
 }

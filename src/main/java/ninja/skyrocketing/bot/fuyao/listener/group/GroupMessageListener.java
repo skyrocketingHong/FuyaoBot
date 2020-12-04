@@ -6,6 +6,7 @@ import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.ListeningStatus;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.message.GroupMessageEvent;
+import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.Message;
 import ninja.skyrocketing.bot.fuyao.sender.group.GroupMessageSender;
 import ninja.skyrocketing.bot.fuyao.service.bot.BotBanedGroupService;
@@ -57,8 +58,8 @@ public class GroupMessageListener extends SimpleListenerHost {
                     //调用消息对应的实现类，并保存返回值（对应的回复）
                     Message message = GroupMessageSender.Sender(event);
                     if (message != null) {
-                        //发送消息
-                        event.getGroup().sendMessage(message);
+                        //发送消息，并在开头添加@触发人
+                        event.getGroup().sendMessage(new At(event.getSender()).plus("\n" + message));
                         return ListeningStatus.LISTENING;
                     }
                 }
