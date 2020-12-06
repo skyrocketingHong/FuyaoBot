@@ -11,4 +11,6 @@ public interface GroupCoinService {
     GroupCoin GetCoinByGroupUser(GroupUser groupUser);
     int InsertCoin(GroupCoin groupCoin);
     int UpdateCoin(GroupCoin groupCoin);
+    int DeleteCoin(GroupUser groupUser);
+    int DeleteCoinByGroupId(Long groupId);
 }

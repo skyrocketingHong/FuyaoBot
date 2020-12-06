@@ -135,4 +135,15 @@ public class Exp {
             return groupExpRankName.getRank7();
         }
     }
+
+    //清除EXP数据
+    public static int CleanExpData(Long groupId, Long userId) {
+        if (userId == 0L) {
+            return groupExpService.DeleteExpByGroupId(groupId);
+        }
+        if (groupId == 0L) {
+
+        }
+        return groupExpService.DeleteExp(new GroupUser(groupId, userId));
+    }
 }

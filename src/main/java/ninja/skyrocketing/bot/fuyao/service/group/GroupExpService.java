@@ -12,4 +12,6 @@ public interface GroupExpService {
     GroupExp GetExpByGroupUser(GroupUser groupUser);
     int InsertExp(GroupExp groupExp);
     int UpdateExp(GroupExp groupExp);
+    int DeleteExp(GroupUser groupUser);
+    int DeleteExpByGroupId(Long groupId);
 }

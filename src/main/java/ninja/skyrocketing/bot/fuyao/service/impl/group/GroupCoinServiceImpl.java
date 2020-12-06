@@ -31,4 +31,14 @@ public class GroupCoinServiceImpl implements GroupCoinService {
     public int UpdateCoin(GroupCoin groupCoin) {
         return groupCoinMapper.updateByPrimaryKeySelective(groupCoin);
     }
+
+    @Override
+    public int DeleteCoin(GroupUser groupUser) {
+        return groupCoinMapper.deleteByPrimaryKey(groupUser.getGroupId(), groupUser.getUserId());
+    }
+
+    @Override
+    public int DeleteCoinByGroupId(Long groupId) {
+        return groupCoinMapper.deleteByGroupId(groupId);
+    }
 }

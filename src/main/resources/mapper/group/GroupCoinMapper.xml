@@ -24,6 +24,10 @@
     where group_id = #{groupId,jdbcType=BIGINT}
       and user_id = #{userId,jdbcType=BIGINT}
   </delete>
+  <delete id="deleteByGroupId" parameterType="java.lang.Long">
+    delete from group_coin
+    where group_id = #{groupId,jdbcType=BIGINT}
+</delete>
   <insert id="insert" parameterType="ninja.skyrocketing.bot.fuyao.pojo.group.GroupCoin">
     insert into group_coin (group_id, user_id, coin, 
       get_date)

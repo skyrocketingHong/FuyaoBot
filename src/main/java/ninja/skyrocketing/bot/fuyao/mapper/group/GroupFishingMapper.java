@@ -17,4 +17,6 @@ public interface GroupFishingMapper {
     int updateByPrimaryKeySelective(GroupFishing record);
 
     int updateByPrimaryKey(GroupFishing record);
+
+    int deleteByGroupId(@Param("groupId") Long groupId);
 }

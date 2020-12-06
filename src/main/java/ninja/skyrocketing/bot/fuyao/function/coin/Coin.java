@@ -183,4 +183,15 @@ public class Coin {
         }
         return messageChainBuilder.asMessageChain();
     }
+
+    //清理金币数据
+    public static int CleanCoinData(Long groupId, Long userId) {
+        if (userId == 0L) {
+            groupCoinService.DeleteCoinByGroupId(groupId);
+        }
+        if (groupId == 0L) {
+
+        }
+        return groupCoinService.DeleteCoin(new GroupUser(groupId, userId));
+    }
 }

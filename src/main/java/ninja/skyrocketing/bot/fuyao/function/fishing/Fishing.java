@@ -239,4 +239,15 @@ public class Fishing {
         messageChainBuilder.add("暂时未实现");
         return messageChainBuilder.asMessageChain();
     }
+
+    //清理钓鱼数据
+    public static int CleanFishingData(Long groupId, Long userId) {
+        if (userId == 0L) {
+            return groupFishingService.DeleteFishingByGroup(groupId);
+        }
+        if (groupId == 0L) {
+
+        }
+        return groupFishingService.DeleteFishing(new GroupUser(groupId, userId));
+    }
 }

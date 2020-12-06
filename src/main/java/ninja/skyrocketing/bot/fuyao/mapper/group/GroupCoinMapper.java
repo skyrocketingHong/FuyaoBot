@@ -17,4 +17,6 @@ public interface GroupCoinMapper {
     int updateByPrimaryKeySelective(GroupCoin record);
 
     int updateByPrimaryKey(GroupCoin record);
+
+    int deleteByGroupId(@Param("groupId") Long groupId);
 }

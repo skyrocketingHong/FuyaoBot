@@ -18,7 +18,7 @@ public class GroupExpServiceImpl implements GroupExpService {
 
     @Override
     public GroupExp GetExpByGroupUser(GroupUser groupUser) {
-        return groupExpMapper.selectByPrimaryKey(groupUser.getUserId(), groupUser.getGroupId());
+        return groupExpMapper.selectByPrimaryKey(groupUser.getGroupId(), groupUser.getUserId());
     }
 
     @Override
@@ -29,5 +29,15 @@ public class GroupExpServiceImpl implements GroupExpService {
     @Override
     public int UpdateExp(GroupExp groupExp) {
         return groupExpMapper.updateByPrimaryKeySelective(groupExp);
+    }
+
+    @Override
+    public int DeleteExp(GroupUser groupUser) {
+        return groupExpMapper.deleteByPrimaryKey(groupUser.getGroupId(), groupUser.getUserId());
+    }
+
+    @Override
+    public int DeleteExpByGroupId(Long groupId) {
+        return 0;
     }
 }

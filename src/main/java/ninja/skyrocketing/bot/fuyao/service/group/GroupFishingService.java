@@ -11,4 +11,6 @@ public interface GroupFishingService {
     GroupFishing GetGroupFishingByGroupUser(GroupUser groupUser);
     int UpdateGroupFishing(GroupFishing groupFishing);
     int InsertGroupFishing(GroupFishing groupFishing);
+    int DeleteFishing(GroupUser groupUser);
+    int DeleteFishingByGroup(Long groupId);
 }

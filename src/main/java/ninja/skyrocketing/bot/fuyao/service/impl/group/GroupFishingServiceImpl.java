@@ -30,4 +30,14 @@ public class GroupFishingServiceImpl implements GroupFishingService {
     public int InsertGroupFishing(GroupFishing groupFishing) {
         return groupFishingMapper.insertSelective(groupFishing);
     }
+
+    @Override
+    public int DeleteFishing(GroupUser groupUser) {
+        return groupFishingMapper.deleteByPrimaryKey(groupUser.getGroupId(), groupUser.getUserId());
+    }
+
+    @Override
+    public int DeleteFishingByGroup(Long groupId) {
+        return groupFishingMapper.deleteByGroupId(groupId);
+    }
 }
