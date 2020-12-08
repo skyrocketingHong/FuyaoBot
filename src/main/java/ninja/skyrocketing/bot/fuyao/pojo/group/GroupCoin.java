@@ -39,7 +39,7 @@ public class GroupCoin {
 
     //加金币
     public void addCoin(Long add) {
-        this.coin -= add;
+        this.coin += add;
     }
 
     //将对象的值直接改为下一次需要写回数据库的值

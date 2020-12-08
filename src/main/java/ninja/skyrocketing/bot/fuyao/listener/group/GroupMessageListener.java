@@ -6,7 +6,6 @@ import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.ListeningStatus;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.BotLeaveEvent;
-import net.mamoe.mirai.event.events.GroupEvent;
 import net.mamoe.mirai.event.events.MemberJoinEvent;
 import net.mamoe.mirai.event.events.MemberLeaveEvent;
 import net.mamoe.mirai.message.GroupMessageEvent;

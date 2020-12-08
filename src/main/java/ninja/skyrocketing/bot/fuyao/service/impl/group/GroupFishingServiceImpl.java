@@ -23,7 +23,7 @@ public class GroupFishingServiceImpl implements GroupFishingService {
 
     @Override
     public int UpdateGroupFishing(GroupFishing groupFishing) {
-        return groupFishingMapper.updateByPrimaryKeySelective(groupFishing);
+        return groupFishingMapper.updateByPrimaryKey(groupFishing);
     }
 
     @Override

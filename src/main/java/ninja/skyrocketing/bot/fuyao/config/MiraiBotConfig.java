@@ -36,28 +36,28 @@ public class MiraiBotConfig {
         return botQQ;
     }
 
-    public static void RunBot(boolean devMode) throws InterruptedException {
+    public static void RunBot(boolean devMode) {
         BotQQ botQQ = SetBotQQByMode(devMode);
-        // 设备缓存信息
+        //设备缓存信息
         FuyaoBotApplication.bot = BotFactoryJvm.newBot(
                 botQQ.getQqId(),
                 botQQ.getQqPassword(),
                 new BotConfiguration() {{
-                    // 设备缓存信息
+                    //设备缓存信息
                     setProtocol(MiraiProtocol.ANDROID_PHONE);
                     fileBasedDeviceInfo("deviceInfo.json");
                 }}
         );
-        // 登录
+        //登录
         FuyaoBotApplication.bot.login();
 
-        // 注册监听事件
+        //注册监听事件
         Events.registerEvents(FuyaoBotApplication.bot, new GroupMessageListener());
 
-        // 运行定时消息模块
+        //运行定时消息模块
         Timely.TimelyMessage();
 
-        // 挂载该机器人的线程
+        //挂载该机器人的线程
         FuyaoBotApplication.bot.join();
     }
 }

@@ -1,7 +1,6 @@
 package ninja.skyrocketing.bot.fuyao.function.fishing;
 
 import lombok.NoArgsConstructor;
-import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.bot.fuyao.pojo.bot.BotGameFishing;
@@ -14,7 +13,6 @@ import ninja.skyrocketing.bot.fuyao.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -236,7 +234,62 @@ public class Fishing {
     //卖鱼
     public static Message SellFish(GroupMessage groupMessage) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("暂时未实现");
+        //鱼筐坑位编号
+        int slotId;
+        //使用try-catch，避免后面为非数字
+        try {
+            slotId = Integer.parseInt(groupMessage.getMessage().replaceAll("卖鱼", ""));
+        } catch (NumberFormatException numberFormatException) {
+            messageChainBuilder.add("❌ 语法错误" + "\n" + "非数字");
+            return messageChainBuilder.asMessageChain();
+        }
+        //判断slot是否在范围内
+        if (slotId >= 1 && slotId <= 5) {
+            GroupUser groupUser = groupMessage.getGroupUser();
+            //获取当前坑位的鱼的信息
+            String fishId = groupFishingService.GetGroupFishingByGroupUser(groupUser).getFishBySlot(slotId);
+            //如果为null，则返回无鱼
+            if (fishId == null) {
+                messageChainBuilder.add("❌ 当前位置里面没有鱼");
+            } else {
+                //获取当前要卖掉的鱼的价值
+                Long fishValue = botGameFishingService.GetFishValueById(fishId) / 2;
+                //获取当前用户的金币数据
+                GroupCoin groupCoin = groupCoinService.GetCoinByGroupUser(groupUser);
+                //判断金币是否为空
+                if (groupCoin == null) {
+                    messageChainBuilder.add("❌ 从未领金币");
+                } else {
+                    //获取当前用户的钓鱼数据
+                    GroupFishing groupFishing = groupFishingService.GetGroupFishingByGroupUser(groupUser);
+                    //判断钓鱼数据是否为空
+                    if (groupFishing == null) {
+                        messageChainBuilder.add("❌ 从未钓鱼");
+                    } else {
+                        //金币数据加上卖掉的鱼的价值
+                        groupCoin.addCoin(fishValue);
+                        //将当前位置的鱼置空
+                        groupFishing.setNullBySlotId(slotId);
+                        //更新数据库数据
+                        int status1 = groupCoinService.UpdateCoin(groupCoin);
+                        int status2 = groupFishingService.UpdateGroupFishing(groupFishing);
+                        //判断是否插入成功
+                        if (status1 == 0 && status2 == 0) {
+                            messageChainBuilder.add("❌ 卖鱼失败，请联系开发者查看数据库连接问题");
+                        } else {
+                            messageChainBuilder.add("✔ 卖鱼成功" + "\n" +
+                                    "💴 你卖掉了一条 \"" + botGameFishingService.GetFishNameById(fishId) + "\"\n" +
+                                    "💰 获得 " + fishValue + " 金币，当前余额为 " + groupCoin.getCoin() + " 金币"
+                            );
+                        }
+                    }
+                }
+                return messageChainBuilder.asMessageChain();
+            }
+        } else {
+            messageChainBuilder.add("❌ 语法错误" + "\n" + "数字超出鱼筐大小");
+            return messageChainBuilder.asMessageChain();
+        }
         return messageChainBuilder.asMessageChain();
     }
 

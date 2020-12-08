@@ -64,6 +64,17 @@ public class GroupFishing {
         }
     }
 
+    //根据鱼筐坑位置空
+    public void setNullBySlotId(int slotId) {
+        switch (slotId) {
+            case 1 -> this.fish1 = null;
+            case 2 -> this.fish2 = null;
+            case 3 -> this.fish3 = null;
+            case 4 -> this.fish4 = null;
+            case 5 -> this.fish5 = null;
+        }
+    }
+
     //获取鱼筐占用的坑位数
     public int getSlotCount() {
         int count = 0;

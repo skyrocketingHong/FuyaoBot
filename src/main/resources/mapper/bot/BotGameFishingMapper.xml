@@ -14,11 +14,17 @@
   <sql id="Base_Column_List">
     fish_id, fish_name, fish_probability, fish_value, is_special, special_group
   </sql>
+  <select id="getFishValueById" parameterType="java.lang.String" resultType="java.lang.Long">
+    select
+    fish_value
+    from bot_game_fishing
+    where fish_id = #{fishId,jdbcType=VARCHAR}
+</select>
   <select id="getAllFish" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     *
     from bot_game_fishing
-    order by fish_probability asc;
+    order by fish_probability asc
   </select>
   <select id="selectFishNameByPrimaryKey" parameterType="java.lang.String" resultType="java.lang.String">
     select

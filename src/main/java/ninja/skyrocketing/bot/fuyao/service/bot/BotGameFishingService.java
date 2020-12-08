@@ -11,4 +11,5 @@ import java.util.List;
 public interface BotGameFishingService {
     List<BotGameFishing> GetAllFish();
     String GetFishNameById(String id);
+    Long GetFishValueById(String id);
 }

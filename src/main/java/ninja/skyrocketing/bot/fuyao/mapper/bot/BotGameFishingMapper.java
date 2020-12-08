@@ -22,4 +22,6 @@ public interface BotGameFishingMapper {
     List<BotGameFishing> getAllFish();
 
     String selectFishNameByPrimaryKey(String fishId);
+
+    Long getFishValueById(String id);
 }

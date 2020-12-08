@@ -27,4 +27,9 @@ public class BotGameFishingServiceImpl implements BotGameFishingService {
     public String GetFishNameById(String id) {
         return botGameFishingMapper.selectFishNameByPrimaryKey(id);
     }
+
+    @Override
+    public Long GetFishValueById(String id) {
+        return botGameFishingMapper.getFishValueById(id);
+    }
 }
