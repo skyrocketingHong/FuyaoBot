@@ -36,4 +36,5 @@ build/
 src/main/resources/application.properties
 deviceInfo.json
 debug.log
-src/test/java/ninja/skyrocketing/bot/fuyao/FuyaoBotApplicationTests.java
+src/test/*
+MxLibData/*

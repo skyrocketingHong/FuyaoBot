@@ -13,7 +13,7 @@
             <property name="suppressAllComments" value="true"/>
         </commentGenerator>
         <!--jdbc的数据库连接：驱动类、链接地址、用户名、密码-->
-        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+        <jdbcConnection driverClass=""
                         connectionURL=""
                         userId=""
                         password="">
@@ -53,7 +53,7 @@
             <property name="enableSubPackages" value="false" />
         </javaClientGenerator>
 
-        <table tableName="group_coin"
+        <table tableName=""
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"

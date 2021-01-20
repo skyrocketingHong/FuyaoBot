@@ -1,7 +1,7 @@
 package ninja.skyrocketing.bot.fuyao.sender.group;
 
 import net.mamoe.mirai.contact.Contact;
-import net.mamoe.mirai.message.GroupMessageEvent;
+import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Message;
 import ninja.skyrocketing.bot.fuyao.FuyaoBotApplication;

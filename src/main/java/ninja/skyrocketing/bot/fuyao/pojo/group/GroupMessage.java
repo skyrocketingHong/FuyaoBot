@@ -1,7 +1,7 @@
 package ninja.skyrocketing.bot.fuyao.pojo.group;
 
 import lombok.*;
-import net.mamoe.mirai.message.GroupMessageEvent;
+import net.mamoe.mirai.event.events.GroupMessageEvent;
 
 /**
  * @Author skyrocketing Hong

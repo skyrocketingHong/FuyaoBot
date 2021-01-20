@@ -5,12 +5,8 @@ import lombok.NoArgsConstructor;
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.ListeningStatus;
 import net.mamoe.mirai.event.SimpleListenerHost;
-import net.mamoe.mirai.event.events.BotLeaveEvent;
-import net.mamoe.mirai.event.events.MemberJoinEvent;
-import net.mamoe.mirai.event.events.MemberLeaveEvent;
-import net.mamoe.mirai.message.GroupMessageEvent;
+import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.message.data.At;
-import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.bot.fuyao.function.coin.Coin;
@@ -22,12 +18,13 @@ import ninja.skyrocketing.bot.fuyao.service.bot.BotConfigService;
 import ninja.skyrocketing.bot.fuyao.service.bot.BotReplyMessageService;
 import ninja.skyrocketing.bot.fuyao.service.user.BotBanedUserService;
 import ninja.skyrocketing.bot.fuyao.util.MessageUtil;
+import ninja.skyrocketing.bot.fuyao.util.TimeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.IOException;
+import java.util.Date;
 
 /**
  * @Author skyrocketing Hong
@@ -72,7 +69,7 @@ public class GroupMessageListener extends SimpleListenerHost {
                     Message message = GroupMessageSender.Sender(event);
                     if (message != null) {
                         //发送消息，并在开头添加@触发人
-                        event.getGroup().sendMessage(new At(event.getSender()).plus("\n" + message));
+                        event.getGroup().sendMessage(new At(event.getSender().getId()).plus("\n" + message));
                         return ListeningStatus.LISTENING;
                     }
                 }
@@ -89,15 +86,17 @@ public class GroupMessageListener extends SimpleListenerHost {
 
     //监听成员进群，并发送欢迎消息
     @EventHandler
-    public ListeningStatus onJoin(MemberJoinEvent.Active event) throws MalformedURLException {
+    public ListeningStatus onJoin(MemberJoinEvent.Active event) throws IOException {
         //上传头像
-        Image avatarImage = event.getGroup().uploadImage(new URL(event.getMember().getAvatarUrl()));
-        MessageChainBuilder messages = new MessageChainBuilder() {{
-            add("👏 欢迎第" + (event.getGroup().getMembers().size() + 1) + "名群员。" + "\n");
-            add(avatarImage);
-            add(new At(event.getMember()));
-            add("\n" + "记得阅读群公告（如果有的话）哦！");
-        }};
+//        File image = FileUtil.GetAvatarImageFile(event.getMember().getId());
+//        Image avatarImage = Contact.uploadImage(event.getGroup(), image);
+
+        //生成消息
+        MessageChainBuilder messages = new MessageChainBuilder();
+        messages.add("👏 欢迎第" + (event.getGroup().getMembers().size() + 1) + "名群员。" + "\n");
+//        messages.add(avatarImage);
+        messages.add(new At(event.getMember().getId()));
+        messages.add("\n" + "记得阅读群公告（如果有的话）哦！");
         event.getGroup().sendMessage(messages.asMessageChain());
         return ListeningStatus.LISTENING;
     }
@@ -105,15 +104,14 @@ public class GroupMessageListener extends SimpleListenerHost {
     //监听群员主动退群
     @EventHandler
     public ListeningStatus onQuit(MemberLeaveEvent.Quit event) {
-        MessageChainBuilder messages = new MessageChainBuilder() {{
-            add("⚠ 群员减少提醒\n" +
-                    "群员 \"" +
-                    MessageUtil.NameOfMember(event.getMember()) + "\" (" +
-                    event.getMember().getId() + ") " +
-                    "悄悄地溜了...\n" +
-                    "(提醒消息将在1分钟内自动撤回)"
-            );
-        }};
+        MessageChainBuilder messages = new MessageChainBuilder();
+        messages.add("⚠ 群员减少提醒\n" +
+                "群员 \"" +
+                MessageUtil.NameOfMember(event.getMember()) + "\" (" +
+                event.getMember().getId() + ") " +
+                "悄悄地溜了...\n" +
+                "(提醒消息将在1分钟内自动撤回)"
+        );
         //清理数据
         Exp.CleanExpData(event.getGroup().getId(), event.getMember().getId());
         Coin.CleanCoinData(event.getGroup().getId(), event.getMember().getId());
@@ -123,21 +121,21 @@ public class GroupMessageListener extends SimpleListenerHost {
         return ListeningStatus.LISTENING;
     }
 
-    //去成员被踢
+    //群成员被踢
     @EventHandler
     public ListeningStatus onKick(MemberLeaveEvent.Kick event) {
-        MessageChainBuilder messages = new MessageChainBuilder() {{
-            add("⚠ 群员减少提醒\n" +
-                    "群员 \"" +
-                    MessageUtil.NameOfMember(event.getMember()) + "\" (" +
-                    event.getMember().getId() + ") " +
-                    "已被 \"" +
-                    MessageUtil.NameOfMember(event.getOperator()) + "\" (" +
-                    event.getOperator().getId() + ") " +
-                    "移出群聊。\n" +
-                    "(提醒消息将在1分钟内自动撤回)"
-            );
-        }};
+        MessageChainBuilder messages = new MessageChainBuilder();
+        messages.add("⚠ 群员减少提醒\n" +
+                "群员 \"" +
+                MessageUtil.NameOfMember(event.getMember()) + "\" (" +
+                event.getMember().getId() + ") " +
+                "已被 \"" +
+                MessageUtil.NameOfMember(event.getOperator()) + "\" (" +
+                event.getOperator().getId() + ") " +
+                "移出群聊。\n" +
+                "(提醒消息将在1分钟内自动撤回)"
+        );
+
         //清理数据
         Exp.CleanExpData(event.getGroup().getId(), event.getMember().getId());
         Coin.CleanCoinData(event.getGroup().getId(), event.getMember().getId());
@@ -157,6 +155,29 @@ public class GroupMessageListener extends SimpleListenerHost {
         return ListeningStatus.LISTENING;
     }
 
+    //监听群成员荣誉修改
+    @EventHandler
+    public ListeningStatus onMemberHonorChange(MemberHonorChangeEvent event) {
+        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+        messageChainBuilder.add("恭喜" + " \"" + MessageUtil.NameOfMember(event.getMember()) + "\" " + "\n" + new At(event.getMember().getId()) +
+                "于 " + TimeUtil.NowDateTime(new Date()) + " " +
+                "喜提" +  " \"" + event.getHonorType() + "\" "
+        );
+        event.getGroup().sendMessage(messageChainBuilder.asMessageChain());
+        return ListeningStatus.LISTENING;
+    }
+
+    //监听群头衔修改
+    @EventHandler
+    public ListeningStatus onMemberSpecialTitleChange(MemberSpecialTitleChangeEvent event) {
+        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+        messageChainBuilder.add("恭喜" + " \"" + MessageUtil.NameOfMember(event.getMember()) + "\" " + "\n" + new At(event.getMember().getId()) +
+                "于 " + TimeUtil.NowDateTime(new Date()) + " " +
+                "喜提新头衔" +  " \"" + event.getNew() + "\" "
+        );
+        event.getGroup().sendMessage(messageChainBuilder.asMessageChain());
+        return ListeningStatus.LISTENING;
+    }
     //处理事件处理时抛出的异常
     @Override
     public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {

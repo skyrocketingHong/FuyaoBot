@@ -1,10 +1,12 @@
 package ninja.skyrocketing.bot.fuyao.config;
 
-import net.mamoe.mirai.BotFactoryJvm;
-import net.mamoe.mirai.event.Events;
+import net.mamoe.mirai.BotFactory;
+import net.mamoe.mirai.event.EventChannel;
+import net.mamoe.mirai.event.events.BotEvent;
 import net.mamoe.mirai.utils.BotConfiguration;
 import ninja.skyrocketing.bot.fuyao.FuyaoBotApplication;
 import ninja.skyrocketing.bot.fuyao.function.timely.Timely;
+import ninja.skyrocketing.bot.fuyao.listener.admin.BotMessageListener;
 import ninja.skyrocketing.bot.fuyao.listener.group.GroupMessageListener;
 import ninja.skyrocketing.bot.fuyao.pojo.bot.BotQQ;
 import ninja.skyrocketing.bot.fuyao.service.bot.BotConfigService;
@@ -39,7 +41,7 @@ public class MiraiBotConfig {
     public static void RunBot(boolean devMode) {
         BotQQ botQQ = SetBotQQByMode(devMode);
         //设备缓存信息
-        FuyaoBotApplication.bot = BotFactoryJvm.newBot(
+        FuyaoBotApplication.bot = BotFactory.INSTANCE.newBot(
                 botQQ.getQqId(),
                 botQQ.getQqPassword(),
                 new BotConfiguration() {{
@@ -52,7 +54,9 @@ public class MiraiBotConfig {
         FuyaoBotApplication.bot.login();
 
         //注册监听事件
-        Events.registerEvents(FuyaoBotApplication.bot, new GroupMessageListener());
+        EventChannel<BotEvent> eventChannel = FuyaoBotApplication.bot.getEventChannel();
+        eventChannel.registerListenerHost(new GroupMessageListener());
+        eventChannel.registerListenerHost(new BotMessageListener());
 
         //运行定时消息模块
         Timely.TimelyMessage();
