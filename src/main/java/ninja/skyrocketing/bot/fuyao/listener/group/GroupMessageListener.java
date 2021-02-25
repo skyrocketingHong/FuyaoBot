@@ -2,11 +2,13 @@ package ninja.skyrocketing.bot.fuyao.listener.group;
 
 import kotlin.coroutines.CoroutineContext;
 import lombok.NoArgsConstructor;
+import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.ListeningStatus;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.message.data.At;
+import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.bot.fuyao.function.coin.Coin;
@@ -17,12 +19,15 @@ import ninja.skyrocketing.bot.fuyao.service.bot.BotBanedGroupService;
 import ninja.skyrocketing.bot.fuyao.service.bot.BotConfigService;
 import ninja.skyrocketing.bot.fuyao.service.bot.BotReplyMessageService;
 import ninja.skyrocketing.bot.fuyao.service.user.BotBanedUserService;
+import ninja.skyrocketing.bot.fuyao.util.DBUtil;
+import ninja.skyrocketing.bot.fuyao.util.FileUtil;
 import ninja.skyrocketing.bot.fuyao.util.MessageUtil;
 import ninja.skyrocketing.bot.fuyao.util.TimeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
@@ -101,6 +106,24 @@ public class GroupMessageListener extends SimpleListenerHost {
         return ListeningStatus.LISTENING;
     }
 
+    @EventHandler
+    public ListeningStatus onInvite(MemberJoinEvent.Invite event) throws IOException {
+        //上传头像
+//        Image avatarImage = MessageUtil.UploadImageToGroup(FileUtil.GetAvatarImageFile(event.getMember().getId()), event.getGroup());
+
+        //生成消息
+        MessageChainBuilder messages = new MessageChainBuilder();
+        messages.add("👏 欢迎" +
+                "由 \"" +  MessageUtil.NameOfMember(event.getInvitor()) +
+                "\" (" + event.getInvitor().getId() + ") " + "\" " +
+                "邀请的第" + (event.getGroup().getMembers().size() + 1) + "名群员。" + "\n");
+//        messages.add(avatarImage);
+        messages.add(new At(event.getMember().getId()));
+        messages.add("\n" + "记得阅读群公告（如果有的话）哦！");
+        event.getGroup().sendMessage(messages.asMessageChain());
+        return ListeningStatus.LISTENING;
+    }
+
     //监听群员主动退群
     @EventHandler
     public ListeningStatus onQuit(MemberLeaveEvent.Quit event) {
@@ -113,9 +136,7 @@ public class GroupMessageListener extends SimpleListenerHost {
                 "(提醒消息将在1分钟内自动撤回)"
         );
         //清理数据
-        Exp.CleanExpData(event.getGroup().getId(), event.getMember().getId());
-        Coin.CleanCoinData(event.getGroup().getId(), event.getMember().getId());
-        Fishing.CleanFishingData(event.getGroup().getId(), event.getMember().getId());
+        DBUtil.CleanDataAfterLeave(event.getGroup().getId(), event.getMember().getId());
         //撤回消息
         event.getGroup().sendMessage(messages.asMessageChain()).recallIn(60000);
         return ListeningStatus.LISTENING;
@@ -137,9 +158,7 @@ public class GroupMessageListener extends SimpleListenerHost {
         );
 
         //清理数据
-        Exp.CleanExpData(event.getGroup().getId(), event.getMember().getId());
-        Coin.CleanCoinData(event.getGroup().getId(), event.getMember().getId());
-        Fishing.CleanFishingData(event.getGroup().getId(), event.getMember().getId());
+        DBUtil.CleanDataAfterLeave(event.getGroup().getId(), event.getMember().getId());
         //撤回消息
         event.getGroup().sendMessage(messages.asMessageChain()).recallIn(60000);
         return ListeningStatus.LISTENING;
@@ -159,7 +178,7 @@ public class GroupMessageListener extends SimpleListenerHost {
     @EventHandler
     public ListeningStatus onMemberHonorChange(MemberHonorChangeEvent event) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("恭喜" + " \"" + MessageUtil.NameOfMember(event.getMember()) + "\" " + "\n" + new At(event.getMember().getId()) +
+        messageChainBuilder.add("恭喜" + " \"" + MessageUtil.NameOfMember(event.getMember()) + "\" " + new At(event.getMember().getId()) + "\n" +
                 "于 " + TimeUtil.NowDateTime(new Date()) + " " +
                 "喜提" +  " \"" + event.getHonorType() + "\" "
         );
@@ -171,10 +190,11 @@ public class GroupMessageListener extends SimpleListenerHost {
     @EventHandler
     public ListeningStatus onMemberSpecialTitleChange(MemberSpecialTitleChangeEvent event) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("恭喜" + " \"" + MessageUtil.NameOfMember(event.getMember()) + "\" " + "\n" + new At(event.getMember().getId()) +
+        messageChainBuilder.add("恭喜" + " \"" + MessageUtil.NameOfMember(event.getMember()) + "\" " + "\n" +
                 "于 " + TimeUtil.NowDateTime(new Date()) + " " +
-                "喜提新头衔" +  " \"" + event.getNew() + "\" "
+                "喜提" +  " \"" + MessageUtil.GetGroupHonorTypeName(event.getNew()) + "\" " + "\n"
         );
+        messageChainBuilder.add(new At(event.getMember().getId()));
         event.getGroup().sendMessage(messageChainBuilder.asMessageChain());
         return ListeningStatus.LISTENING;
     }

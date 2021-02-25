@@ -21,6 +21,6 @@ public class TimeUtil {
 
     //直接获取格式化后的当前时间
     public static String NowDateTime(Date date) {
-        return TimeFormatter(date) + " " + DateFormatter(date);
+        return DateFormatter(date) + " "  + TimeFormatter(date);
     }
 }
