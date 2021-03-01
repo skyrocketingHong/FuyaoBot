@@ -90,7 +90,12 @@ public class GroupMessageListener extends SimpleListenerHost {
                 String imageURL = FileUtil.ImageIdToURL(flashImage);
                 //文件名规则：群号-QQ号-日期（年月日时分秒微秒）
                 String fileName = event.getGroup().getId() + "-" + event.getSender().getId() + "-" + TimeUtil.DateTimeFileName();
-                File imagePath = new File(FileUtil.GetPath() + "\\cache\\Flash Image\\" + fileName + ".jpg");
+                String separator = File.separator;
+                File imagePath = new File(FileUtil.GetPath() +
+                        separator + "cache" +
+                        separator + "Flash Image" +
+                        separator + fileName + ".jpg"
+                );
                 HttpUtil.downloadFile(imageURL, imagePath);
                 //继续监听
                 return ListeningStatus.LISTENING;
