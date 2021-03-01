@@ -11,7 +11,7 @@ import java.util.Date;
 public class TimeUtil {
     //格式化时间
     public static String TimeFormatter(Date date) {
-        return DateUtil.format(date, "HH:mm:ss");
+        return DateUtil.format(date, "HH:mm:ss.SSS");
     }
 
     //格式化日期
@@ -21,6 +21,11 @@ public class TimeUtil {
 
     //直接获取格式化后的当前时间
     public static String NowDateTime(Date date) {
-        return DateFormatter(date) + " "  + TimeFormatter(date);
+        return DateFormatter(date) + " " + TimeFormatter(date);
+    }
+
+    //将时间作为文件名
+    public static String DateTimeFileName() {
+        return DateUtil.format(new Date(), "yyyyMMddHHmmssSSS");
     }
 }

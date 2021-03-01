@@ -10,12 +10,13 @@
 	</parent>
 	<groupId>ninja.skyrocketing.bot.fuyao</groupId>
 	<artifactId>fuyao-bot</artifactId>
-	<version>4.1.0.43</version>
+	<version>4.1.1.44</version>
 	<name>Fuyao bot</name>
 	<description>A QQ bot.</description>
 
 	<properties>
 		<java.version>15</java.version>
+		<kotlin.version>1.4.21</kotlin.version>
 		<start-class>ninja.skyrocketing.bot.fuyao.FuyaoBotApplication</start-class>
 	</properties>
 
@@ -30,13 +31,13 @@
 		<!--Mirai框架-->
 		<dependency>
 			<groupId>net.mamoe</groupId>
-			<artifactId>mirai-core-all</artifactId>
-			<version>2.3.2</version>
+			<artifactId>mirai-core-jvm</artifactId>
+			<version>2.4.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-stdlib</artifactId>
-			<version>1.4.21</version>
+			<artifactId>kotlin-stdlib-jdk8</artifactId>
+			<version>${kotlin.version}</version>
 		</dependency>
 		<!--druid连接池-->
 		<dependency>
