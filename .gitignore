@@ -38,3 +38,4 @@ deviceInfo.json
 debug.log
 src/test/*
 MxLibData/*
+cache/*

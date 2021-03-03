@@ -12,7 +12,7 @@ import java.io.IOException;
  * @Date 2021-01-17 22:16:13
  */
 public class FileUtil {
-    static String separator = File.separator;
+    public static String separator = File.separator;
 
     //获取jar包的路径
     public static String GetPath() {
@@ -29,7 +29,8 @@ public class FileUtil {
         String avatarFilePath = GetPath() +
                 separator + "cache" +
                 separator + "Member Avatar" +
-                separator + "qqId" + ".jpg";
+                separator + TimeUtil.DateFileName() +
+                separator + qqId + ".jpg";
         //下载并保存头像。当头像存在时则不下载，直接返回
         File avatarImageFile = new File(avatarFilePath);
         HttpUtil.downloadFile(avatarURL, avatarImageFile);

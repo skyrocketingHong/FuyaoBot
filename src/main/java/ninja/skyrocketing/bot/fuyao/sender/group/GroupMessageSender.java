@@ -3,14 +3,18 @@ package ninja.skyrocketing.bot.fuyao.sender.group;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.MessageReceipt;
+import net.mamoe.mirai.message.action.AsyncRecallResult;
 import net.mamoe.mirai.message.data.Message;
 import ninja.skyrocketing.bot.fuyao.FuyaoBotApplication;
 import ninja.skyrocketing.bot.fuyao.pojo.bot.BotFunctionTrigger;
 import ninja.skyrocketing.bot.fuyao.pojo.group.GroupMessage;
+import ninja.skyrocketing.bot.fuyao.sender.SendLog;
 import ninja.skyrocketing.bot.fuyao.service.bot.BotFunctionTriggerService;
 import ninja.skyrocketing.bot.fuyao.util.InvokeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
 
 /**
  * @Author skyrocketing Hong
@@ -42,18 +46,6 @@ public class GroupMessageSender {
      * **/
     public static String MatchedClass(GroupMessage groupMessage) {
         String msg = groupMessage.getMessage();
-        //提前判断闪照，并将消息转换为数据库中对应的实现类的关键词
-        if (msg.contains("[闪照]")) {
-            if (groupMessage.getGroupMessageEvent().getMessage().toString().matches(".*mirai:flash:.*")) {
-                msg = groupMessage.getGroupMessageEvent().getMessage().toString();
-            } else {
-                return null;
-            }
-        }
-        //提前判断红包，并将消息转换为数据库中对应的实现类的关键词
-        if (msg.equals("[QQ红包]请使用新版手机QQ查收红包。") || msg.equals("[QQ红包]你收到一个红包，请在新版手机QQ查看。")) {
-            msg = groupMessage.getGroupMessageEvent().getMessage().toString();
-        }
         for (BotFunctionTrigger botFunctionTrigger : botFunctionTriggerService.GetAllTrigger()) {
             if (msg.matches(botFunctionTrigger.getKeyword())) {
                 if (botFunctionTrigger.getEnabled()) {
@@ -74,15 +66,18 @@ public class GroupMessageSender {
     }
 
     /**
-     * 根据群号发消息
+     * 根据群号发消息并保存日志
      * **/
-    public static boolean SendMessageByGroupId(Message message, Long groupId) {
-        MessageReceipt<Contact> messageReceipt = FuyaoBotApplication.bot.getGroup(groupId).sendMessage(message);
-        return messageReceipt.isToGroup();
+    public static void SendMessageByGroupId(Message message, Long groupId) throws IOException {
+        FuyaoBotApplication.bot.getGroup(groupId).sendMessage(message);
+        SendLog.WriteLogToFile(message.toString().replaceAll("\n", ""), groupId);
     }
-
-    public static boolean SendMessageByGroupId(String message, Long groupId) {
-        MessageReceipt<Contact> messageReceipt = FuyaoBotApplication.bot.getGroup(groupId).sendMessage(message);
-        return messageReceipt.isToGroup();
+    public static void SendMessageByGroupId(String message, Long groupId) throws IOException {
+        FuyaoBotApplication.bot.getGroup(groupId).sendMessage(message);
+        SendLog.WriteLogToFile(message.replaceAll("\n", ""), groupId);
+    }
+    public static void SendMessageByGroupId(Message message, Long groupId, Integer recall) throws IOException {
+        FuyaoBotApplication.bot.getGroup(groupId).sendMessage(message).recallIn(recall);
+        SendLog.WriteLogToFile("(" + recall + " 毫秒后撤回) " + message.toString().replaceAll("\n", ""), groupId);
     }
 }

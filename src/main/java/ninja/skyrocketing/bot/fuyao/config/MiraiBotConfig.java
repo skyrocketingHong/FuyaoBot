@@ -1,5 +1,7 @@
 package ninja.skyrocketing.bot.fuyao.config;
 
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import net.mamoe.mirai.BotFactory;
 import net.mamoe.mirai.event.EventChannel;
 import net.mamoe.mirai.event.events.BotEvent;
@@ -12,6 +14,9 @@ import ninja.skyrocketing.bot.fuyao.pojo.bot.BotQQ;
 import ninja.skyrocketing.bot.fuyao.service.bot.BotConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.Date;
 
 /**
  * @Author skyrocketing Hong
@@ -38,7 +43,7 @@ public class MiraiBotConfig {
         return botQQ;
     }
 
-    public static void RunBot(boolean devMode) {
+    public static void RunBot(boolean devMode) throws IOException {
         BotQQ botQQ = SetBotQQByMode(devMode);
         //设备缓存信息
         FuyaoBotApplication.bot = BotFactory.INSTANCE.newBot(
@@ -60,6 +65,13 @@ public class MiraiBotConfig {
 
         //运行定时消息模块
         Timely.TimelyMessage();
+
+        //发送启动成功消息
+        Date endDate = new Date();
+        FuyaoBotApplication.bot.getFriend(Long.parseLong(botConfigService.GetConfigValueByKey("admin_user"))).sendMessage(
+                "✔ 启动成功" + "\n" +
+                        "耗费时间：" + DateUtil.between(FuyaoBotApplication.startDate, endDate, DateUnit.SECOND) + "s"
+        );
 
         //挂载该机器人的线程
         FuyaoBotApplication.bot.join();

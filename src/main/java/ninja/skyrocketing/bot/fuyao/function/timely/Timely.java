@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -29,7 +30,7 @@ public class Timely {
 
     //每分钟读取一次数据库
     @Scheduled(cron = "0 */1 * * * ?")
-    public static void TimelyMessage() {
+    public static void TimelyMessage() throws IOException {
         //获取实时时间
         Date nowDate = DateUtil.date();
         //从数据库中获取所有定时消息并迭代

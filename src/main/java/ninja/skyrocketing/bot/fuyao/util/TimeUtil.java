@@ -23,9 +23,17 @@ public class TimeUtil {
     public static String NowDateTime(Date date) {
         return DateFormatter(date) + " " + TimeFormatter(date);
     }
+    public static String NowDateTime() {
+        return NowDateTime(new Date());
+    }
 
-    //将时间作为文件名
+    //将日期时间作为文件名
     public static String DateTimeFileName() {
         return DateUtil.format(new Date(), "yyyyMMddHHmmssSSS");
+    }
+
+    //将日期作为文件名
+    public static String DateFileName() {
+        return DateUtil.format(new Date(), "yyyyMMdd");
     }
 }
