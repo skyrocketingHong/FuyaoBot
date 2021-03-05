@@ -9,14 +9,20 @@ import net.mamoe.mirai.utils.BotConfiguration;
 import ninja.skyrocketing.bot.fuyao.FuyaoBotApplication;
 import ninja.skyrocketing.bot.fuyao.function.timely.Timely;
 import ninja.skyrocketing.bot.fuyao.listener.admin.BotMessageListener;
+import ninja.skyrocketing.bot.fuyao.listener.group.GroupEventListener;
 import ninja.skyrocketing.bot.fuyao.listener.group.GroupMessageListener;
 import ninja.skyrocketing.bot.fuyao.pojo.bot.BotQQ;
+import ninja.skyrocketing.bot.fuyao.pojo.group.GroupRepeaterMessage;
 import ninja.skyrocketing.bot.fuyao.service.bot.BotConfigService;
+import ninja.skyrocketing.bot.fuyao.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Author skyrocketing Hong
@@ -31,6 +37,15 @@ public class MiraiBotConfig {
         MiraiBotConfig.botConfigService = botConfigService;
     }
 
+    //全局jar根目录
+    public static final String jarPath =  FileUtil.GetPath();
+    //全局log文件的File对象
+    public static final File logFile = new File(jarPath + FileUtil.separator + "cache" + FileUtil.separator + "log");
+
+    //全局复读消息变量
+    public static Map<Long, GroupRepeaterMessage> GroupsRepeaterMessagesMap = new HashMap<>();
+
+    //根据模式获得不同的qq号
     public static BotQQ SetBotQQByMode(boolean devMode) {
         BotQQ botQQ = new BotQQ();
         if (devMode) {
@@ -61,6 +76,7 @@ public class MiraiBotConfig {
         //注册监听事件
         EventChannel<BotEvent> eventChannel = FuyaoBotApplication.bot.getEventChannel();
         eventChannel.registerListenerHost(new GroupMessageListener());
+        eventChannel.registerListenerHost(new GroupEventListener());
         eventChannel.registerListenerHost(new BotMessageListener());
 
         //运行定时消息模块

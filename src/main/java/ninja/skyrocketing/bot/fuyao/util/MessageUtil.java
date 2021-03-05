@@ -52,7 +52,9 @@ public class MessageUtil {
         return avatarImage;
     }
 
-    //统一的用户提及文案
+    /**
+     * 统一的用户提及文案，无空格无换行
+     */
     public static Message UserNotify(Member member, boolean needAt) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add("\"" + NameOfMember(member) + "\" " + "(" + member.getId() + ")");

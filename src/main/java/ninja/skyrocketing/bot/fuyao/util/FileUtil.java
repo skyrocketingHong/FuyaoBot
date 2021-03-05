@@ -2,6 +2,7 @@ package ninja.skyrocketing.bot.fuyao.util;
 
 import cn.hutool.http.HttpUtil;
 import net.mamoe.mirai.message.data.Image;
+import ninja.skyrocketing.bot.fuyao.config.MiraiBotConfig;
 import org.springframework.boot.system.ApplicationHome;
 
 import java.io.File;
@@ -12,6 +13,7 @@ import java.io.IOException;
  * @Date 2021-01-17 22:16:13
  */
 public class FileUtil {
+    //全局文件名分隔符
     public static String separator = File.separator;
 
     //获取jar包的路径
@@ -26,7 +28,7 @@ public class FileUtil {
         //将QQ号和获取头像的链接拼接起来
         String avatarURL = "http://q1.qlogo.cn/g?b=qq&nk=" + qqId + "&s=640";
         //拼接头像的路径和文件名
-        String avatarFilePath = GetPath() +
+        String avatarFilePath = MiraiBotConfig.jarPath +
                 separator + "cache" +
                 separator + "Member Avatar" +
                 separator + TimeUtil.DateFileName() +
@@ -37,9 +39,20 @@ public class FileUtil {
         return avatarImageFile;
     }
 
-    //图片id转链接
+    /** 图片id转链接
+     * @param image Image Mirai类型图片
+     */
     //http://gchat.qpic.cn/gchatpic_new/0/0-0-{图片ID}/0?term=2
     public static String ImageIdToURL(Image image) {
         return "http://gchat.qpic.cn/gchatpic_new/0/0-0-" + image.getImageId().replaceAll("[-{}]|\\.jpg", "") + "/0?term=2";
+    }
+
+    /** 判断jar根目录下是否有dev文件，有的话则为开发环境
+    * @return boolean 存在dev文件为true，否则返回false
+    */
+    public static Boolean IsDev() {
+        String path = MiraiBotConfig.jarPath + separator + "dev";
+        File devFile = new File(path);
+        return devFile.exists();
     }
 }
