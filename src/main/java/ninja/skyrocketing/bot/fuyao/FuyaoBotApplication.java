@@ -2,6 +2,7 @@ package ninja.skyrocketing.bot.fuyao;
 
 import net.mamoe.mirai.Bot;
 import ninja.skyrocketing.bot.fuyao.config.MiraiBotConfig;
+import ninja.skyrocketing.bot.fuyao.function.functions.GameFunction;
 import ninja.skyrocketing.bot.fuyao.pojo.group.GroupRepeaterMessage;
 import ninja.skyrocketing.bot.fuyao.util.FileUtil;
 import org.mybatis.spring.annotation.MapperScan;

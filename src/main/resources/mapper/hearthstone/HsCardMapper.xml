@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ninja.skyrocketing.bot.fuyao.mapper.hearthstone.HsCardMapper">
+  <resultMap id="BaseResultMap" type="ninja.skyrocketing.bot.fuyao.pojo.hearthstone.HsCard">
+    <constructor>
+      <idArg column="id" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="set" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="rarity" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="imgUrl" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, `set`, name, rarity, imgUrl
+  </sql>
+  <select id="selectBySetOrderByRandom" parameterType="java.lang.String" resultType="ninja.skyrocketing.bot.fuyao.pojo.hearthstone.HsCard">
+    select
+    <include refid="Base_Column_List" />
+    from hs_card
+    where `set` = #{set,jdbcType=VARCHAR}
+    and rarity != 'FREE'
+    order by rand() limit 5
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from hs_card
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from hs_card
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="ninja.skyrocketing.bot.fuyao.pojo.hearthstone.HsCard">
+    insert into hs_card (id, `set`, name,
+      rarity, imgUrl)
+    values (#{id,jdbcType=VARCHAR}, #{set,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{rarity,jdbcType=VARCHAR}, #{imgurl,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="ninja.skyrocketing.bot.fuyao.pojo.hearthstone.HsCard">
+    insert into hs_card
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="set != null">
+        set,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="rarity != null">
+        rarity,
+      </if>
+      <if test="imgurl != null">
+        imgUrl,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="set != null">
+        #{set,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="rarity != null">
+        #{rarity,jdbcType=VARCHAR},
+      </if>
+      <if test="imgurl != null">
+        #{imgurl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="ninja.skyrocketing.bot.fuyao.pojo.hearthstone.HsCard">
+    update hs_card
+    <set>
+      <if test="set != null">
+        set = #{set,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="rarity != null">
+        rarity = #{rarity,jdbcType=VARCHAR},
+      </if>
+      <if test="imgurl != null">
+        imgUrl = #{imgurl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="ninja.skyrocketing.bot.fuyao.pojo.hearthstone.HsCard">
+    update hs_card
+    set `set` = #{set,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      rarity = #{rarity,jdbcType=VARCHAR},
+      imgUrl = #{imgurl,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

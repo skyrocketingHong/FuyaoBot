@@ -13,7 +13,7 @@
             <property name="suppressAllComments" value="true"/>
         </commentGenerator>
         <!--jdbc的数据库连接：驱动类、链接地址、用户名、密码-->
-        <jdbcConnection driverClass=""
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
                         connectionURL=""
                         userId=""
                         password="">
@@ -28,7 +28,7 @@
 
         <!-- targetProject：生成POJO类的位置 -->
         <javaModelGenerator
-                targetPackage="ninja.skyrocketing.bot.fuyao.pojo.group"
+                targetPackage="ninja.skyrocketing.bot.fuyao.pojo.hearthstone"
                 targetProject=".\src\main\java">
             <!-- 是否允许子包，即targetPackage.schemaName.tableName -->
             <property name="enableSubPackages" value="false" />
@@ -41,19 +41,19 @@
         </javaModelGenerator>
 
         <!--Mapper映射文件生成所在的目录 为每一个数据库的表生成对应的SqlMap文件 -->
-        <sqlMapGenerator targetPackage="group"
+        <sqlMapGenerator targetPackage="hearthstone"
                          targetProject=".\src\main\resources\mapper">
             <property name="enableSubPackages" value="false" />
         </sqlMapGenerator>
 
         <javaClientGenerator type="MAPPER"
-                             targetPackage="ninja.skyrocketing.bot.fuyao.mapper.group"
+                             targetPackage="ninja.skyrocketing.bot.fuyao.mapper.hearthstone"
                              targetProject=".\src\main\java">
             <!-- enableSubPackages:是否让schema作为包的后缀 -->
             <property name="enableSubPackages" value="false" />
         </javaClientGenerator>
 
-        <table tableName=""
+        <table tableName="hs_card"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"

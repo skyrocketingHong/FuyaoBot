@@ -43,7 +43,7 @@ public class GroupEventListener extends SimpleListenerHost {
         //生成消息
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add("👏 欢迎第" + (event.getGroup().getMembers().size() + 1) + "名群员。" + "\n");
-        messageChainBuilder.add(MessageUtil.UploadImageToGroup(event.getGroup(), event.getMember()));
+        messageChainBuilder.add(MessageUtil.UploadAvatarImageToGroup(event.getGroup(), event.getMember()));
         messageChainBuilder.add(MessageUtil.UserNotify(event.getMember(), true));
         messageChainBuilder.add("\n记得阅读群公告（如果有的话）哦！");
         GroupMessageSender.SendMessageByGroupId(messageChainBuilder, event.getGroup());
@@ -58,8 +58,8 @@ public class GroupEventListener extends SimpleListenerHost {
         messageChainBuilder.add("👏 欢迎由 ");
         messageChainBuilder.add(MessageUtil.UserNotify(event.getInvitor(), false));
         messageChainBuilder.add(" 邀请的第 " + (event.getGroup().getMembers().size() + 1) + " 名群员：" + "\n");
-        messageChainBuilder.add(MessageUtil.UploadImageToGroup(event.getGroup(), event.getMember()));
-        messageChainBuilder.add(MessageUtil.UserNotify(event.getMember(), false));
+        messageChainBuilder.add(MessageUtil.UploadAvatarImageToGroup(event.getGroup(), event.getMember()));
+        messageChainBuilder.add(MessageUtil.UserNotify(event.getMember(), true));
         messageChainBuilder.add("\n" + "记得阅读群公告（如果有的话）哦！");
         GroupMessageSender.SendMessageByGroupId(messageChainBuilder, event.getGroup());
         return ListeningStatus.LISTENING;

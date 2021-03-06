@@ -22,7 +22,7 @@ public class GroupMessage {
     GroupMessageEvent groupMessageEvent;
 
     public GroupMessage(GroupMessageEvent event) {
-        this.message = event.getMessage().contentToString().replaceFirst("~|～", "");
+        this.message = event.getMessage().contentToString().replaceFirst("[~～/]", "");
         this.groupUser.setGroupId(event.getGroup().getId());
         this.groupUser.setUserId(event.getSender().getId());
         this.groupMessageEvent = event;

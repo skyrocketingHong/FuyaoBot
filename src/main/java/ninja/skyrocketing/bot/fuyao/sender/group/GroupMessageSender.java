@@ -50,7 +50,7 @@ public class GroupMessageSender {
                 if (botFunctionTrigger.getEnabled()) {
                     return botFunctionTrigger.getImplClass();
                 } else {
-                    return "FuncOffMessage.FuncOff";
+                    return "functions.FunctionDisabledMessage.FunctionDisabled";
                 }
             }
         }
@@ -72,7 +72,7 @@ public class GroupMessageSender {
     public static void SendMessageByGroupId(MessageChainBuilder message, Group group) throws IOException {
         Message asMessageChain = message.asMessageChain();
         group.sendMessage(asMessageChain);
-        LogUtil.GroupMessageLog(asMessageChain.toString().replaceAll("\n", ""), group.getId());
+        LogUtil.GroupMessageLog(asMessageChain.toString().replaceAll("\n", " \\\n "), group.getId());
     }
 
     /**

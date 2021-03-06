@@ -1,10 +1,14 @@
 package ninja.skyrocketing.bot.fuyao.util;
 
+import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.Member;
+import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.*;
 import net.mamoe.mirai.utils.ExternalResource;
+import ninja.skyrocketing.bot.fuyao.pojo.group.GroupMessage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -44,13 +48,18 @@ public class MessageUtil {
         };
     }
 
-    //向QQ群上传图片
-    public static Image UploadImageToGroup(Group group, Member member) throws IOException {
-        ExternalResource externalResource = ExternalResource.create(FileUtil.GetAvatarImageFile(member.getId()));
-        Image avatarImage = group.uploadImage(externalResource);
-        externalResource.close();
-        return avatarImage;
+    //向QQ群上传头像
+    public static Image UploadAvatarImageToGroup(Group group, Member member) throws IOException {
+        return UploadImageToGroup(group, FileUtil.GetAvatarImageFile(member.getId()));
     }
+    //向QQ群上传图片
+    public static Image UploadImageToGroup(Group group, File imageFile) throws IOException {
+        ExternalResource externalResource = ExternalResource.create(imageFile);
+        Image image = group.uploadImage(externalResource);
+        externalResource.close();
+        return image;
+    }
+
 
     /**
      * 统一的用户提及文案，无空格无换行
@@ -63,5 +72,15 @@ public class MessageUtil {
             messageChainBuilder.add(new At(member.getId()));
         }
         return messageChainBuilder.asMessageChain();
+    }
+
+    /**
+    * 等待API返回消息时的提醒，在获取到API返回的消息后会撤回
+    * */
+    public static MessageReceipt<Contact> WaitingForAPI(GroupMessage groupMessage) {
+        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+        messageChainBuilder.add(UserNotify(groupMessage.getGroupMessageEvent().getSender(), true));
+        messageChainBuilder.add("正在等待 API 返回数据...");
+        return groupMessage.getGroupMessageEvent().getGroup().sendMessage(messageChainBuilder.asMessageChain());
     }
 }

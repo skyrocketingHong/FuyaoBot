@@ -39,8 +39,12 @@ public class MiraiBotConfig {
 
     //全局jar根目录
     public static final String jarPath =  FileUtil.GetPath();
+    //全局cache目录
+    public static final String cachePath = jarPath + FileUtil.separator + "cache";
     //全局log文件的File对象
-    public static final File logFile = new File(jarPath + FileUtil.separator + "cache" + FileUtil.separator + "log");
+    public static final File logFile = new File(cachePath + FileUtil.separator + "log");
+    //全局hs卡牌缓存目录
+    public static final String hsCachePath = cachePath + FileUtil.separator + "Hearthstone";
 
     //全局复读消息变量
     public static Map<Long, GroupRepeaterMessage> GroupsRepeaterMessagesMap = new HashMap<>();

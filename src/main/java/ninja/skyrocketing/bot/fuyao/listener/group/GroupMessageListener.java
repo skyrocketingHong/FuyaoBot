@@ -75,7 +75,8 @@ public class GroupMessageListener extends SimpleListenerHost {
                         //发送消息，并在开头添加@触发人
                         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
                         messageChainBuilder.add(MessageUtil.UserNotify(event.getSender(), true));
-                        messageChainBuilder.add("\n" + message);
+                        messageChainBuilder.add("\n");
+                        messageChainBuilder.add(message);
                         GroupMessageSender.SendMessageByGroupId(messageChainBuilder, event.getGroup());
                     }
                 }
