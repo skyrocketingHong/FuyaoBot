@@ -61,10 +61,10 @@ public class GameFunction {
     }
 
     /**
-    * 炉石开包（暗月马戏团）
+    * 炉石开包
     * */
     public static Message HearthStone(GroupMessage groupMessage) throws IOException {
-        MessageReceipt<Contact> messageReceipt = MessageUtil.WaitingForAPI(groupMessage);
+        MessageReceipt<Contact> messageReceipt = MessageUtil.WaitingMessage(groupMessage, "正在开包...");
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         //从数据库中随机取出5张卡，放在List中
         List<HsCard> hsCardList = hsCardService.SelectBySetOrderByRandom("DARKMOON_FAIRE");
@@ -72,7 +72,7 @@ public class GameFunction {
         List<File> cardImageFileList = new ArrayList<>();
         //生成的新图片的文件名，将卡的id直接拼在一起
         StringBuilder jointCardFileName = new StringBuilder();
-        messageChainBuilder.add("你开出了五张卡\n");
+        messageChainBuilder.add("疯狂的暗月马戏团\n");
         //遍历5张卡
         for (HsCard hsCard : hsCardList) {
             jointCardFileName.append(hsCard.getId());

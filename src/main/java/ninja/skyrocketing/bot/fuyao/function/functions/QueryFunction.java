@@ -49,7 +49,7 @@ public class QueryFunction {
      * 守望先锋街机模式查询
      **/
     public static Message GetOverwatchArcadeModes(GroupMessage groupMessage) throws IOException, ParseException {
-        MessageReceipt<Contact> messageReceipt = MessageUtil.WaitingForAPI(groupMessage);
+        MessageReceipt<Contact> messageReceipt = MessageUtil.WaitingMessage(groupMessage, "正在等待API返回数据");
         JSONObject owModes = HttpUtil.ReadJsonFromURL("https://overwatcharcade.today/api/overwatch/today");
         SimpleDateFormat updateDateTime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
         MessageChainBuilder messages = new MessageChainBuilder();

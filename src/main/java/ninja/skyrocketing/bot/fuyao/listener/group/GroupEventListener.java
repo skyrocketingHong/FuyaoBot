@@ -118,10 +118,12 @@ public class GroupEventListener extends SimpleListenerHost {
     //群员荣誉修改
     @EventHandler
     public ListeningStatus onMemberHonorChange(MemberHonorChangeEvent event) throws IOException {
+        String honorName = MessageUtil.GetGroupHonorTypeName(event.getHonorType());
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+        messageChainBuilder.add("恭喜 ");
         messageChainBuilder.add(MessageUtil.UserNotify(event.getUser(), true));
         messageChainBuilder.add("\n于 " + TimeUtil.NowDateTime(new Date()) + " " +
-                "喜提" +  " \"" + event.getHonorType() + "\" "
+                "喜提" +  " \"" + honorName + "\" "
         );
         GroupMessageSender.SendMessageByGroupId(messageChainBuilder, event.getGroup());
         return ListeningStatus.LISTENING;
@@ -142,13 +144,11 @@ public class GroupEventListener extends SimpleListenerHost {
     //群员头衔修改
     @EventHandler
     public ListeningStatus onMemberSpecialTitleChange(MemberSpecialTitleChangeEvent event) throws IOException {
-        String honorTypeName = event.getNew();
-        String honorName = MessageUtil.GetGroupHonorTypeName(honorTypeName);
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add("恭喜 ");
         messageChainBuilder.add(MessageUtil.UserNotify(event.getMember(), false));
         messageChainBuilder.add("\n于 " + TimeUtil.NowDateTime(new Date()) + " " +
-                "喜提 " + honorName + "\n"
+                "喜提 \"" + event.getNew() + "\" 头衔\n"
         );
         messageChainBuilder.add(new At(event.getMember().getId()));
         GroupMessageSender.SendMessageByGroupId(messageChainBuilder, event.getGroup());
@@ -196,6 +196,16 @@ public class GroupEventListener extends SimpleListenerHost {
         LogUtil.GroupEventFile(
                 event.toString(), "机器人成功加入了一个新群 (原群主通过 https://huifu.qq.com/ 恢复原来群主身份并入群, Bot 是原群主)"
         );
+        return ListeningStatus.LISTENING;
+    }
+
+    //监听机器人的群名片被修改后，改成默认名片
+    @EventHandler
+    public ListeningStatus onMemberCardChangeEvent(MemberCardChangeEvent event) throws IOException {
+        if (event.getMember().getId() == event.getBot().getId()) {
+            event.getMember().setNameCard("");
+        }
+        LogUtil.GroupEventFile(event.toString(), "机器人群名片被修改");
         return ListeningStatus.LISTENING;
     }
 

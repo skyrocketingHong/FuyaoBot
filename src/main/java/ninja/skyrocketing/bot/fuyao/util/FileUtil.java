@@ -64,33 +64,27 @@ public class FileUtil {
     /**
     * 图片横向拼接
     * */
-    public static void JointPic(List<File> files, File path) {
-        try {
-            int allWidth = 0;	//图片总宽度
-            int allHeight = 0;	//图片总高度
-            List<BufferedImage> imgs = new ArrayList<>();
-            for(int i=0; i<files.size(); i++){
-                imgs.add(ImageIO.read(files.get(i)));
-                //横向
-                if (i==0) {
-                    allHeight = imgs.get(0).getHeight();
-                }
-                allWidth += imgs.get(i).getWidth();
+    public static void JointPic(List<File> files, File path) throws IOException {
+        int allWidth = 0;	//图片总宽度
+        int allHeight = 0;	//图片总高度
+        List<BufferedImage> imgs = new ArrayList<>();
+        for(int i=0; i<files.size(); i++){
+            imgs.add(ImageIO.read(files.get(i)));
+            //横向
+            if (i==0) {
+                allHeight = imgs.get(0).getHeight();
             }
-            BufferedImage combined = new BufferedImage(allWidth, allHeight, BufferedImage.TYPE_INT_RGB);
-            //paint both images, preserving the alpha channels
-            Graphics g = combined.getGraphics();
-            //横向合成
-            int width = 0;
-            for (BufferedImage img : imgs) {
-                g.drawImage(img, width, 0, null);
-                width += img.getWidth();
-            }
-            ImageIO.write(combined, "png", path);
-            System.out.println("合成成功");
-        } catch (Exception e) {
-            System.out.println("合成失败");
-            e.printStackTrace();
+            allWidth += imgs.get(i).getWidth();
         }
+        BufferedImage combined = new BufferedImage(allWidth, allHeight, BufferedImage.TYPE_INT_ARGB);
+        //paint both images, preserving the alpha channels
+        Graphics g = combined.getGraphics();
+        //横向合成
+        int width = 0;
+        for (BufferedImage img : imgs) {
+            g.drawImage(img, width, 0, null);
+            width += img.getWidth();
+        }
+        ImageIO.write(combined, "png", path);
     }
 }

@@ -7,7 +7,7 @@ import net.mamoe.mirai.event.EventChannel;
 import net.mamoe.mirai.event.events.BotEvent;
 import net.mamoe.mirai.utils.BotConfiguration;
 import ninja.skyrocketing.bot.fuyao.FuyaoBotApplication;
-import ninja.skyrocketing.bot.fuyao.function.timely.Timely;
+import ninja.skyrocketing.bot.fuyao.function.functions.TimelyFunction;
 import ninja.skyrocketing.bot.fuyao.listener.admin.BotMessageListener;
 import ninja.skyrocketing.bot.fuyao.listener.group.GroupEventListener;
 import ninja.skyrocketing.bot.fuyao.listener.group.GroupMessageListener;
@@ -84,7 +84,7 @@ public class MiraiBotConfig {
         eventChannel.registerListenerHost(new BotMessageListener());
 
         //运行定时消息模块
-        Timely.TimelyMessage();
+        TimelyFunction.TimelyMessage();
 
         //发送启动成功消息
         Date endDate = new Date();

@@ -1,7 +1,6 @@
 package ninja.skyrocketing.bot.fuyao.service.hearthstone;
 
 import ninja.skyrocketing.bot.fuyao.pojo.hearthstone.HsCard;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 

@@ -66,13 +66,22 @@ public class GroupMessageSender {
 
     /**
      * 根据群号发消息并保存日志
+     * @param message Message
+     * @param group Group
+     */
+    public static void SendMessageByGroupId(Message message, Group group) throws IOException {
+        group.sendMessage(message);
+        LogUtil.GroupMessageLog(message.toString().replaceAll("\n", " \\\\n "), group.getId());
+    }
+
+    /**
+     * 根据群号发消息并保存日志
      * @param message MessageChainBuilder
      * @param group Group
      */
     public static void SendMessageByGroupId(MessageChainBuilder message, Group group) throws IOException {
         Message asMessageChain = message.asMessageChain();
-        group.sendMessage(asMessageChain);
-        LogUtil.GroupMessageLog(asMessageChain.toString().replaceAll("\n", " \\\n "), group.getId());
+        SendMessageByGroupId(asMessageChain, group);
     }
 
     /**
