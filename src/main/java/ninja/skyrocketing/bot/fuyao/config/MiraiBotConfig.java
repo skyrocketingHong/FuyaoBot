@@ -42,12 +42,14 @@ public class MiraiBotConfig {
     //全局cache目录
     public static final String cachePath = jarPath + FileUtil.separator + "cache";
     //全局log文件的File对象
-    public static final File logFile = new File(cachePath + FileUtil.separator + "log");
+    public static final String logFile = cachePath + FileUtil.separator + "log" + FileUtil.separator;
     //全局hs卡牌缓存目录
     public static final String hsCachePath = cachePath + FileUtil.separator + "Hearthstone";
 
     //全局复读消息变量
     public static Map<Long, GroupRepeaterMessage> GroupsRepeaterMessagesMap = new HashMap<>();
+    //全局已复读消息变量
+    public static Map<Long, String> GroupRepeatedMessagesMap = new HashMap<>();
 
     //根据模式获得不同的qq号
     public static BotQQ SetBotQQByMode(boolean devMode) {

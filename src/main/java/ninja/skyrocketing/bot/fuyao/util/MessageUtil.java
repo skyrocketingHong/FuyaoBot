@@ -66,7 +66,7 @@ public class MessageUtil {
      */
     public static Message UserNotify(Member member, boolean needAt) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("\"" + NameOfMember(member) + "\" " + "(" + member.getId() + ")");
+        messageChainBuilder.add("\"" + NameOfMember(member) + "" + "(" + member.getId() + ")");
         if (needAt) {
             messageChainBuilder.add("\n");
             messageChainBuilder.add(new At(member.getId()));

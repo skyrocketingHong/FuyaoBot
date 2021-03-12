@@ -83,4 +83,11 @@ public class TimeUtil {
             return "error";
         }
     }
+
+    /**
+    * 返回当前时间的时间戳
+    * */
+    public static Long Timestamp() {
+        return System.currentTimeMillis();
+    }
 }

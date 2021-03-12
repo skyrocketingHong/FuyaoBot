@@ -3,14 +3,19 @@ package ninja.skyrocketing.bot.fuyao.function.functions;
 import cn.hutool.core.date.ChineseDate;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
+import net.mamoe.mirai.message.data.MusicKind;
+import net.mamoe.mirai.message.data.MusicShare;
 import ninja.skyrocketing.bot.fuyao.pojo.group.GroupMessage;
 import ninja.skyrocketing.bot.fuyao.util.HttpUtil;
 import ninja.skyrocketing.bot.fuyao.util.MessageUtil;
+import ninja.skyrocketing.bot.fuyao.util.MusicSearchUtil;
 import ninja.skyrocketing.bot.fuyao.util.TimeUtil;
 
 import java.io.IOException;
@@ -19,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 /**
  * @Author skyrocketing Hong
@@ -26,6 +32,7 @@ import java.time.format.DateTimeFormatter;
  */
 
 public class QueryFunction {
+
     /**
      * 获取当前时间
      **/
@@ -49,7 +56,7 @@ public class QueryFunction {
      * 守望先锋街机模式查询
      **/
     public static Message GetOverwatchArcadeModes(GroupMessage groupMessage) throws IOException, ParseException {
-        MessageReceipt<Contact> messageReceipt = MessageUtil.WaitingMessage(groupMessage, "正在等待API返回数据");
+        MessageReceipt<Contact> messageReceipt = MessageUtil.WaitingMessage(groupMessage, "正在等待 API 返回数据");
         JSONObject owModes = HttpUtil.ReadJsonFromURL("https://overwatcharcade.today/api/overwatch/today");
         SimpleDateFormat updateDateTime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
         MessageChainBuilder messages = new MessageChainBuilder();
@@ -60,5 +67,52 @@ public class QueryFunction {
         }
         messageReceipt.recall();
         return messages.asMessageChain();
+    }
+
+    /**
+    * nbnhhsh 能不能好好说话
+    * */
+    public static Message nbnhhsh(GroupMessage groupMessage) {
+        MessageReceipt<Contact> messageReceipt = MessageUtil.WaitingMessage(groupMessage, "正在等待 API 返回数据");
+        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+        //从消息中分离出需要查询的字符串
+        String msg = groupMessage.getMessage().replaceFirst("^wtf\\s+", "");
+        //拼接查询参数
+        String param = "{\"text\" : \"" + msg + "\"}";
+        //存储返回的json字符串
+        String nbnhhsh = cn.hutool.http.HttpUtil.post("https://lab.magiconch.com/api/nbnhhsh/guess", param);
+        //如果字符串是json数组，则返回消息
+        if (JSONUtil.isJsonArray(nbnhhsh)) {
+            //将字符串转换为json数组
+            JSONArray nbnhhshArray = JSONUtil.parseArray(nbnhhsh);
+            //获取可能的结果，去掉中括号并分割成String数组
+            String[] trans = nbnhhshArray.getByPath("trans", String.class)
+                    .replaceAll("\\[|]", "")
+                    .split(",");
+            //统计个数
+            int count = trans.length;
+            //拼接消息
+            messageChainBuilder.add("\"" + msg + "\" ");
+            messageChainBuilder.add("有以下 " + count + " 种可能: \n");
+            for (int i = 0; i < count; ++i) {
+                messageChainBuilder.add(i + 1 + ". " + trans[i] + " ");
+            }
+        } else {
+            messageChainBuilder.add("查询失败，请稍后重试...");
+            return messageChainBuilder.asMessageChain();
+        }
+        messageReceipt.recall();
+        return messageChainBuilder.asMessageChain();
+    }
+
+    /**
+    * 点歌
+    * */
+    public static Message Music(GroupMessage groupMessage) throws IOException {
+        String str = groupMessage.getMessage().replaceFirst("^music\\s+", "");
+        if (str.matches("^set qq$|^set 163$")) {
+
+        }
+        return MusicSearchUtil.MusicQuery(str, false);
     }
 }

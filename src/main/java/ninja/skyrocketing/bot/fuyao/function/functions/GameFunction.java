@@ -1,6 +1,5 @@
 package ninja.skyrocketing.bot.fuyao.function.functions;
 
-import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.HttpUtil;
 import lombok.NoArgsConstructor;
 import net.mamoe.mirai.contact.Contact;
@@ -12,7 +11,6 @@ import ninja.skyrocketing.bot.fuyao.pojo.group.GroupMessage;
 import ninja.skyrocketing.bot.fuyao.pojo.hearthstone.HsCard;
 import ninja.skyrocketing.bot.fuyao.service.hearthstone.HsCardService;
 import ninja.skyrocketing.bot.fuyao.util.FileUtil;
-import ninja.skyrocketing.bot.fuyao.util.HearthstoneUtil;
 import ninja.skyrocketing.bot.fuyao.util.MessageUtil;
 import ninja.skyrocketing.bot.fuyao.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;

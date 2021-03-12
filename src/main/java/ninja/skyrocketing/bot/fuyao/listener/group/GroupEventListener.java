@@ -9,10 +9,10 @@ import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
-import ninja.skyrocketing.bot.fuyao.util.LogUtil;
 import ninja.skyrocketing.bot.fuyao.sender.group.GroupMessageSender;
 import ninja.skyrocketing.bot.fuyao.service.bot.BotConfigService;
 import ninja.skyrocketing.bot.fuyao.util.DBUtil;
+import ninja.skyrocketing.bot.fuyao.util.LogUtil;
 import ninja.skyrocketing.bot.fuyao.util.MessageUtil;
 import ninja.skyrocketing.bot.fuyao.util.TimeUtil;
 import org.jetbrains.annotations.NotNull;
@@ -204,8 +204,8 @@ public class GroupEventListener extends SimpleListenerHost {
     public ListeningStatus onMemberCardChangeEvent(MemberCardChangeEvent event) throws IOException {
         if (event.getMember().getId() == event.getBot().getId()) {
             event.getMember().setNameCard("");
+            LogUtil.GroupEventFile(event.toString(), "机器人群名片被修改");
         }
-        LogUtil.GroupEventFile(event.toString(), "机器人群名片被修改");
         return ListeningStatus.LISTENING;
     }
 

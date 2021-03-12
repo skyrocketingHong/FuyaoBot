@@ -1,10 +1,11 @@
 package ninja.skyrocketing.bot.fuyao.util;
 
 import ninja.skyrocketing.bot.fuyao.config.MiraiBotConfig;
-import ninja.skyrocketing.bot.fuyao.util.FileUtil;
-import ninja.skyrocketing.bot.fuyao.util.TimeUtil;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.sql.Time;
 
 /**
  * @Author skyrocketing Hong
@@ -18,10 +19,13 @@ public class LogUtil {
      */
     public static void GroupMessageLog(String message, Long id) throws IOException {
         //log文件路径
+        String logFilePath = MiraiBotConfig.logFile + TimeUtil.DateFileName() + ".log";
+        File logFile = new File(logFilePath);
+        //构造字符串
         String content = "[" + TimeUtil.NowDateTime() + "]" + "\r\n" +
                 "[接收方号码] " + id + "\r\n" +
                 "[发送内容] " + message + "\r\n\r\n";
-        RandomAccessFile randomFile = new RandomAccessFile(MiraiBotConfig.logFile, "rw");
+        RandomAccessFile randomFile = new RandomAccessFile(logFile, "rw");
         long fileLength = randomFile.length();
         randomFile.seek(fileLength);
         randomFile.write(content.getBytes());
@@ -34,10 +38,9 @@ public class LogUtil {
      */
     public static void GroupEventFile(String event, String type) throws IOException {
         //log文件路径
-        String logPath = MiraiBotConfig.jarPath +
-                FileUtil.separator + "cache" +
-                FileUtil.separator + "log";
-        File logFile = new File(logPath);
+        String logFilePath = MiraiBotConfig.logFile + TimeUtil.DateFileName() + ".log";
+        File logFile = new File(logFilePath);
+        //构造字符串
         String content = "[" + TimeUtil.NowDateTime() + "]" + "\r\n" +
                 "[事件类型] " + type + "\r\n" +
                 "[事件内容] " + event + "\r\n\r\n";

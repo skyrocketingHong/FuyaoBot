@@ -7,17 +7,16 @@ import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.ListeningStatus;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
-import net.mamoe.mirai.message.data.*;
-import ninja.skyrocketing.bot.fuyao.config.MiraiBotConfig;
+import net.mamoe.mirai.message.data.Message;
+import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.bot.fuyao.function.functions.EasterEggFunction;
 import ninja.skyrocketing.bot.fuyao.function.functions.NotificationFunction;
-import ninja.skyrocketing.bot.fuyao.pojo.group.GroupRepeaterMessage;
-import ninja.skyrocketing.bot.fuyao.util.LogUtil;
 import ninja.skyrocketing.bot.fuyao.sender.group.GroupMessageSender;
 import ninja.skyrocketing.bot.fuyao.service.bot.BotBanedGroupService;
 import ninja.skyrocketing.bot.fuyao.service.bot.BotConfigService;
 import ninja.skyrocketing.bot.fuyao.service.bot.BotReplyMessageService;
 import ninja.skyrocketing.bot.fuyao.service.user.BotBanedUserService;
+import ninja.skyrocketing.bot.fuyao.util.LogUtil;
 import ninja.skyrocketing.bot.fuyao.util.MessageUtil;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,21 +50,27 @@ public class GroupMessageListener extends SimpleListenerHost {
     //监听所有群消息
     @EventHandler
     public ListeningStatus onMessage(GroupMessageEvent event) throws Exception {
+        //获取消息
+        Message messageInGroup = event.getMessage();
+        String messageInGroupToString = messageInGroup.toString();
+        String messageInGroupContentToString = messageInGroup.contentToString();
         //首先判断是否为@机器人
-        if (event.getMessage().toString().matches(".*\\[mirai:at:" + event.getBot().getId() + "].*") &&
-                !event.getMessage().toString().matches(".*\\[mirai:quote:\\[\\d*],\\[\\d*]].*")) {
+        if (messageInGroupToString.matches(".*\\[mirai:at:" + event.getBot().getId() + "].*") &&
+                !messageInGroupToString.matches(".*\\[mirai:quote:\\[\\d*],\\[\\d*]].*")) {
             //被@后返回帮助文案
             GroupMessageSender.SendMessageByGroupId(botConfigService.GetConfigValueByKey("reply"), event.getGroup().getId());
-        } else {
+        }
+        //不是@机器人就继续处理消息
+        else {
             //拦截以~开头的消息
-            if (event.getMessage().contentToString().matches("^[~～/].+")) {
+            if (messageInGroupContentToString.matches("^[~～/].+")) {
                 //判断是否为被禁用户或群
                 if (!botBanedGroupService.IsBaned(event.getGroup().getId()) &&
                         !botBanedUserService.IsBaned(event.getSender().getId())) {
                     //调用消息对应的实现类，并保存返回值（对应的回复）
                     Message message = GroupMessageSender.Sender(event);
                     if (message != null) {
-                        //发送消息，并在开头添加@触发人
+                        //构造并发送消息，在开头添加@触发人
                         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
                         messageChainBuilder.add(MessageUtil.UserNotify(event.getSender(), true));
                         messageChainBuilder.add("\n");
@@ -74,23 +79,28 @@ public class GroupMessageListener extends SimpleListenerHost {
                     }
                 }
             }
-            //拦截其他消息
+            //拦截非~或/开头的消息
             else {
                 //拦截闪照消息，使用mirai码判断
-                if (event.getMessage().toString().matches(".*\\[mirai:flash:\\{[0-9A-F]{8}(-[0-9A-F]{4}){3}-[0-9A-F]{12}\\}\\.jpg].*")) {
+                if (messageInGroupToString.matches(".*\\[mirai:flash:\\{[0-9A-F]{8}(-[0-9A-F]{4}){3}-[0-9A-F]{12}}\\.jpg].*")) {
+                    //闪照消息通知
                     NotificationFunction.FlashImageNotification(event);
-                } else {
-                    //拦截红包消息
-                    if (event.getMessage().contentToString().matches("\\[QQ红包].+新版手机QQ查.+")){
-                        NotificationFunction.RedPackageNotification(event);
-                    }
-                    //拦截判断复读消息
-                    else {
-                        EasterEggFunction.Repeater(event);
-                    }
+                    return ListeningStatus.LISTENING;
                 }
-                return ListeningStatus.LISTENING;
+                //拦截红包消息
+                else if (messageInGroupContentToString.matches("\\[QQ红包].+新版手机QQ查.+")) {
+                    //红包消息通知
+                    NotificationFunction.RedPackageNotification(event);
+                    return ListeningStatus.LISTENING;
+                }
+                //拦截其它可能触发机器人的消息
+                else {
+                    //消息复读
+                    EasterEggFunction.Repeater(event);
+                    return ListeningStatus.LISTENING;
+                }
             }
+            return ListeningStatus.LISTENING;
         }
         return ListeningStatus.LISTENING;
     }

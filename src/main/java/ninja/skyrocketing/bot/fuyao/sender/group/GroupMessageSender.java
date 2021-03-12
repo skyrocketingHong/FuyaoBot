@@ -7,9 +7,9 @@ import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.bot.fuyao.FuyaoBotApplication;
 import ninja.skyrocketing.bot.fuyao.pojo.bot.BotFunctionTrigger;
 import ninja.skyrocketing.bot.fuyao.pojo.group.GroupMessage;
-import ninja.skyrocketing.bot.fuyao.util.LogUtil;
 import ninja.skyrocketing.bot.fuyao.service.bot.BotFunctionTriggerService;
 import ninja.skyrocketing.bot.fuyao.util.InvokeUtil;
+import ninja.skyrocketing.bot.fuyao.util.LogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
