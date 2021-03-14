@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * @Author skyrocketing Hong
- * @Date 2020-11-29 13:21:30
+ * @author skyrocketing Hong
+ * @date 2020-11-29 13:21:30
  */
 
 @Service
@@ -19,17 +19,17 @@ public class BotGameFishingServiceImpl implements BotGameFishingService {
     BotGameFishingMapper botGameFishingMapper;
 
     @Override
-    public List<BotGameFishing> GetAllFish() {
+    public List<BotGameFishing> getAllFish() {
         return botGameFishingMapper.getAllFish();
     }
 
     @Override
-    public String GetFishNameById(String id) {
+    public String getFishNameById(String id) {
         return botGameFishingMapper.selectFishNameByPrimaryKey(id);
     }
 
     @Override
-    public Long GetFishValueById(String id) {
+    public Long getFishValueById(String id) {
         return botGameFishingMapper.getFishValueById(id);
     }
 }

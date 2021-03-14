@@ -14,29 +14,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Author skyrocketing Hong
- * @Date 2021-01-17 22:16:13
+ * @author skyrocketing Hong
+ * @date 2021-01-17 22:16:13
  */
 public class FileUtil {
     //全局文件名分隔符
     public static String separator = File.separator;
 
     //获取jar包的路径
-    public static String GetPath() {
+    public static String getPath() {
         ApplicationHome applicationHome = new ApplicationHome(FileUtil.class);
         File file = applicationHome.getDir();
         return file.getAbsolutePath();
     }
 
     //根据QQ号下载头像并保存在jar包同级目录中
-    public static File GetAvatarImageFile(long qqId) throws IOException {
+    public static File getAvatarImageFile(long qqId) throws IOException {
         //将QQ号和获取头像的链接拼接起来
         String avatarURL = "http://q1.qlogo.cn/g?b=qq&nk=" + qqId + "&s=640";
         //拼接头像的路径和文件名
         String avatarFilePath = MiraiBotConfig.jarPath +
                 separator + "cache" +
                 separator + "Member Avatar" +
-                separator + TimeUtil.DateFileName() +
+                separator + TimeUtil.dateFileName() +
                 separator + qqId + ".jpg";
         //下载并保存头像。当头像存在时则不下载，直接返回
         File avatarImageFile = new File(avatarFilePath);
@@ -48,14 +48,14 @@ public class FileUtil {
      * @param image Image Mirai类型图片
      */
     //http://gchat.qpic.cn/gchatpic_new/0/0-0-{图片ID}/0?term=2
-    public static String ImageIdToURL(Image image) {
+    public static String imageIdToURL(Image image) {
         return "http://gchat.qpic.cn/gchatpic_new/0/0-0-" + image.getImageId().replaceAll("[-{}]|\\.jpg", "") + "/0?term=2";
     }
 
     /** 判断jar根目录下是否有dev文件，有的话则为开发环境
     * @return boolean 存在dev文件为true，否则返回false
     */
-    public static Boolean IsDev() {
+    public static Boolean isDev() {
         String path = MiraiBotConfig.jarPath + separator + "dev";
         File devFile = new File(path);
         return devFile.exists();
@@ -64,7 +64,7 @@ public class FileUtil {
     /**
     * 图片横向拼接
     * */
-    public static void JointPic(List<File> files, File path) throws IOException {
+    public static void jointPic(List<File> files, File path) throws IOException {
         int allWidth = 0;	//图片总宽度
         int allHeight = 0;	//图片总高度
         List<BufferedImage> imgs = new ArrayList<>();

@@ -16,13 +16,13 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 /**
- * @Author skyrocketing Hong
- * @Date 2020-11-28 15:14:44
+ * @author skyrocketing Hong
+ * @date 2020-11-28 15:14:44
  */
 
 @Component
 public class GroupMessageSender {
-    public static BotFunctionTriggerService botFunctionTriggerService;
+    private static BotFunctionTriggerService botFunctionTriggerService;
     @Autowired
     public GroupMessageSender(BotFunctionTriggerService botFunctionTriggerService) {
         GroupMessageSender.botFunctionTriggerService = botFunctionTriggerService;
@@ -31,11 +31,11 @@ public class GroupMessageSender {
     /**
      * 消息发送器
      */
-    public static Message Sender(GroupMessageEvent event) throws Exception {
+    public static Message sender(GroupMessageEvent event) throws Exception {
         GroupMessage groupMessage = new GroupMessage(event);
-        String className = MatchedClass(groupMessage);
+        String className = matchedClass(groupMessage);
         if (className != null) {
-            return RunByInvoke(className, groupMessage);
+            return runByInvoke(className, groupMessage);
         }
         return null;
     }
@@ -43,14 +43,14 @@ public class GroupMessageSender {
     /**
      * 根据消息获取对应的实现类
      */
-    public static String MatchedClass(GroupMessage groupMessage) {
+    public static String matchedClass(GroupMessage groupMessage) {
         String msg = groupMessage.getMessage();
-        for (BotFunctionTrigger botFunctionTrigger : botFunctionTriggerService.GetAllTrigger()) {
+        for (BotFunctionTrigger botFunctionTrigger : botFunctionTriggerService.getAllTrigger()) {
             if (msg.matches(botFunctionTrigger.getKeyword())) {
                 if (botFunctionTrigger.getEnabled()) {
                     return botFunctionTrigger.getImplClass();
                 } else {
-                    return "functions.FunctionDisabledMessage.FunctionDisabled";
+                    return "function.FunctionDisabledMessage.FunctionDisabled";
                 }
             }
         }
@@ -60,8 +60,8 @@ public class GroupMessageSender {
     /**
      * 根据实现类字符串执行对应的代码
      */
-    public static Message RunByInvoke(String str, GroupMessage groupMessage) throws Exception {
-        return InvokeUtil.RunByInvoke(str, groupMessage);
+    public static Message runByInvoke(String str, GroupMessage groupMessage) throws Exception {
+        return InvokeUtil.runByInvoke(str, groupMessage);
     }
 
     /**
@@ -69,9 +69,9 @@ public class GroupMessageSender {
      * @param message Message
      * @param group Group
      */
-    public static void SendMessageByGroupId(Message message, Group group) throws IOException {
+    public static void sendMessageByGroupId(Message message, Group group) throws IOException {
         group.sendMessage(message);
-        LogUtil.GroupMessageLog(message.toString().replaceAll("\n", " \\\\n "), group.getId());
+        LogUtil.messageLog(message.toString(), group.getId(), true, group.getName());
     }
 
     /**
@@ -79,9 +79,9 @@ public class GroupMessageSender {
      * @param message MessageChainBuilder
      * @param group Group
      */
-    public static void SendMessageByGroupId(MessageChainBuilder message, Group group) throws IOException {
+    public static void sendMessageByGroupId(MessageChainBuilder message, Group group) throws IOException {
         Message asMessageChain = message.asMessageChain();
-        SendMessageByGroupId(asMessageChain, group);
+        sendMessageByGroupId(asMessageChain, group);
     }
 
     /**
@@ -89,10 +89,10 @@ public class GroupMessageSender {
      * @param message String
      * @param groupId Long
      */
-    public static void SendMessageByGroupId(String message, Long groupId) throws IOException {
+    public static void sendMessageByGroupId(String message, Long groupId) throws IOException {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add(message);
-        SendMessageByGroupId(messageChainBuilder, FuyaoBotApplication.bot.getGroup(groupId));
+        sendMessageByGroupId(messageChainBuilder, FuyaoBotApplication.bot.getGroup(groupId));
     }
     /**
      * 根据群号发消息并保存日志，带撤回
@@ -100,10 +100,12 @@ public class GroupMessageSender {
      * @param group Group
      * @param recall Integer
      */
-    public static void SendMessageByGroupId(MessageChainBuilder message, Group group, Integer recall) throws IOException {
+    public static void sendMessageByGroupId(MessageChainBuilder message, Group group, Integer recall) throws IOException {
         group.sendMessage(message.asMessageChain()).recallIn(recall);
-        LogUtil.GroupMessageLog(
-                "(" + recall + " 毫秒后撤回) " + message.toString().replaceAll("\n", ""), group.getId()
+        LogUtil.messageLog("(" + recall + " 毫秒后撤回) " + message.toString().replaceAll("\n", ""),
+                group.getId(),
+                true,
+                group.getName()
         );
     }
 }

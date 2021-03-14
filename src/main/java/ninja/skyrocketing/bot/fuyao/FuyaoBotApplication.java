@@ -36,7 +36,7 @@ public class FuyaoBotApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		//运行机器人
-		MiraiBotConfig.RunBot(FileUtil.IsDev());
+		MiraiBotConfig.RunBot(FileUtil.isDev());
 
 		// Spring线程阻塞
 		Thread.currentThread().join();

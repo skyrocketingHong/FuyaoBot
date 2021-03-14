@@ -1,25 +1,25 @@
 package ninja.skyrocketing.bot.fuyao.util;
 
-import ninja.skyrocketing.bot.fuyao.function.coin.Coin;
-import ninja.skyrocketing.bot.fuyao.function.exp.Exp;
-import ninja.skyrocketing.bot.fuyao.function.fishing.Fishing;
+import ninja.skyrocketing.bot.fuyao.function.CoinFunction;
+import ninja.skyrocketing.bot.fuyao.function.ExpFunction;
+import ninja.skyrocketing.bot.fuyao.function.FishingFunction;
 
 /**
- * @Author skyrocketing Hong
- * @Date 2021-02-25 19:14:41
+ * @author skyrocketing Hong
+ * @date 2021-02-25 19:14:41
  */
 public class DBUtil {
     //清理单独用户的数据
-    public static void CleanDataAfterLeave(long groupId, long userId) {
-        Exp.CleanExpData(groupId, userId);
-        Coin.CleanCoinData(groupId, userId);
-        Fishing.CleanFishingData(groupId, userId);
+    public static void cleanDataAfterLeave(long groupId, long userId) {
+        ExpFunction.cleanExpData(groupId, userId);
+        CoinFunction.cleanCoinData(groupId, userId);
+        FishingFunction.cleanFishingData(groupId, userId);
     }
 
     //清理整个群的数据
-    public static void CleanDataAfterLeave(long groupId) {
-        Exp.CleanExpData(groupId, 0L);
-        Coin.CleanCoinData(groupId, 0L);
-        Fishing.CleanFishingData(groupId, 0L);
+    public static void cleanDataAfterLeave(long groupId) {
+        ExpFunction.cleanExpData(groupId, 0L);
+        CoinFunction.cleanCoinData(groupId, 0L);
+        FishingFunction.cleanFishingData(groupId, 0L);
     }
 }

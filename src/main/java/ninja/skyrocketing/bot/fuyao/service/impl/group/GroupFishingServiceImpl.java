@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * @Author skyrocketing Hong
- * @Date 2020-11-29 14:53:45
+ * @author skyrocketing Hong
+ * @date 2020-11-29 14:53:45
  */
 @Service
 public class GroupFishingServiceImpl implements GroupFishingService {
@@ -17,27 +17,27 @@ public class GroupFishingServiceImpl implements GroupFishingService {
     GroupFishingMapper groupFishingMapper;
 
     @Override
-    public GroupFishing GetGroupFishingByGroupUser(GroupUser groupUser) {
+    public GroupFishing getGroupFishingByGroupUser(GroupUser groupUser) {
         return groupFishingMapper.selectByPrimaryKey(groupUser.getGroupId(), groupUser.getUserId());
     }
 
     @Override
-    public int UpdateGroupFishing(GroupFishing groupFishing) {
+    public int updateGroupFishing(GroupFishing groupFishing) {
         return groupFishingMapper.updateByPrimaryKey(groupFishing);
     }
 
     @Override
-    public int InsertGroupFishing(GroupFishing groupFishing) {
+    public int insertGroupFishing(GroupFishing groupFishing) {
         return groupFishingMapper.insertSelective(groupFishing);
     }
 
     @Override
-    public int DeleteFishing(GroupUser groupUser) {
+    public int deleteFishing(GroupUser groupUser) {
         return groupFishingMapper.deleteByPrimaryKey(groupUser.getGroupId(), groupUser.getUserId());
     }
 
     @Override
-    public int DeleteFishingByGroup(Long groupId) {
+    public int deleteFishingByGroup(Long groupId) {
         return groupFishingMapper.deleteByGroupId(groupId);
     }
 }

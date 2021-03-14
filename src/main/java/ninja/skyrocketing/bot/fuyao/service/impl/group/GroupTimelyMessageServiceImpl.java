@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * @Author skyrocketing Hong
- * @Date 2020-12-01 16:10:24
+ * @author skyrocketing Hong
+ * @date 2020-12-01 16:10:24
  */
 @Service
 public class GroupTimelyMessageServiceImpl implements GroupTimelyMessageService {
@@ -19,17 +19,17 @@ public class GroupTimelyMessageServiceImpl implements GroupTimelyMessageService 
     GroupTimelyMessageMapper groupTimelyMessageMapper;
 
     @Override
-    public List<GroupTimelyMessage> GetAllTimelyMessage() {
+    public List<GroupTimelyMessage> getAllTimelyMessage() {
         return groupTimelyMessageMapper.selectAllGroupTimelyMessage();
     }
 
     @Override
-    public int DeleteSentMessageByGroupUser(GroupUser groupUser) {
+    public int deleteSentMessageByGroupUser(GroupUser groupUser) {
         return groupTimelyMessageMapper.deleteByPrimaryKey(groupUser.getGroupId(), groupUser.getUserId());
     }
 
     @Override
-    public int DeleteSentMessageById(Long groupId, Long userId) {
+    public int deleteSentMessageById(Long groupId, Long userId) {
         return groupTimelyMessageMapper.deleteByPrimaryKey(groupId, userId);
     }
 }

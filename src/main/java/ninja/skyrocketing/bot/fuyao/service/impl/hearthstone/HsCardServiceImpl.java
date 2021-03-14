@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * @Author skyrocketing Hong
- * @Date 2021-03-06 01:07:36
+ * @author skyrocketing Hong
+ * @date 2021-03-06 01:07:36
  */
 
 @Service
@@ -19,12 +19,12 @@ public class HsCardServiceImpl implements HsCardService {
     HsCardMapper hsCardMapper;
 
     @Override
-    public int InsertACard(HsCard hsCard) {
+    public int insertACard(HsCard hsCard) {
         return hsCardMapper.insert(hsCard);
     }
 
     @Override
-    public List<HsCard> SelectBySetOrderByRandom(String setName) {
+    public List<HsCard> selectBySetOrderByRandom(String setName) {
         return hsCardMapper.selectBySetOrderByRandom(setName);
     }
 }

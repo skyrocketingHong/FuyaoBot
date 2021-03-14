@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * @Author skyrocketing Hong
- * @Date 2020-11-28 14:50:05
+ * @author skyrocketing Hong
+ * @date 2020-11-28 14:50:05
  */
 @Service
 public class GroupExpServiceImpl implements GroupExpService {
@@ -17,27 +17,27 @@ public class GroupExpServiceImpl implements GroupExpService {
     GroupExpMapper groupExpMapper;
 
     @Override
-    public GroupExp GetExpByGroupUser(GroupUser groupUser) {
+    public GroupExp getExpByGroupUser(GroupUser groupUser) {
         return groupExpMapper.selectByPrimaryKey(groupUser.getGroupId(), groupUser.getUserId());
     }
 
     @Override
-    public int InsertExp(GroupExp groupExp) {
+    public int insertExp(GroupExp groupExp) {
         return groupExpMapper.insertSelective(groupExp);
     }
 
     @Override
-    public int UpdateExp(GroupExp groupExp) {
+    public int updateExp(GroupExp groupExp) {
         return groupExpMapper.updateByPrimaryKeySelective(groupExp);
     }
 
     @Override
-    public int DeleteExp(GroupUser groupUser) {
+    public int deleteExp(GroupUser groupUser) {
         return groupExpMapper.deleteByPrimaryKey(groupUser.getGroupId(), groupUser.getUserId());
     }
 
     @Override
-    public int DeleteExpByGroupId(Long groupId) {
+    public int deleteExpByGroupId(Long groupId) {
         return 0;
     }
 }

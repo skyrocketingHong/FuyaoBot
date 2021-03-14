@@ -5,24 +5,33 @@ import ninja.skyrocketing.bot.fuyao.config.MiraiBotConfig;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.sql.Time;
 
 /**
- * @Author skyrocketing Hong
- * @Date 2021-03-03 21:45:00
+ * @author skyrocketing Hong
+ * @date 2021-03-03 21:45:00
  */
 
 public class LogUtil {
-    /** 发送消息至群的日志
+    /** 发送消息的日志
      * @param message String 消息
-     * @param id Long QQ群号
+     * @param id Long 群号或用户号码
+     * @param isGroup boolean 是否是群
+     * @param name String 接收方的名字
      */
-    public static void GroupMessageLog(String message, Long id) throws IOException {
+    public static void messageLog(String message, Long id, boolean isGroup, String name) throws IOException {
         //log文件路径
-        String logFilePath = MiraiBotConfig.logFile + TimeUtil.DateFileName() + ".log";
+        String logFilePath = MiraiBotConfig.logFile + TimeUtil.dateFileName() + ".log";
         File logFile = new File(logFilePath);
+        String type;
+        //根据类型添加不同的信息
+        if (isGroup) {
+            type = "[接收方类型] QQ 群\r\n" + "[接收方名称] " + name + "\r\n";
+        } else {
+            type = "[接收方类型] QQ 好友\r\n" + "[接收方名称] \"" + name + "\"\r\n";
+        }
         //构造字符串
-        String content = "[" + TimeUtil.NowDateTime() + "]" + "\r\n" +
+        String content = "[" + TimeUtil.nowDateTime() + "]" + "\r\n" +
+                type +
                 "[接收方号码] " + id + "\r\n" +
                 "[发送内容] " + message + "\r\n\r\n";
         RandomAccessFile randomFile = new RandomAccessFile(logFile, "rw");
@@ -36,12 +45,12 @@ public class LogUtil {
      * @param event String 事件
      * @param type String 类型
      */
-    public static void GroupEventFile(String event, String type) throws IOException {
+    public static void eventLog(String event, String type) throws IOException {
         //log文件路径
-        String logFilePath = MiraiBotConfig.logFile + TimeUtil.DateFileName() + ".log";
+        String logFilePath = MiraiBotConfig.logFile + TimeUtil.dateFileName() + ".log";
         File logFile = new File(logFilePath);
         //构造字符串
-        String content = "[" + TimeUtil.NowDateTime() + "]" + "\r\n" +
+        String content = "[" + TimeUtil.nowDateTime() + "]" + "\r\n" +
                 "[事件类型] " + type + "\r\n" +
                 "[事件内容] " + event + "\r\n\r\n";
         RandomAccessFile randomFile = new RandomAccessFile(logFile, "rw");

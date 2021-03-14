@@ -4,8 +4,8 @@ import lombok.*;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 
 /**
- * @Author skyrocketing Hong
- * @Date 2020-11-28 15:15:48
+ * @author skyrocketing Hong
+ * @date 2020-11-28 15:15:48
  */
 
 @Data

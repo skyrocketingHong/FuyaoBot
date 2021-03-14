@@ -5,9 +5,9 @@ import ninja.skyrocketing.bot.fuyao.pojo.bot.BotFunctionTrigger;
 import java.util.List;
 
 /**
- * @Author skyrocketing Hong
- * @Date 2020-11-28 15:23:44
+ * @author skyrocketing Hong
+ * @date 2020-11-28 15:23:44
  */
 public interface BotFunctionTriggerService {
-    List<BotFunctionTrigger> GetAllTrigger();
+    List<BotFunctionTrigger> getAllTrigger();
 }

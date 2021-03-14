@@ -7,8 +7,10 @@ import net.mamoe.mirai.event.EventChannel;
 import net.mamoe.mirai.event.events.BotEvent;
 import net.mamoe.mirai.utils.BotConfiguration;
 import ninja.skyrocketing.bot.fuyao.FuyaoBotApplication;
-import ninja.skyrocketing.bot.fuyao.function.functions.TimelyFunction;
+import ninja.skyrocketing.bot.fuyao.function.TimelyFunction;
 import ninja.skyrocketing.bot.fuyao.listener.admin.BotMessageListener;
+import ninja.skyrocketing.bot.fuyao.listener.friend.FriendEventListener;
+import ninja.skyrocketing.bot.fuyao.listener.friend.FriendMessageListener;
 import ninja.skyrocketing.bot.fuyao.listener.group.GroupEventListener;
 import ninja.skyrocketing.bot.fuyao.listener.group.GroupMessageListener;
 import ninja.skyrocketing.bot.fuyao.pojo.bot.BotQQ;
@@ -18,15 +20,14 @@ import ninja.skyrocketing.bot.fuyao.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @Author skyrocketing Hong
- * @Date 2020-11-28 11:29:59
+ * @author skyrocketing Hong
+ * @date 2020-11-28 11:29:59
  */
 
 @Component
@@ -38,7 +39,7 @@ public class MiraiBotConfig {
     }
 
     //全局jar根目录
-    public static final String jarPath =  FileUtil.GetPath();
+    public static final String jarPath =  FileUtil.getPath();
     //全局cache目录
     public static final String cachePath = jarPath + FileUtil.separator + "cache";
     //全局log文件的File对象
@@ -55,11 +56,11 @@ public class MiraiBotConfig {
     public static BotQQ SetBotQQByMode(boolean devMode) {
         BotQQ botQQ = new BotQQ();
         if (devMode) {
-            botQQ.setQqId(Long.parseLong(botConfigService.GetConfigValueByKey("qq_id_dev")));
-            botQQ.setQqPassword(botConfigService.GetConfigValueByKey("qq_password_dev"));
+            botQQ.setQqId(Long.parseLong(botConfigService.getConfigValueByKey("qq_id_dev")));
+            botQQ.setQqPassword(botConfigService.getConfigValueByKey("qq_password_dev"));
         } else {
-            botQQ.setQqId(Long.parseLong(botConfigService.GetConfigValueByKey("qq_id")));
-            botQQ.setQqPassword(botConfigService.GetConfigValueByKey("qq_password"));
+            botQQ.setQqId(Long.parseLong(botConfigService.getConfigValueByKey("qq_id")));
+            botQQ.setQqPassword(botConfigService.getConfigValueByKey("qq_password"));
         }
         return botQQ;
     }
@@ -84,13 +85,15 @@ public class MiraiBotConfig {
         eventChannel.registerListenerHost(new GroupMessageListener());
         eventChannel.registerListenerHost(new GroupEventListener());
         eventChannel.registerListenerHost(new BotMessageListener());
+        eventChannel.registerListenerHost(new FriendEventListener());
+        eventChannel.registerListenerHost(new FriendMessageListener());
 
         //运行定时消息模块
-        TimelyFunction.TimelyMessage();
+        TimelyFunction.timelyMessage();
 
         //发送启动成功消息
         Date endDate = new Date();
-        FuyaoBotApplication.bot.getFriend(Long.parseLong(botConfigService.GetConfigValueByKey("admin_user"))).sendMessage(
+        FuyaoBotApplication.bot.getFriend(Long.parseLong(botConfigService.getConfigValueByKey("admin_user"))).sendMessage(
                 "✔ 启动成功" + "\n" +
                         "耗费时间：" + DateUtil.between(FuyaoBotApplication.startDate, endDate, DateUnit.SECOND) + "s"
         );

@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * @Author skyrocketing Hong
- * @Date 2020-11-29 02:34:11
+ * @author skyrocketing Hong
+ * @date 2020-11-29 02:34:11
  */
 
 @Service
@@ -19,7 +19,7 @@ public class BotReplyMessageServiceImpl implements BotReplyMessageService {
     BotReplyMessageMapper botReplyMessageMapper;
 
     @Override
-    public List<BotReplyMessage> GetAllReplyMessage() {
+    public List<BotReplyMessage> getAllReplyMessage() {
         return botReplyMessageMapper.selectAllBotReplyMessage();
     }
 }

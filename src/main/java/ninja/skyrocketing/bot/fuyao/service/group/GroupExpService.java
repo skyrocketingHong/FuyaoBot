@@ -5,13 +5,13 @@ import ninja.skyrocketing.bot.fuyao.pojo.group.GroupExp;
 import ninja.skyrocketing.bot.fuyao.pojo.group.GroupUser;
 
 /**
- * @Author skyrocketing Hong
- * @Date 2020-11-28 14:49:40
+ * @author skyrocketing Hong
+ * @date 2020-11-28 14:49:40
  */
 public interface GroupExpService {
-    GroupExp GetExpByGroupUser(GroupUser groupUser);
-    int InsertExp(GroupExp groupExp);
-    int UpdateExp(GroupExp groupExp);
-    int DeleteExp(GroupUser groupUser);
-    int DeleteExpByGroupId(Long groupId);
+    GroupExp getExpByGroupUser(GroupUser groupUser);
+    int insertExp(GroupExp groupExp);
+    int updateExp(GroupExp groupExp);
+    int deleteExp(GroupUser groupUser);
+    int deleteExpByGroupId(Long groupId);
 }

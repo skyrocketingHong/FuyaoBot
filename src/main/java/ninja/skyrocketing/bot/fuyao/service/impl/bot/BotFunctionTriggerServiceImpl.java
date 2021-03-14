@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * @Author skyrocketing Hong
- * @Date 2020-11-28 15:28:58
+ * @author skyrocketing Hong
+ * @date 2020-11-28 15:28:58
  */
 @Service
 public class BotFunctionTriggerServiceImpl implements BotFunctionTriggerService {
@@ -18,7 +18,7 @@ public class BotFunctionTriggerServiceImpl implements BotFunctionTriggerService 
     BotFunctionTriggerMapper botFunctionTriggerMapper;
 
     @Override
-    public List<BotFunctionTrigger> GetAllTrigger() {
+    public List<BotFunctionTrigger> getAllTrigger() {
         return botFunctionTriggerMapper.selectAllFunctionTrigger();
     }
 }

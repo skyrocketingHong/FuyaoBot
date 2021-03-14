@@ -1,34 +1,32 @@
 package ninja.skyrocketing.bot.fuyao.util;
 
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONObject;
 import net.mamoe.mirai.message.data.MusicKind;
 import net.mamoe.mirai.message.data.MusicShare;
-import ninja.skyrocketing.bot.fuyao.FuyaoBotApplication;
 
 import java.io.IOException;
 
 /**
- * @Author skyrocketing Hong
- * @Date 2021-03-12 09:10:49
+ * @author skyrocketing Hong
+ * @date 2021-03-12 09:10:49
  */
 
 public class MusicSearchUtil {
-    public static MusicShare NeteaseMusic(String str) throws IOException {
-        return MusicQuery(str, true);
+    public static MusicShare neteaseMusic(String str) throws IOException {
+        return musicQuery(str, true);
     }
 
-    public static MusicShare QQMusic(String str) throws IOException {
-        return MusicQuery(str, false);
+    public static MusicShare qqMusic(String str) throws IOException {
+        return musicQuery(str, false);
     }
 
-    public static MusicShare MusicQuery(String str, boolean is163) throws IOException {
+    public static MusicShare musicQuery(String str, boolean is163) throws IOException {
         MusicKind musicKind;
         String musicSummary, jumpUrl, musicUrl, musicJpg, musicTitle, apiUrl;
-        String searchStr = HttpUtil.CHNCharterAndSpaceReplace(str);
+        String searchStr = HttpUtil.chnCharterAndSpaceReplace(str);
         if (is163) {
             apiUrl = "https://music.163.com/api/search/get/web?csrf_token=hlpretag=&hlposttag=&type=1&offset=0&total=true&limit=1&s=";
-            JSONObject jsonMusic = HttpUtil.ReadJsonFromURL(apiUrl + searchStr);
+            JSONObject jsonMusic = HttpUtil.readJsonFromURL(apiUrl + searchStr);
             musicTitle = jsonMusic.getByPath("result.songs[0].name", String.class);
             System.out.println(musicTitle);
             if (musicTitle == null) {
@@ -39,13 +37,13 @@ public class MusicSearchUtil {
                 jumpUrl = "http://music.163.com/song/" + musicId;
                 musicUrl = "http://music.163.com/song/media/outer/url?id=" + musicId;
                 // 获取封面
-                JSONObject jsonAlbum = HttpUtil.ReadJsonFromURL("https://music.163.com/api/song/detail/?id=" + musicId + "&ids=%5B" + musicId + "%5D");
+                JSONObject jsonAlbum = HttpUtil.readJsonFromURL("https://music.163.com/api/song/detail/?id=" + musicId + "&ids=%5B" + musicId + "%5D");
                 musicJpg = jsonAlbum.getByPath("songs[0].album.picUrl", String.class);
             }
             musicKind = MusicKind.NeteaseCloudMusic;
         } else {
             apiUrl = "https://c.y.qq.com/soso/fcgi-bin/client_search_cp?p=1&n=1&format=json&w=";
-            JSONObject jsonMusic = HttpUtil.ReadJsonFromURL(apiUrl + searchStr);
+            JSONObject jsonMusic = HttpUtil.readJsonFromURL(apiUrl + searchStr);
             musicTitle = jsonMusic.getByPath("data.song.list[0].songname", String.class);
             if (musicTitle == null) {
                 return null;

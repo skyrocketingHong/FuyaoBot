@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * @Author skyrocketing Hong
- * @Date 2020-11-28 20:22:12
+ * @author skyrocketing Hong
+ * @date 2020-11-28 20:22:12
  */
 @Service
 public class GroupExpRankNameServiceImpl implements GroupExpRankNameService {
@@ -16,7 +16,7 @@ public class GroupExpRankNameServiceImpl implements GroupExpRankNameService {
     GroupExpRankNameMapper groupExpRankNameMapper;
 
     @Override
-    public GroupExpRankName GetGroupExpRankNameById(Long id) {
+    public GroupExpRankName getGroupExpRankNameById(Long id) {
         return groupExpRankNameMapper.selectByPrimaryKey(id);
     }
 }

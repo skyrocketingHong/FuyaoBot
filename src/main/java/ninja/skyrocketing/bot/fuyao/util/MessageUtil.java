@@ -14,17 +14,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * @Author skyrocketing Hong
- * @Date 2020-12-06 19:09:48
+ * @author skyrocketing Hong
+ * @date 2020-12-06 19:09:48
  */
 public class MessageUtil {
     //当群名片为空时返回昵称
-    public static String NameOfMember(Member member) {
+    public static String nameOfMember(Member member) {
         return member.getNameCard().isEmpty() ? member.getNick() : member.getNameCard();
     }
 
     //根据@获取QQ号
-    public static ArrayList<Long> GetQQNumberFromAt(MessageChain messageChain) {
+    public static ArrayList<Long> getQQNumberFromAt(MessageChain messageChain) {
         ArrayList<Long> qqIdList = new ArrayList<>();
         for (SingleMessage singleMessage : messageChain) {
             if (singleMessage.toString().contains("mirai:at:")) {
@@ -35,7 +35,7 @@ public class MessageUtil {
     }
 
     //获取群成员荣誉信息名称
-    public static String GetGroupHonorTypeName(GroupHonorType type) {
+    public static String getGroupHonorTypeName(GroupHonorType type) {
         return switch (type) {
             case TALKATIVE -> "龙王";
             case PERFORMER -> "群聊之火";
@@ -49,11 +49,11 @@ public class MessageUtil {
     }
 
     //向QQ群上传头像
-    public static Image UploadAvatarImageToGroup(Group group, Member member) throws IOException {
-        return UploadImageToGroup(group, FileUtil.GetAvatarImageFile(member.getId()));
+    public static Image uploadAvatarImageToGroup(Group group, Member member) throws IOException {
+        return uploadImageToGroup(group, FileUtil.getAvatarImageFile(member.getId()));
     }
     //向QQ群上传图片
-    public static Image UploadImageToGroup(Group group, File imageFile) throws IOException {
+    public static Image uploadImageToGroup(Group group, File imageFile) throws IOException {
         ExternalResource externalResource = ExternalResource.create(imageFile);
         Image image = group.uploadImage(externalResource);
         externalResource.close();
@@ -64,9 +64,9 @@ public class MessageUtil {
     /**
      * 统一的用户提及文案，无空格无换行
      */
-    public static Message UserNotify(Member member, boolean needAt) {
+    public static Message userNotify(Member member, boolean needAt) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("\"" + NameOfMember(member) + "" + "(" + member.getId() + ")");
+        messageChainBuilder.add("\"" + nameOfMember(member) + "\" " + "(" + member.getId() + ")");
         if (needAt) {
             messageChainBuilder.add("\n");
             messageChainBuilder.add(new At(member.getId()));
@@ -78,16 +78,16 @@ public class MessageUtil {
     * 等待API返回消息时的提醒，在获取到API返回的消息后会撤回
     * */
     @Deprecated
-    public static MessageReceipt<Contact> WaitingForAPI(GroupMessage groupMessage) {
-        return WaitingMessage(groupMessage, "正在等待 API 返回数据...");
+    public static MessageReceipt<Contact> waitingForAPI(GroupMessage groupMessage) {
+        return waitingMessage(groupMessage, "正在等待 API 返回数据...");
     }
 
     /**
      * 等待时发送的消息
      * */
-    public static MessageReceipt<Contact> WaitingMessage(GroupMessage groupMessage, String waitingMsg) {
+    public static MessageReceipt<Contact> waitingMessage(GroupMessage groupMessage, String waitingMsg) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add(UserNotify(groupMessage.getGroupMessageEvent().getSender(), true));
+        messageChainBuilder.add(userNotify(groupMessage.getGroupMessageEvent().getSender(), true));
         messageChainBuilder.add("\n");
         messageChainBuilder.add(waitingMsg);
         return groupMessage.getGroupMessageEvent().getGroup().sendMessage(messageChainBuilder.asMessageChain());
@@ -96,7 +96,7 @@ public class MessageUtil {
     /**
     * 将Message toString后去除source
     * */
-    public static String RemoveSource(Message message) {
+    public static String removeSource(Message message) {
         return message.toString().replaceFirst("\\[mirai:source:\\[-?\\d+],\\[-?\\d+]]","");
     }
 }

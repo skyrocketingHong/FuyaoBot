@@ -14,15 +14,15 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 
 /**
- * @Author skyrocketing Hong
- * @Date 2021-01-19 11:22:24
+ * @author skyrocketing Hong
+ * @date 2021-01-19 11:22:24
  */
 
 public class BotMessageListener extends SimpleListenerHost {
     //机器人主动下线
     @EventHandler
     public ListeningStatus onBotOffline(BotOfflineEvent.Active event) throws InterruptedException, IOException {
-        LogUtil.GroupEventFile(event.getReconnect() + " " + event, "机器人主动下线");
+        LogUtil.eventLog(event.getReconnect() + " " + event, "机器人主动下线");
         return ListeningStatus.LISTENING;
     }
 
@@ -30,7 +30,7 @@ public class BotMessageListener extends SimpleListenerHost {
     @EventHandler
     public ListeningStatus onBotOffline(BotOfflineEvent.Force event) throws InterruptedException, IOException {
         event.setReconnect(true);
-        LogUtil.GroupEventFile(event.getReconnect() + " " + event, "机器人被挤下线");
+        LogUtil.eventLog(event.getReconnect() + " " + event, "机器人被挤下线");
         return ListeningStatus.LISTENING;
     }
 
@@ -38,7 +38,7 @@ public class BotMessageListener extends SimpleListenerHost {
     @EventHandler
     public ListeningStatus onBotOffline(BotOfflineEvent.Dropped event) throws InterruptedException, IOException {
         event.setReconnect(true);
-        LogUtil.GroupEventFile(event.getReconnect() + " " + event, "机器人被服务器断开或因网络问题而掉线");
+        LogUtil.eventLog(event.getReconnect() + " " + event, "机器人被服务器断开或因网络问题而掉线");
         return ListeningStatus.LISTENING;
     }
 
@@ -46,21 +46,21 @@ public class BotMessageListener extends SimpleListenerHost {
     @EventHandler
     public ListeningStatus onBotOffline(BotOfflineEvent.RequireReconnect event) throws InterruptedException, IOException {
         event.setReconnect(true);
-        LogUtil.GroupEventFile(event.getReconnect() + " " + event, "服务器主动要求更换另一个服务器");
+        LogUtil.eventLog(event.getReconnect() + " " + event, "服务器主动要求更换另一个服务器");
         return ListeningStatus.LISTENING;
     }
 
     //机器人重新登录
     @EventHandler
     public ListeningStatus onBotReloginEvent(BotReloginEvent event) throws IOException {
-        LogUtil.GroupEventFile(event.toString(), "机器人重新登录");
+        LogUtil.eventLog(event.toString(), "机器人重新登录");
         return ListeningStatus.LISTENING;
     }
 
     //机器人登录完成
     @EventHandler
     public ListeningStatus onBotOnlineEvent(BotOnlineEvent event) throws IOException {
-        LogUtil.GroupEventFile(event.toString(), "机器人登录完成");
+        LogUtil.eventLog(event.toString(), "机器人登录完成");
         return ListeningStatus.LISTENING;
     }
 
@@ -68,6 +68,6 @@ public class BotMessageListener extends SimpleListenerHost {
     @SneakyThrows
     @Override
     public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {
-        LogUtil.GroupEventFile(context + "\n" + exception, "抛出异常");
+        LogUtil.eventLog(context + "\n" + exception, "抛出异常");
     }
 }

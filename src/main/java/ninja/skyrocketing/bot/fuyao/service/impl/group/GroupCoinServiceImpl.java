@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * @Author skyrocketing Hong
- * @Date 2020-11-28 21:26:06
+ * @author skyrocketing Hong
+ * @date 2020-11-28 21:26:06
  */
 
 @Service
@@ -18,27 +18,27 @@ public class GroupCoinServiceImpl implements GroupCoinService {
     GroupCoinMapper groupCoinMapper;
 
     @Override
-    public GroupCoin GetCoinByGroupUser(GroupUser groupUser) {
+    public GroupCoin getCoinByGroupUser(GroupUser groupUser) {
         return groupCoinMapper.selectByPrimaryKey(groupUser.getGroupId(), groupUser.getUserId());
     }
 
     @Override
-    public int InsertCoin(GroupCoin groupCoin) {
+    public int insertCoin(GroupCoin groupCoin) {
         return groupCoinMapper.insertSelective(groupCoin);
     }
 
     @Override
-    public int UpdateCoin(GroupCoin groupCoin) {
+    public int updateCoin(GroupCoin groupCoin) {
         return groupCoinMapper.updateByPrimaryKeySelective(groupCoin);
     }
 
     @Override
-    public int DeleteCoin(GroupUser groupUser) {
+    public int deleteCoin(GroupUser groupUser) {
         return groupCoinMapper.deleteByPrimaryKey(groupUser.getGroupId(), groupUser.getUserId());
     }
 
     @Override
-    public int DeleteCoinByGroupId(Long groupId) {
+    public int deleteCoinByGroupId(Long groupId) {
         return groupCoinMapper.deleteByGroupId(groupId);
     }
 }

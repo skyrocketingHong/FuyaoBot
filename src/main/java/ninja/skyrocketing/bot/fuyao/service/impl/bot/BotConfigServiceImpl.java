@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 /**
- * @Author skyrocketing Hong
- * @Date 2020-11-28 00:58:18
+ * @author skyrocketing Hong
+ * @date 2020-11-28 00:58:18
  */
 @Service
 public class BotConfigServiceImpl implements BotConfigService {
@@ -17,12 +17,12 @@ public class BotConfigServiceImpl implements BotConfigService {
     BotConfigMapper botConfigMapper;
 
     @Override
-    public BotConfig GetConfigByKey(String key) {
+    public BotConfig getConfigByKey(String key) {
         return botConfigMapper.selectByPrimaryKey(key);
     }
 
     @Override
-    public String GetConfigValueByKey(String key) {
+    public String getConfigValueByKey(String key) {
         return botConfigMapper.selectByPrimaryKey(key).getConfigValue();
     }
 }

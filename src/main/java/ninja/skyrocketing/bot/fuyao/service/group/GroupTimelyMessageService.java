@@ -6,13 +6,13 @@ import ninja.skyrocketing.bot.fuyao.pojo.group.GroupUser;
 import java.util.List;
 
 /**
- * @Author skyrocketing Hong
- * @Date 2020-12-01 16:09:12
+ * @author skyrocketing Hong
+ * @date 2020-12-01 16:09:12
  */
 public interface GroupTimelyMessageService {
-    List<GroupTimelyMessage> GetAllTimelyMessage();
+    List<GroupTimelyMessage> getAllTimelyMessage();
 
-    int DeleteSentMessageByGroupUser(GroupUser groupUser);
+    int deleteSentMessageByGroupUser(GroupUser groupUser);
 
-    int DeleteSentMessageById(Long groupId, Long userId);
+    int deleteSentMessageById(Long groupId, Long userId);
 }

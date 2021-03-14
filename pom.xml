@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>ninja.skyrocketing.bot.fuyao</groupId>
 	<artifactId>fuyao-bot</artifactId>
-	<version>4.1.6.49</version>
+	<version>4.1.8.51</version>
 	<name>Fuyao bot</name>
 	<description>A QQ bot.</description>
 

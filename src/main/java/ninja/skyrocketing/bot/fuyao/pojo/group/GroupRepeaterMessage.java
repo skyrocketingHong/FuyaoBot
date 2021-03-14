@@ -3,8 +3,8 @@ package ninja.skyrocketing.bot.fuyao.pojo.group;
 import lombok.*;
 
 /**
- * @Author skyrocketing Hong
- * @Date 2021-03-03 13:12:45
+ * @author skyrocketing Hong
+ * @date 2021-03-03 13:12:45
  */
 
 @AllArgsConstructor
