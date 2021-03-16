@@ -1,8 +1,13 @@
 package ninja.skyrocketing.bot.fuyao.pojo.group;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.*;
 
 import java.util.Date;
+
+/**
+ * @author skyrocketing Hong
+ */
 
 @Data
 @AllArgsConstructor
@@ -11,8 +16,10 @@ import java.util.Date;
 @Setter
 @ToString
 public class GroupExp {
+    @TableField
     private Long userId;
 
+    @TableField
     private Long groupId;
 
     private Long exp;

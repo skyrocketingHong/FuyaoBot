@@ -2,7 +2,10 @@ package ninja.skyrocketing.bot.fuyao.pojo.group;
 
 import lombok.*;
 
-@Data
+/**
+ * @author skyrocketing Hong
+ */
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

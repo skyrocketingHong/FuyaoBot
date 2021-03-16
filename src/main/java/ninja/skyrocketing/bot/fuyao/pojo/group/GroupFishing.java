@@ -1,6 +1,11 @@
 package ninja.skyrocketing.bot.fuyao.pojo.group;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.*;
+
+/**
+ * @author skyrocketing Hong
+ */
 
 @Data
 @AllArgsConstructor
@@ -9,8 +14,10 @@ import lombok.*;
 @Setter
 @ToString
 public class GroupFishing {
+    @TableField
     private Long groupId;
 
+    @TableField
     private Long userId;
 
     private String fish1;

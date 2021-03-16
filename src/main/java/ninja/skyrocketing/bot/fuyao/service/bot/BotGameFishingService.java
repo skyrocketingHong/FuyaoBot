@@ -1,6 +1,6 @@
 package ninja.skyrocketing.bot.fuyao.service.bot;
 
-import ninja.skyrocketing.bot.fuyao.pojo.bot.BotGameFishing;
+import ninja.skyrocketing.bot.fuyao.pojo.game.GameFishing;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import java.util.List;
  * @date 2020-11-29 13:20:23
  */
 public interface BotGameFishingService {
-    List<BotGameFishing> getAllFish();
+    List<GameFishing> getAllFish();
     String getFishNameById(String id);
     Long getFishValueById(String id);
 }

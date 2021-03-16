@@ -1,4 +1,4 @@
-create table bot_game_fishing
+create table game_fishing
 (
 	fish_id varchar(256) not null comment '鱼名称id'
 		constraint `PRIMARY`
@@ -10,4 +10,3 @@ create table bot_game_fishing
 	special_group bigint null comment '如果是特殊鱼的话，则需要注明是哪个群的'
 )
 comment '钓鱼游戏表';
-

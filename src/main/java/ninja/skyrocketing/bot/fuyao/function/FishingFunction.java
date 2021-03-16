@@ -3,7 +3,7 @@ package ninja.skyrocketing.bot.fuyao.function;
 import lombok.NoArgsConstructor;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
-import ninja.skyrocketing.bot.fuyao.pojo.bot.BotGameFishing;
+import ninja.skyrocketing.bot.fuyao.pojo.game.GameFishing;
 import ninja.skyrocketing.bot.fuyao.pojo.group.*;
 import ninja.skyrocketing.bot.fuyao.service.bot.BotGameFishingService;
 import ninja.skyrocketing.bot.fuyao.service.group.GroupCoinService;
@@ -73,20 +73,20 @@ public class FishingFunction {
     }
 
     //直接获取一条鱼
-    public static BotGameFishing getFish(GroupMessage groupMessage) {
-        List<BotGameFishing> allFish = botGameFishingService.getAllFish();
+    public static GameFishing getFish(GroupMessage groupMessage) {
+        List<GameFishing> allFish = botGameFishingService.getAllFish();
         //生成随机数0~9999，共10000个
         int randomNum = RandomUtil.secureRandomNum(0, 9999);
-        for (BotGameFishing botGameFishing : allFish) {
-            if (botGameFishing.getIsSpecial()) {
+        for (GameFishing gameFishing : allFish) {
+            if (gameFishing.getIsSpecial()) {
                 //排除所有鱼中的特殊群组中的鱼
-                if (!botGameFishing.getSpecialGroup().equals(groupMessage.getGroupUser().getGroupId())) {
+                if (!gameFishing.getSpecialGroup().equals(groupMessage.getGroupUser().getGroupId())) {
                     continue;
                 }
             }
             //根据随机数，取第一个随机数比概率值小的鱼
-            if (10000 - randomNum < botGameFishing.getFishProbability() * 100) {
-                return botGameFishing;
+            if (10000 - randomNum < gameFishing.getFishProbability() * 100) {
+                return gameFishing;
             }
         }
         return null;
@@ -99,9 +99,9 @@ public class FishingFunction {
         GroupUser groupUser = groupMessage.getGroupUser();
         GroupFishing groupFishing = groupFishingService.getGroupFishingByGroupUser(groupUser);
         //获取一条鱼
-        BotGameFishing botGameFishing = getFish(groupMessage);
+        GameFishing gameFishing = getFish(groupMessage);
         //如果为空，则直接返回没钓到
-        if (botGameFishing == null) {
+        if (gameFishing == null) {
             //扣除金币
             groupCoin.minusCoin(10L);
             int status = groupCoinService.updateCoin(groupCoin);
@@ -117,7 +117,7 @@ public class FishingFunction {
         //判断数据库中是否有这个人的鱼筐
         if (groupFishing == null) {
             //如果没有，则直接插入
-            groupFishing = new GroupFishing(groupUser, botGameFishing.getFishId(), 1);
+            groupFishing = new GroupFishing(groupUser, gameFishing.getFishId(), 1);
             int status = groupFishingService.insertGroupFishing(groupFishing);
             //判断插入是否成功
             if (status == 0) {
@@ -133,7 +133,7 @@ public class FishingFunction {
                 } else {
                     //插入成功提示
                     messageChainBuilder.add("✔ 首次钓鱼成功 扣除 10 金币" + "\n" +
-                            "🎣 你钓到了一条 \"" + botGameFishing.getFishName() + "\"\n" +
+                            "🎣 你钓到了一条 \"" + gameFishing.getFishName() + "\"\n" +
                             "🗑 鱼筐状态 1 / 5"
                     );
                 }
@@ -143,7 +143,7 @@ public class FishingFunction {
             //先获取空鱼筐的坑位
             int slotId = groupFishing.getNullSlot();
             //根据坑位id插入新的鱼
-            groupFishing.setFishBySlotId(slotId, botGameFishing.getFishId());
+            groupFishing.setFishBySlotId(slotId, gameFishing.getFishId());
             int status = groupFishingService.updateGroupFishing(groupFishing);
             if (status == 0) {
                 //插入失败提示
@@ -158,7 +158,7 @@ public class FishingFunction {
                 } else {
                     //插入成功提示
                     messageChainBuilder.add("✔ 钓鱼成功 扣除 10 金币" + "\n" +
-                            "🎣 你钓到了一条 \"" + botGameFishing.getFishName() + "\"\n" +
+                            "🎣 你钓到了一条 \"" + gameFishing.getFishName() + "\"\n" +
                             "🗑 鱼筐状态 " + groupFishing.getSlotCount() + " / 5"
                     );
                 }
@@ -178,23 +178,23 @@ public class FishingFunction {
         //群内是否有特殊鱼种类，默认为true，如果有的话就改为false
         boolean noSpecialFish = true;
         //获取所有鱼
-        List<BotGameFishing> botGameFishingList = botGameFishingService.getAllFish();
+        List<GameFishing> gameFishingList = botGameFishingService.getAllFish();
         //迭代所有鱼种类
-        for (BotGameFishing botGameFishing : botGameFishingList) {
+        for (GameFishing gameFishing : gameFishingList) {
             //是否是特殊种类
-            if (botGameFishing.getIsSpecial()) {
+            if (gameFishing.getIsSpecial()) {
                 //是否是对应群
-                if (botGameFishing.getSpecialGroup().equals(groupMessage.getGroupUser().getGroupId())) {
-                    specialFish.add(botGameFishing.getFishName() + "\n" +
-                            "价值 " + botGameFishing.getFishValue() +
-                            " 概率 " + botGameFishing.getFishProbability() + "\n"
+                if (gameFishing.getSpecialGroup().equals(groupMessage.getGroupUser().getGroupId())) {
+                    specialFish.add(gameFishing.getFishName() + "\n" +
+                            "价值 " + gameFishing.getFishValue() +
+                            " 概率 " + gameFishing.getFishProbability() + "\n"
                     );
                     noSpecialFish = false;
                 }
             } else {
-                normalFish.add(botGameFishing.getFishName() + "\n" +
-                        "价值 " + botGameFishing.getFishValue() +
-                        " 概率 " + botGameFishing.getFishProbability() + "\n"
+                normalFish.add(gameFishing.getFishName() + "\n" +
+                        "价值 " + gameFishing.getFishValue() +
+                        " 概率 " + gameFishing.getFishProbability() + "\n"
                 );
             }
         }

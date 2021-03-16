@@ -38,6 +38,6 @@ public class GroupExpServiceImpl implements GroupExpService {
 
     @Override
     public int deleteExpByGroupId(Long groupId) {
-        return 0;
+        return groupExpMapper.deleteByGroupId(groupId);
     }
 }

@@ -1,7 +1,7 @@
 package ninja.skyrocketing.bot.fuyao.service.impl.bot;
 
-import ninja.skyrocketing.bot.fuyao.mapper.bot.BotGameFishingMapper;
-import ninja.skyrocketing.bot.fuyao.pojo.bot.BotGameFishing;
+import ninja.skyrocketing.bot.fuyao.mapper.game.GameFishingMapper;
+import ninja.skyrocketing.bot.fuyao.pojo.game.GameFishing;
 import ninja.skyrocketing.bot.fuyao.service.bot.BotGameFishingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,20 +16,20 @@ import java.util.List;
 @Service
 public class BotGameFishingServiceImpl implements BotGameFishingService {
     @Autowired
-    BotGameFishingMapper botGameFishingMapper;
+    GameFishingMapper gameFishingMapper;
 
     @Override
-    public List<BotGameFishing> getAllFish() {
-        return botGameFishingMapper.getAllFish();
+    public List<GameFishing> getAllFish() {
+        return gameFishingMapper.getAllFish();
     }
 
     @Override
     public String getFishNameById(String id) {
-        return botGameFishingMapper.selectFishNameByPrimaryKey(id);
+        return gameFishingMapper.selectFishNameByPrimaryKey(id);
     }
 
     @Override
     public Long getFishValueById(String id) {
-        return botGameFishingMapper.getFishValueById(id);
+        return gameFishingMapper.getFishValueById(id);
     }
 }

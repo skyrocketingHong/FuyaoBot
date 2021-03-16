@@ -17,6 +17,6 @@ public class GroupExpRankNameServiceImpl implements GroupExpRankNameService {
 
     @Override
     public GroupExpRankName getGroupExpRankNameById(Long id) {
-        return groupExpRankNameMapper.selectByPrimaryKey(id);
+        return groupExpRankNameMapper.selectById(id);
     }
 }

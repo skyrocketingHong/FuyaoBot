@@ -1,19 +1,14 @@
 package ninja.skyrocketing.bot.fuyao.mapper.bot;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import ninja.skyrocketing.bot.fuyao.pojo.bot.BotConfig;
 import org.apache.ibatis.annotations.Mapper;
 
+/**
+ * @author skyrocketing Hong
+ */
+
 @Mapper
-public interface BotConfigMapper {
-    int deleteByPrimaryKey(String configName);
+public interface BotConfigMapper extends BaseMapper<BotConfig> {
 
-    int insert(BotConfig record);
-
-    int insertSelective(BotConfig record);
-
-    BotConfig selectByPrimaryKey(String configName);
-
-    int updateByPrimaryKeySelective(BotConfig record);
-
-    int updateByPrimaryKey(BotConfig record);
 }

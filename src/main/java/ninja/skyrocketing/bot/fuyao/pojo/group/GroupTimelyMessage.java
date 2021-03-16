@@ -2,6 +2,10 @@ package ninja.skyrocketing.bot.fuyao.pojo.group;
 
 import java.util.Date;
 
+/**
+ * @author skyrocketing Hong
+ */
+
 public class GroupTimelyMessage {
     private Long groupId;
 

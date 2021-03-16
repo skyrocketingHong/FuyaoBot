@@ -1,7 +1,7 @@
 package ninja.skyrocketing.bot.fuyao.service.impl.hearthstone;
 
-import ninja.skyrocketing.bot.fuyao.mapper.hearthstone.HsCardMapper;
-import ninja.skyrocketing.bot.fuyao.pojo.hearthstone.HsCard;
+import ninja.skyrocketing.bot.fuyao.mapper.game.GameHsCardMapper;
+import ninja.skyrocketing.bot.fuyao.pojo.game.GameHsCard;
 import ninja.skyrocketing.bot.fuyao.service.hearthstone.HsCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,15 +16,15 @@ import java.util.List;
 @Service
 public class HsCardServiceImpl implements HsCardService {
     @Autowired
-    HsCardMapper hsCardMapper;
+    GameHsCardMapper gameHsCardMapper;
 
     @Override
-    public int insertACard(HsCard hsCard) {
-        return hsCardMapper.insert(hsCard);
+    public int insertACard(GameHsCard gameHsCard) {
+        return gameHsCardMapper.insert(gameHsCard);
     }
 
     @Override
-    public List<HsCard> selectBySetOrderByRandom(String setName) {
-        return hsCardMapper.selectBySetOrderByRandom(setName);
+    public List<GameHsCard> selectBySetOrderByRandom(String setName) {
+        return gameHsCardMapper.selectBySetOrderByRandom(setName);
     }
 }

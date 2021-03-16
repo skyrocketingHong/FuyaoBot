@@ -4,7 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import ninja.skyrocketing.bot.fuyao.pojo.hearthstone.HsCard;
+import ninja.skyrocketing.bot.fuyao.pojo.game.GameHsCard;
 import ninja.skyrocketing.bot.fuyao.service.hearthstone.HsCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,7 +38,7 @@ public class HearthstoneUtil {
             String name = jsonObject.get("name", String.class);
             String rarity = jsonObject.get("rarity", String.class);
             String cardId = jsonObject.get("id", String.class);
-            hsCardService.insertACard(new HsCard(id, set, name, rarity, "https://art.hearthstonejson.com/v1/render/latest/zhCN/256x/" + cardId + ".png"));
+            hsCardService.insertACard(new GameHsCard(id, set, name, rarity, "https://art.hearthstonejson.com/v1/render/latest/zhCN/256x/" + cardId + ".png"));
         }
     }
 }

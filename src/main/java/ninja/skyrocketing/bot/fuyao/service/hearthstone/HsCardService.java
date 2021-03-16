@@ -1,6 +1,6 @@
 package ninja.skyrocketing.bot.fuyao.service.hearthstone;
 
-import ninja.skyrocketing.bot.fuyao.pojo.hearthstone.HsCard;
+import ninja.skyrocketing.bot.fuyao.pojo.game.GameHsCard;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  */
 
 public interface HsCardService {
-    int insertACard(HsCard hsCard);
+    int insertACard(GameHsCard gameHsCard);
 
-    List<HsCard> selectBySetOrderByRandom(String setName);
+    List<GameHsCard> selectBySetOrderByRandom(String setName);
 }

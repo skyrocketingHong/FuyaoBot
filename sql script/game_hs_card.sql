@@ -1,4 +1,4 @@
-create table hs_card
+create table game_hs_card
 (
 	id varchar(32) not null comment '卡的数字id'
 		constraint `PRIMARY`
@@ -9,4 +9,3 @@ create table hs_card
 	imgUrl varchar(1024) null comment '渲染卡牌的图片链接'
 )
 comment '炉石卡牌';
-

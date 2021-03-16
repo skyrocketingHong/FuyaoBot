@@ -13,26 +13,40 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.util.Date;
 
+/**
+ * @author skyrocketing Hong
+ */
+
 @SpringBootApplication
 @Configuration
 @EnableScheduling
 @MapperScan("ninja.skyrocketing.bot.fuyao.mapper.*")
-//mvn package "-Dmaven.test.skip=true"
+/**
+ * mvn package "-Dmaven.test.skip=true"
+ * */
 public class FuyaoBotApplication implements CommandLineRunner {
-	//生成启动时间
+	/**
+	 * 生成启动时间
+	 * */
 	public static Date startDate = new Date();
 
-	//机器人实例
+	/**
+	 * 机器人实例
+	 * */
 	public static Bot bot;
 
-	//主函数，不运行Springboot的web模块
+	/**
+	 * 主函数，不运行Springboot的web模块
+	 * */
 	public static void main(String[] args) {
 		SpringApplication app = new SpringApplication(FuyaoBotApplication.class);
 		app.setBannerMode(Banner.Mode.OFF);
 		app.run();
 	}
 
-	//覆盖run方法
+	/**
+	 * 覆盖run方法
+	 * */
 	@Override
 	public void run(String... args) throws Exception {
 		//运行机器人

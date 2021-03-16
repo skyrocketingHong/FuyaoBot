@@ -17,7 +17,7 @@ public class BotBanedUserServiceImpl implements BotBanedUserService {
 
     @Override
     public boolean IsBaned(Long id) {
-        BotBanedUser botBanedUser = botBanedUserMapper.selectByPrimaryKey(id);
+        BotBanedUser botBanedUser = botBanedUserMapper.selectById(id);
         return botBanedUser != null;
     }
 }

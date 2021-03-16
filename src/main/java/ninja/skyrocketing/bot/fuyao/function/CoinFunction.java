@@ -184,13 +184,13 @@ public class CoinFunction {
     }
 
     //清理金币数据
-    public static int cleanCoinData(Long groupId, Long userId) {
+    public static void cleanCoinData(Long groupId, Long userId) {
         if (userId == 0L) {
             groupCoinService.deleteCoinByGroupId(groupId);
         }
         if (groupId == 0L) {
 
         }
-        return groupCoinService.deleteCoin(new GroupUser(groupId, userId));
+        groupCoinService.deleteCoin(new GroupUser(groupId, userId));
     }
 }

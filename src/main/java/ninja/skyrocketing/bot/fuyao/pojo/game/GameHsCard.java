@@ -1,6 +1,11 @@
-package ninja.skyrocketing.bot.fuyao.pojo.hearthstone;
+package ninja.skyrocketing.bot.fuyao.pojo.game;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.*;
+
+/**
+ * @author skyrocketing Hong
+ */
 
 @Data
 @AllArgsConstructor
@@ -8,7 +13,8 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class HsCard {
+public class GameHsCard {
+    @TableId
     private String id;
 
     private String set;

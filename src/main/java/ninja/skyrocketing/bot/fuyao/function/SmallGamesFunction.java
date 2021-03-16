@@ -8,7 +8,7 @@ import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.bot.fuyao.config.MiraiBotConfig;
 import ninja.skyrocketing.bot.fuyao.pojo.group.GroupMessage;
-import ninja.skyrocketing.bot.fuyao.pojo.hearthstone.HsCard;
+import ninja.skyrocketing.bot.fuyao.pojo.game.GameHsCard;
 import ninja.skyrocketing.bot.fuyao.service.hearthstone.HsCardService;
 import ninja.skyrocketing.bot.fuyao.util.FileUtil;
 import ninja.skyrocketing.bot.fuyao.util.MessageUtil;
@@ -65,24 +65,24 @@ public class SmallGamesFunction {
         MessageReceipt<Contact> messageReceipt = MessageUtil.waitingMessage(groupMessage, "正在开包...");
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         //从数据库中随机取出5张卡，放在List中
-        List<HsCard> hsCardList = hsCardService.selectBySetOrderByRandom("DARKMOON_FAIRE");
+        List<GameHsCard> gameHsCardList = hsCardService.selectBySetOrderByRandom("DARKMOON_FAIRE");
         //卡的图片的List，为图片拼接准备
         List<File> cardImageFileList = new ArrayList<>();
         //生成的新图片的文件名，将卡的id直接拼在一起
         StringBuilder jointCardFileName = new StringBuilder();
         messageChainBuilder.add("疯狂的暗月马戏团\n");
         //遍历5张卡
-        for (HsCard hsCard : hsCardList) {
-            jointCardFileName.append(hsCard.getId());
+        for (GameHsCard gameHsCard : gameHsCardList) {
+            jointCardFileName.append(gameHsCard.getId());
             //卡的图片的缓存位置
-            File cardImageFile = new File(MiraiBotConfig.hsCachePath + FileUtil.separator + hsCard.getId() + ".png");
+            File cardImageFile = new File(MiraiBotConfig.hsCachePath + FileUtil.separator + gameHsCard.getId() + ".png");
             //如果图片不存在时就下载
             if (!cardImageFile.exists()) {
-                cardImageFile = HttpUtil.downloadFileFromUrl(hsCard.getImgurl(), cardImageFile);
+                cardImageFile = HttpUtil.downloadFileFromUrl(gameHsCard.getImgurl(), cardImageFile);
             }
             cardImageFileList.add(cardImageFile);
             //生成消息
-            messageChainBuilder.add(hsCard.getRarity() + " " + hsCard.getName() + "\n");
+            messageChainBuilder.add(gameHsCard.getRarity() + " " + gameHsCard.getName() + "\n");
         }
         //拼接后的图片的保存位置
         File jointCardFile = new File(MiraiBotConfig.hsCachePath + FileUtil.separator + jointCardFileName + ".png");

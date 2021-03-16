@@ -1,5 +1,6 @@
 package ninja.skyrocketing.bot.fuyao.pojo.bot;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.*;
 
 /**
@@ -14,6 +15,7 @@ import lombok.*;
 @Setter
 @ToString
 public class BotQQ {
+    @TableId
     private Long qqId;
 
     private String qqPassword;

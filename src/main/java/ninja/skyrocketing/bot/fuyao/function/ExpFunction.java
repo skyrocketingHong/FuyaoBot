@@ -137,13 +137,14 @@ public class ExpFunction {
     }
 
     //清除EXP数据
-    public static int cleanExpData(Long groupId, Long userId) {
+    public static void cleanExpData(Long groupId, Long userId) {
         if (userId == 0L) {
-            return groupExpService.deleteExpByGroupId(groupId);
+            groupExpService.deleteExpByGroupId(groupId);
+            return;
         }
         if (groupId == 0L) {
 
         }
-        return groupExpService.deleteExp(new GroupUser(groupId, userId));
+        groupExpService.deleteExp(new GroupUser(groupId, userId));
     }
 }

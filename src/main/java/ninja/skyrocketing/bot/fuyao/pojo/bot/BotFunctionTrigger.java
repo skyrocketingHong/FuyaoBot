@@ -1,6 +1,11 @@
 package ninja.skyrocketing.bot.fuyao.pojo.bot;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.*;
+
+/**
+ * @author skyrocketing Hong
+ */
 
 @Data
 @AllArgsConstructor
@@ -9,6 +14,7 @@ import lombok.*;
 @Setter
 @ToString
 public class BotFunctionTrigger {
+    @TableId
     private Integer id;
 
     private String charId;

@@ -1,17 +1,8 @@
 package ninja.skyrocketing.bot.fuyao.mapper.user;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import ninja.skyrocketing.bot.fuyao.pojo.user.UserCoin;
 
-public interface UserCoinMapper {
-    int deleteByPrimaryKey(Long userId);
+public interface UserCoinMapper extends BaseMapper<UserCoinMapper> {
 
-    int insert(UserCoin record);
-
-    int insertSelective(UserCoin record);
-
-    UserCoin selectByPrimaryKey(Long userId);
-
-    int updateByPrimaryKeySelective(UserCoin record);
-
-    int updateByPrimaryKey(UserCoin record);
 }

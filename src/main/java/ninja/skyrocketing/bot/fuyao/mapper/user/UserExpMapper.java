@@ -1,17 +1,8 @@
 package ninja.skyrocketing.bot.fuyao.mapper.user;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import ninja.skyrocketing.bot.fuyao.pojo.user.UserExp;
 
-public interface UserExpMapper {
-    int deleteByPrimaryKey(Long userId);
+public interface UserExpMapper extends BaseMapper<UserExp> {
 
-    int insert(UserExp record);
-
-    int insertSelective(UserExp record);
-
-    UserExp selectByPrimaryKey(Long userId);
-
-    int updateByPrimaryKeySelective(UserExp record);
-
-    int updateByPrimaryKey(UserExp record);
 }
