@@ -8,16 +8,16 @@
 		<version>2.4.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>ninja.skyrocketing.bot.fuyao</groupId>
+	<groupId>ninja.skyrocketing.fuyao</groupId>
 	<artifactId>fuyao-bot</artifactId>
-	<version>4.2.0.52</version>
+	<version>4.2.1.53</version>
 	<name>Fuyao bot</name>
-	<description>A QQ bot.</description>
+	<description>A QQ bot named Fuyao and bases on Mirai, Spring Boot, MySQL and Mybatis Plus.</description>
 
 	<properties>
 		<java.version>15</java.version>
 		<kotlin.version>1.4.21</kotlin.version>
-		<start-class>ninja.skyrocketing.bot.fuyao.FuyaoBotApplication</start-class>
+		<start-class>ninja.skyrocketing.fuyao.FuyaoApplication</start-class>
 	</properties>
 
 	<repositories>
@@ -51,6 +51,12 @@
 			<artifactId>hutool-all</artifactId>
 			<version>5.5.8</version>
 		</dependency>
+		<!--MySQL-->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 		<!--MyBatis plus-->
 		<dependency>
 			<groupId>com.baomidou</groupId>
@@ -61,11 +67,13 @@
 			<groupId>com.baomidou</groupId>
 			<artifactId>mybatis-plus-generator</artifactId>
 			<version>3.4.1</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
 			<artifactId>velocity-engine-core</artifactId>
 			<version>2.3</version>
+			<scope>provided</scope>
 		</dependency>
 		<!--Java EE-->
 		<dependency>
@@ -74,7 +82,13 @@
 			<version>8.0.1</version>
 			<scope>provided</scope>
 		</dependency>
-
+		<!--Lombok-->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<!--Spring Boot-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -82,18 +96,8 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -137,7 +141,7 @@
 						<addMavenDescriptor>false</addMavenDescriptor>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>ninja.skyrocketing.bot.fuyao.FuyaoBotApplication</mainClass>
+							<mainClass>ninja.skyrocketing.fuyao.FuyaoApplication</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
@@ -167,7 +171,7 @@
 			<plugin>
 				<groupId>org.jetbrains.kotlin</groupId>
 				<artifactId>kotlin-maven-plugin</artifactId>
-				<version>1.4.21</version>
+				<version>${kotlin.version}</version>
 				<executions>
 					<execution>
 						<id>compile</id>

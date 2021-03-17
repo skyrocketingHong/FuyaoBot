@@ -1,5 +1,5 @@
 # 扶摇 bot
-一个基于 [Mirai](https://github.com/mamoe/mirai) 、Spring Boot、MySQL、和 Mybatis 的 QQ 机器人。也算是用学校学的点东西做的练手小玩具。
+一个基于 [Mirai](https://github.com/mamoe/mirai) 、Spring Boot、MySQL、和 MyBatis Plus 的 QQ 机器人。也算是用学校学的点东西做的练手小玩具。
 
 # 目录
 
@@ -9,12 +9,6 @@
   * [游戏](#游戏)
   * [查询](#查询)
 - [更新日志](#更新日志)
-  * [最新](#更新日志)
-  * [3.0.0 +](#2020-11-10)
-  * [2.0.0 +](#2020-07-12)
-  * [1.0.0 +](#2020-07-07)
-  * [0.0.1 +](#2020-06-24)
-  * [初版](#2020-06-22)
 
 # 操作列表
 *<p align="right">最后更新时间：2021-03-12</p>*
@@ -79,17 +73,19 @@
 *<p align="right">想要啥功能可以私聊发给机器人，看到后会做。</p>*
 
 # 更新日志
-## 2021-03-16
-#### 4.2.0.52
+## 4.2.1.53 (2021-03-17)
+* 优化目录结构
+* 为 Fuyao Music Room 做准备
+
+<details>
+<summary>4.0.0 +</summary>
+
+## 4.2.0.52 (2021-03-16)
 * 去掉MyBatis，改为使用MyBatis Plus (XML爪巴 (复合主键还是XML))
 * 重命名数据库
     - bot_game_fishing改为game_fishing
     - hs_card改为game_hs_card
 * 修改部分代码，使其更符合代码规范
-
-<details>
-<summary>4.0.0 +</summary>
-
 ## 2021-03-14
 #### 4.1.8.51
 * 规范代码
