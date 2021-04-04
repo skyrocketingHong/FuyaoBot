@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 public class InvokeUtil {
     public static Message runByInvoke(String str, GroupMessage groupMessage) throws Exception {
         String[] className = str.split("\\.");
-        Class<?> clz = Class.forName("ninja.skyrocketing.bot.fuyao." + className[0] + "." + className[1]);
+        Class<?> clz = Class.forName("ninja.skyrocketing.fuyao.bot." + className[0] + "." + className[1]);
         Method method = clz.getMethod(className[2], GroupMessage.class);
         Constructor<?> constructor = clz.getConstructor();
         Object object = constructor.newInstance();

@@ -5,7 +5,7 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import ninja.skyrocketing.fuyao.bot.pojo.game.GameHsCard;
-import ninja.skyrocketing.fuyao.bot.service.game.HsCardService;
+import ninja.skyrocketing.fuyao.bot.service.game.GameHsCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,10 +19,10 @@ import java.nio.charset.StandardCharsets;
 
 @Component
 public class HearthstoneUtil {
-    private static HsCardService hsCardService;
+    private static GameHsCardService gameHsCardService;
     @Autowired
-    public HearthstoneUtil(HsCardService hsCardService) {
-        HearthstoneUtil.hsCardService = hsCardService;
+    public HearthstoneUtil(GameHsCardService gameHsCardService) {
+        HearthstoneUtil.gameHsCardService = gameHsCardService;
     }
 
     /**
@@ -38,7 +38,7 @@ public class HearthstoneUtil {
             String name = jsonObject.get("name", String.class);
             String rarity = jsonObject.get("rarity", String.class);
             String cardId = jsonObject.get("id", String.class);
-            hsCardService.insertACard(new GameHsCard(id, set, name, rarity, "https://art.hearthstonejson.com/v1/render/latest/zhCN/256x/" + cardId + ".png"));
+            gameHsCardService.insertACard(new GameHsCard(id, set, name, rarity, "https://art.hearthstonejson.com/v1/render/latest/zhCN/256x/" + cardId + ".png"));
         }
     }
 }
