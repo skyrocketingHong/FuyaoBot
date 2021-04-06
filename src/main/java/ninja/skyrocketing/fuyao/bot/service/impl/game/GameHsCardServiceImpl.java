@@ -27,7 +27,7 @@ public class GameHsCardServiceImpl implements GameHsCardService {
     }
 
     @Override
-    public List<GameHsCard> selectBySetOrderByRandom(String setName) {
-        return gameHsCardMapper.selectBySetOrderByRandom(setName);
+    public List<GameHsCard> selectBySetOrderByRandom() {
+        return gameHsCardMapper.selectBySetOrderByRandom();
     }
 }

@@ -7,6 +7,7 @@ import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.fuyao.FuyaoBotApplication;
 import ninja.skyrocketing.fuyao.bot.pojo.bot.BotFunctionTrigger;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessage;
+import ninja.skyrocketing.fuyao.bot.service.bot.BotAdminUserService;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotFunctionTriggerService;
 import ninja.skyrocketing.fuyao.util.InvokeUtil;
 import ninja.skyrocketing.fuyao.util.LogUtil;
@@ -23,9 +24,14 @@ import java.io.IOException;
 @Component
 public class GroupMessageSender {
     private static BotFunctionTriggerService botFunctionTriggerService;
+    private static BotAdminUserService botAdminUserService;
     @Autowired
-    public GroupMessageSender(BotFunctionTriggerService botFunctionTriggerService) {
+    public GroupMessageSender(
+            BotFunctionTriggerService botFunctionTriggerService,
+            BotAdminUserService botAdminUserService
+    ) {
         GroupMessageSender.botFunctionTriggerService = botFunctionTriggerService;
+        GroupMessageSender.botAdminUserService = botAdminUserService;
     }
 
     /**
@@ -44,12 +50,28 @@ public class GroupMessageSender {
      * 根据消息获取对应的实现类
      */
     public static String matchedClass(GroupMessage groupMessage) {
+        //保存消息便于便利
         String msg = groupMessage.getMessage();
+        //遍历所有功能
         for (BotFunctionTrigger botFunctionTrigger : botFunctionTriggerService.getAllTrigger()) {
+            //如果包含对应关键词，触发消息
             if (msg.matches(botFunctionTrigger.getKeyword())) {
+                //存储功能名
+                groupMessage.setFunctionName(botFunctionTrigger.getTriggerName());
+                //判断功能是否开启
                 if (botFunctionTrigger.getEnabled()) {
+                    //判断是否为管理员功能
+                    if(botFunctionTrigger.getIsAdmin()) {
+                        //判断用户是否为管理员
+                        if (botAdminUserService.isAdmin(groupMessage.getGroupUser().getUserId())) {
+                            return botFunctionTrigger.getImplClass();
+                        }
+                        //非管理员提醒
+                        return "function.FunctionDisabledMessage.adminFunction";
+                    }
                     return botFunctionTrigger.getImplClass();
                 } else {
+                    //禁用消息提醒
                     return "function.FunctionDisabledMessage.FunctionDisabled";
                 }
             }

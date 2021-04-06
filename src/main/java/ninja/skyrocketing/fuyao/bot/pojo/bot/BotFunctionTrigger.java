@@ -30,4 +30,6 @@ public class BotFunctionTrigger {
     private Boolean enabled;
 
     private Boolean shown;
+
+    private Boolean isAdmin;
 }

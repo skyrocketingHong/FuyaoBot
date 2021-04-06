@@ -12,5 +12,5 @@ import java.util.List;
 public interface GameHsCardService {
     int insertACard(GameHsCard gameHsCard);
 
-    List<GameHsCard> selectBySetOrderByRandom(String setName);
+    List<GameHsCard> selectBySetOrderByRandom();
 }

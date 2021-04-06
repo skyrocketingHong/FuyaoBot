@@ -10,11 +10,23 @@ import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessage;
  */
 
 public class FunctionDisabledMessage {
+    /**
+     * 功能被禁用提醒
+     * */
     public static Message functionDisabled(GroupMessage groupMessage) {
-        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("⚠ 维护中" + "\n" +
-                "\"" + groupMessage.getMessage() + "\" " +
+        groupMessage.getMessageChainBuilder().add("⚠ 维护中" + "\n" +
+                "\"" + groupMessage.getFunctionName() + "\" " +
                 "功能已暂时关闭。");
-        return messageChainBuilder.asMessageChain();
+        return groupMessage.getMessageChainBuilderAsMessageChain();
+    }
+
+    /**
+     * 管理员功能提醒
+     * */
+    public static Message adminFunction(GroupMessage groupMessage) {
+        groupMessage.getMessageChainBuilder().add("⚠ 非管理员无法使用 " +
+                "\"" + groupMessage.getFunctionName() + "\" " +
+                "功能，请联系管理员！");
+        return groupMessage.getMessageChainBuilderAsMessageChain();
     }
 }

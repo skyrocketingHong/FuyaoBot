@@ -29,16 +29,23 @@ public class HearthstoneUtil {
     * 将json文件中的数据插入数据库中
     * @param file json文件路径
     * */
-    public static void readJsonFromFile(File file) {
+    public static int readJsonFromFile(File file, String needSet) {
         JSONArray jsonArray = JSONUtil.parseArray(FileUtil.readString(file, StandardCharsets.UTF_8));
+        int cardNum = 0;
         for (int i = 0; i < jsonArray.size(); ++i) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
-            String id = jsonObject.get("dbfId", String.class);
+            Integer id = Integer.parseInt(jsonObject.get("dbfId", String.class));
             String set = jsonObject.get("set", String.class);
+            if (!set.equals(needSet)) {
+                continue;
+            }
             String name = jsonObject.get("name", String.class);
             String rarity = jsonObject.get("rarity", String.class);
             String cardId = jsonObject.get("id", String.class);
-            gameHsCardService.insertACard(new GameHsCard(id, set, name, rarity, "https://art.hearthstonejson.com/v1/render/latest/zhCN/256x/" + cardId + ".png"));
+            String imgUrl = "https://art.hearthstonejson.com/v1/render/latest/zhCN/256x/" + cardId + ".png";
+            gameHsCardService.insertACard(new GameHsCard(id, set, name, rarity, imgUrl));
+            ++cardNum;
         }
+        return cardNum;
     }
 }

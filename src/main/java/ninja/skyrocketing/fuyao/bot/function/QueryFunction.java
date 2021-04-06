@@ -29,7 +29,6 @@ import java.time.format.DateTimeFormatter;
  */
 
 public class QueryFunction {
-
     /**
      * 获取当前时间
      **/
@@ -37,8 +36,7 @@ public class QueryFunction {
         LocalDateTime beijingTime = LocalDateTime.now();
         LocalDateTime ptTime = LocalDateTime.now(ZoneId.of("America/Los_Angeles"));
         ChineseDate chineseDate = new ChineseDate(DateUtil.parseDate(beijingTime.toLocalDate().toString()));
-        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add(TimeUtil.getClockEmoji(beijingTime.getHour()) +
+        groupMessage.getMessageChainBuilder().add(TimeUtil.getClockEmoji(beijingTime.getHour()) +
                 "中国标准时间 (UTC+8)" + "\n" +
                 chineseDate + "\n" +
                 beijingTime.format(DateTimeFormatter.ofPattern("yyyy 年 MM 月 dd 日 HH:mm:ss.SSS"))
@@ -46,7 +44,7 @@ public class QueryFunction {
                 TimeUtil.getClockEmoji(ptTime.getHour()) +
                 "太平洋时间 (UTC-7/UTC-8)" + "\n" +
                 ptTime.format (DateTimeFormatter.ofPattern ("yyyy 年 MM 月 dd 日 HH:mm:ss.SSS")));
-        return messageChainBuilder.asMessageChain();
+        return groupMessage.getMessageChainBuilderAsMessageChain();
     }
 
     /**
@@ -56,14 +54,13 @@ public class QueryFunction {
         MessageReceipt<Contact> messageReceipt = MessageUtil.waitingMessage(groupMessage, "正在等待 API 返回数据");
         JSONObject owModes = HttpUtil.readJsonFromURL("https://overwatcharcade.today/api/overwatch/today");
         SimpleDateFormat updateDateTime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
-        MessageChainBuilder messages = new MessageChainBuilder();
-        messages.add("今日守望先锋街机模式列表\n更新时间：" +
+        groupMessage.getMessageChainBuilder().add("今日守望先锋街机模式列表\n更新时间：" +
                 DateTime.of(updateDateTime.parse(owModes.getByPath("created_at", String.class))) + "\n");
         for (int i = 1; i < 8; i++) {
-            messages.add(i + ". " + owModes.getByPath("modes.tile_" + i + ".name", String.class) + "\n");
+            groupMessage.getMessageChainBuilder().add(i + ". " + owModes.getByPath("modes.tile_" + i + ".name", String.class) + "\n");
         }
         messageReceipt.recall();
-        return messages.asMessageChain();
+        return groupMessage.getMessageChainBuilder().asMessageChain();
     }
 
     /**
@@ -71,7 +68,6 @@ public class QueryFunction {
     * */
     public static Message nbnhhsh(GroupMessage groupMessage) {
         MessageReceipt<Contact> messageReceipt = MessageUtil.waitingMessage(groupMessage, "正在等待 API 返回数据");
-        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         //从消息中分离出需要查询的字符串
         String msg = groupMessage.getMessage().replaceFirst("^wtf\\s+", "");
         //拼接查询参数
@@ -89,17 +85,17 @@ public class QueryFunction {
             //统计个数
             int count = trans.length;
             //拼接消息
-            messageChainBuilder.add("\"" + msg + "\" ");
-            messageChainBuilder.add("有以下 " + count + " 种可能: \n");
+            groupMessage.getMessageChainBuilder().add("\"" + msg + "\" ");
+            groupMessage.getMessageChainBuilder().add("有以下 " + count + " 种可能: \n");
             for (int i = 0; i < count; ++i) {
-                messageChainBuilder.add(i + 1 + ". " + trans[i] + " ");
+                groupMessage.getMessageChainBuilder().add(i + 1 + ". " + trans[i] + " ");
             }
         } else {
-            messageChainBuilder.add("查询失败，请稍后重试...");
-            return messageChainBuilder.asMessageChain();
+            groupMessage.getMessageChainBuilder().add("查询失败，请稍后重试...");
+            return groupMessage.getMessageChainBuilderAsMessageChain();
         }
         messageReceipt.recall();
-        return messageChainBuilder.asMessageChain();
+        return groupMessage.getMessageChainBuilderAsMessageChain();
     }
 
     /**

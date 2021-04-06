@@ -54,55 +54,51 @@ public class GroupMessageListener extends SimpleListenerHost {
         Message messageInGroup = event.getMessage();
         String messageInGroupToString = messageInGroup.toString();
         String messageInGroupContentToString = messageInGroup.contentToString();
-        //首先判断是否为@机器人
+        //判断是否为黑名单用户或群
+        if (botBanedGroupService.isBaned(event.getGroup().getId()) &&
+                botBanedUserService.isBaned(event.getSender().getId())) {
+            return ListeningStatus.LISTENING;
+        }
+        //判断是否为@机器人
         if (messageInGroupToString.matches(".*\\[mirai:at:" + event.getBot().getId() + "].*") &&
                 !messageInGroupToString.matches(".*\\[mirai:quote:\\[\\d*],\\[\\d*]].*")) {
             //被@后返回帮助文案
             GroupMessageSender.sendMessageByGroupId(botConfigService.getConfigValueByKey("reply"), event.getGroup().getId());
+            return ListeningStatus.LISTENING;
         }
         //不是@机器人就继续处理消息
-        else {
-            //拦截以~开头的消息
-            if (messageInGroupContentToString.matches("^[~～/].+")) {
-                //判断是否为被禁用户或群
-                if (!botBanedGroupService.isBaned(event.getGroup().getId()) &&
-                        !botBanedUserService.isBaned(event.getSender().getId())) {
-                    //调用消息对应的实现类，并保存返回值（对应的回复）
-                    Message message = GroupMessageSender.sender(event);
-                    if (message != null) {
-                        //构造并发送消息，在开头添加@触发人
-                        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-                        messageChainBuilder.add(MessageUtil.userNotify(event.getSender(), true));
-                        messageChainBuilder.add("\n");
-                        messageChainBuilder.add(message);
-                        GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
-                    }
-                }
-            }
-            //拦截非~或/开头的消息
-            else {
-                //拦截闪照消息，使用mirai码判断
-                if (messageInGroupToString.matches(".*\\[mirai:flash:\\{[0-9A-F]{8}(-[0-9A-F]{4}){3}-[0-9A-F]{12}}\\.jpg].*")) {
-                    //闪照消息通知
-                    NotificationFunction.flashImageNotification(event);
-                    return ListeningStatus.LISTENING;
-                }
-                //拦截红包消息
-                else if (messageInGroupContentToString.matches("\\[QQ红包].+新版手机QQ查.+")) {
-                    //红包消息通知
-                    NotificationFunction.redPackageNotification(event);
-                    return ListeningStatus.LISTENING;
-                }
-                //拦截其它可能触发机器人的消息
-                else {
-                    //消息复读
-                    EasterEggFunction.repeater(event);
-                    return ListeningStatus.LISTENING;
-                }
+        //拦截以~开头的消息
+        else if (messageInGroupContentToString.matches("^[~～/].+")) {
+            //调用消息对应的实现类，并保存返回值（对应的回复）
+            Message message = GroupMessageSender.sender(event);
+            if (message != null) {
+                //构造并发送消息，在开头添加@触发人
+                MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+                messageChainBuilder.add(MessageUtil.userNotify(event.getSender(), true));
+                messageChainBuilder.add("\n");
+                messageChainBuilder.add(message);
+                GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
             }
             return ListeningStatus.LISTENING;
         }
-        return ListeningStatus.LISTENING;
+        //拦截闪照消息，使用mirai码判断
+        else if (messageInGroupToString.matches(".*\\[mirai:flash:\\{[0-9A-F]{8}(-[0-9A-F]{4}){3}-[0-9A-F]{12}}\\.jpg].*")) {
+            //闪照消息通知
+            NotificationFunction.flashImageNotification(event);
+            return ListeningStatus.LISTENING;
+        }
+        //拦截红包消息
+        else if (messageInGroupContentToString.matches("\\[QQ红包].+新版手机QQ查.+")) {
+            //红包消息通知
+            NotificationFunction.redPackageNotification(event);
+            return ListeningStatus.LISTENING;
+        }
+        //拦截其它可能触发机器人的消息
+        //消息复读
+        else {
+            EasterEggFunction.repeater(event);
+            return ListeningStatus.LISTENING;
+        }
     }
 
     //处理事件处理时抛出的异常

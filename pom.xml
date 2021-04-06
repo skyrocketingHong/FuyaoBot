@@ -10,14 +10,14 @@
 	</parent>
 	<groupId>ninja.skyrocketing.fuyao</groupId>
 	<artifactId>fuyao-bot</artifactId>
-	<version>4.3.0.54</version>
+	<version>4.3.1.55</version>
 	<name>Fuyao bot</name>
 	<description>A QQ bot named Fuyao and bases on Mirai, Spring Boot, MySQL and Mybatis Plus.</description>
 
 	<properties>
 		<java.version>15</java.version>
 		<kotlin.version>1.4.30</kotlin.version>
-		<start-class>ninja.skyrocketing.fuyao.FuyaoApplication</start-class>
+		<start-class>ninja.skyrocketing.fuyao.FuyaoBotApplication</start-class>
 	</properties>
 
 	<repositories>
@@ -103,6 +103,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.vintage</groupId>
+					<artifactId>junit-vintage-engine</artifactId>
+				</exclusion>
+			</exclusions>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -128,32 +134,6 @@
 					<execution>
 						<goals>
 							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>3.3.0</version>
-				<configuration>
-					<archive>
-						<addMavenDescriptor>false</addMavenDescriptor>
-						<manifest>
-							<addClasspath>true</addClasspath>
-							<mainClass>ninja.skyrocketing.fuyao.FuyaoApplication</mainClass>
-						</manifest>
-					</archive>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
 						</goals>
 					</execution>
 				</executions>

@@ -15,7 +15,7 @@ import java.util.Date;
 
 /**
  * @author skyrocketing Hong
- * mvn package "-Dmaven.test.skip=true"
+ * mvn clean && mvn package "-Dmaven.test.skip=true"
  */
 
 @SpringBootApplication

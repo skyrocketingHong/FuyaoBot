@@ -1,17 +1,19 @@
-create table bot_function_trigger
-(
-	id int auto_increment
-		constraint `PRIMARY`
-			primary key,
-	char_id varchar(63) not null comment '字符id',
-	trigger_name varchar(256) not null comment '功能名',
-	trigger_comment varchar(512) not null comment '功能描述',
-	keyword varchar(256) not null comment '触发关键字',
-	impl_class varchar(256) not null comment '触发功能的实现函数',
-	enabled tinyint(1) default 1 null comment '是否启用，默认为true',
-	shown tinyint(1) default 1 null comment '是否在功能列表中展示',
-	constraint bot_function_trigger_pk
-		unique (char_id)
-)
-comment '关键词功能触发表';
-
+INSERT INTO fuyaobot.bot_function_trigger (id, char_id, trigger_name, trigger_comment, keyword, impl_class, enabled, shown, is_admin) VALUES (1, 'sign-in', '签到', '发送签到，获取经验值', '^签到$', 'function.ExpFunction.signIn', 1, 1, 0);
+INSERT INTO fuyaobot.bot_function_trigger (id, char_id, trigger_name, trigger_comment, keyword, impl_class, enabled, shown, is_admin) VALUES (2, 'sign-in-query', '签到经验值查询', '发送EXP查询，获取本人在该群的经验值', '^(EXP|exp|经验)查询$', 'function.ExpFunction.expQuery', 1, 1, 0);
+INSERT INTO fuyaobot.bot_function_trigger (id, char_id, trigger_name, trigger_comment, keyword, impl_class, enabled, shown, is_admin) VALUES (3, 'get-coin', '领金币', '发送领金币，获取金币', '^领金币$', 'function.CoinFunction.getCoin', 1, 1, 0);
+INSERT INTO fuyaobot.bot_function_trigger (id, char_id, trigger_name, trigger_comment, keyword, impl_class, enabled, shown, is_admin) VALUES (4, 'get-coin-query', '金币查询', '发送金币查询，获取本群的经验值', '^金币查询$', 'function.CoinFunction.coinQuery', 1, 1, 0);
+INSERT INTO fuyaobot.bot_function_trigger (id, char_id, trigger_name, trigger_comment, keyword, impl_class, enabled, shown, is_admin) VALUES (5, 'coin-transform', '金币转移', '发送“金币转移 数量 @接收人”，可以将金币转移给他人', '^金币转移.+', 'function.CoinFunction.coinTransform', 1, 1, 0);
+INSERT INTO fuyaobot.bot_function_trigger (id, char_id, trigger_name, trigger_comment, keyword, impl_class, enabled, shown, is_admin) VALUES (6, 'fishing', '钓鱼', '发送“钓鱼”，就可以钓一条鱼', '^钓鱼$', 'function.FishingFunction.fishByExpAndCoin', 1, 1, 0);
+INSERT INTO fuyaobot.bot_function_trigger (id, char_id, trigger_name, trigger_comment, keyword, impl_class, enabled, shown, is_admin) VALUES (7, 'fish-type-query', '鱼种查询', '发送“鱼种查询”', '^鱼种查询$', 'function.FishingFunction.fishTypeQuery', 1, 1, 0);
+INSERT INTO fuyaobot.bot_function_trigger (id, char_id, trigger_name, trigger_comment, keyword, impl_class, enabled, shown, is_admin) VALUES (8, 'fish-tub-query', '鱼筐查询/鱼框状态', '鱼筐查询/鱼框状态', '^鱼筐(查询|状态)$', 'function.FishingFunction.fishTubQuery', 1, 1, 0);
+INSERT INTO fuyaobot.bot_function_trigger (id, char_id, trigger_name, trigger_comment, keyword, impl_class, enabled, shown, is_admin) VALUES (9, 'get-bonus-coin', '福利金币', '领取福利金币', '^福利金币$', 'function.CoinFunction.bonusCoin', 1, 0, 0);
+INSERT INTO fuyaobot.bot_function_trigger (id, char_id, trigger_name, trigger_comment, keyword, impl_class, enabled, shown, is_admin) VALUES (10, 'fish-sell', '卖鱼', '卖鱼', '^卖鱼.*', 'function.FishingFunction.sellFish', 1, 1, 0);
+INSERT INTO fuyaobot.bot_function_trigger (id, char_id, trigger_name, trigger_comment, keyword, impl_class, enabled, shown, is_admin) VALUES (11, 'ow-mode', '守望先锋街机模式查询', '守望先锋街机模式查询', '^守望街机模式|ow mode$', 'function.QueryFunction.getOverwatchArcadeModes', 1, 1, 0);
+INSERT INTO fuyaobot.bot_function_trigger (id, char_id, trigger_name, trigger_comment, keyword, impl_class, enabled, shown, is_admin) VALUES (12, 'roll-a-dice', '投骰子', '投骰子', '^投骰子|roll dice$', 'function.SmallGamesFunction.rollADice', 1, 1, 0);
+INSERT INTO fuyaobot.bot_function_trigger (id, char_id, trigger_name, trigger_comment, keyword, impl_class, enabled, shown, is_admin) VALUES (13, 'rock-paper-scissors', '石头剪刀布', '石头剪刀布', '^(剪刀|石头|布){3}|(r|p|s){3}$', 'function.SmallGamesFunction.rockPaperScissors', 1, 1, 0);
+INSERT INTO fuyaobot.bot_function_trigger (id, char_id, trigger_name, trigger_comment, keyword, impl_class, enabled, shown, is_admin) VALUES (14, 'time', '当前时间', '获取当前时间', '^时间|time$', 'function.QueryFunction.time', 1, 1, 0);
+INSERT INTO fuyaobot.bot_function_trigger (id, char_id, trigger_name, trigger_comment, keyword, impl_class, enabled, shown, is_admin) VALUES (15, 'hs-card', '炉石传说开包', '炉石传说开包', '^炉石传说|hs$', 'function.SmallGamesFunction.hearthStone', 1, 1, 0);
+INSERT INTO fuyaobot.bot_function_trigger (id, char_id, trigger_name, trigger_comment, keyword, impl_class, enabled, shown, is_admin) VALUES (16, 'nbnhhsh', '能不能好好说话', '能不能好好说话，将缩写转换为全称', '^wtf\\s+\\S+', 'function.QueryFunction.nbnhhsh', 1, 1, 0);
+INSERT INTO fuyaobot.bot_function_trigger (id, char_id, trigger_name, trigger_comment, keyword, impl_class, enabled, shown, is_admin) VALUES (17, 'music', '点歌', '点歌', '^music\\s+.*', 'function.QueryFunction.music', 1, 1, 0);
+INSERT INTO fuyaobot.bot_function_trigger (id, char_id, trigger_name, trigger_comment, keyword, impl_class, enabled, shown, is_admin) VALUES (18, 'debug', 'debug测试', 'debug测试', '^debug$', 'function.DebugFunction.debug', 1, 0, 1);
+INSERT INTO fuyaobot.bot_function_trigger (id, char_id, trigger_name, trigger_comment, keyword, impl_class, enabled, shown, is_admin) VALUES (19, 'hs-debug', '炉石卡牌debug', '炉石卡牌debug', '^hs-debug$', 'function.DebugFunction.hearthStoneDebug', 1, 0, 1);

@@ -42,34 +42,33 @@ public class FishingFunction {
 
     //根据经验值和金币值钓鱼
     public static Message fishByExpAndCoin(GroupMessage groupMessage) {
-        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         GroupCoin groupCoin = groupCoinService.getCoinByGroupUser(groupMessage.getGroupUser());
         GroupExp groupExp = groupExpService.getExpByGroupUser(groupMessage.getGroupUser());
         if (groupCoin == null && groupExp == null) {
-            messageChainBuilder.add("❌ 从未签到和领金币");
+            groupMessage.getMessageChainBuilder().add("❌ 从未签到和领金币");
         } else {
             if (groupCoin == null) {
-                messageChainBuilder.add("❌ 从未领金币");
-                return messageChainBuilder.asMessageChain();
+                groupMessage.getMessageChainBuilder().add("❌ 从未领金币");
+                return groupMessage.getMessageChainBuilderAsMessageChain();
             } else if (groupExp == null) {
-                messageChainBuilder.add("❌ 从未签到");
-                return messageChainBuilder.asMessageChain();
+                groupMessage.getMessageChainBuilder().add("❌ 从未签到");
+                return groupMessage.getMessageChainBuilderAsMessageChain();
             } else {
                 if (groupCoin.getCoin() < 50) {
                     if (groupCoin.getCoin() < 10) {
-                        messageChainBuilder.add("❌ 金币小于 10，不够一次钓鱼" + "\n" + "请先领金币");
-                        return messageChainBuilder.asMessageChain();
+                        groupMessage.getMessageChainBuilder().add("❌ 金币小于 10，不够一次钓鱼" + "\n" + "请先领金币");
+                        return groupMessage.getMessageChainBuilderAsMessageChain();
                     }
-                    messageChainBuilder.add("❌ 金币小于 50" + "\n" + "请先领金币");
-                    return messageChainBuilder.asMessageChain();
+                    groupMessage.getMessageChainBuilder().add("❌ 金币小于 50" + "\n" + "请先领金币");
+                    return groupMessage.getMessageChainBuilderAsMessageChain();
                 } else if (groupExp.getExp() < 15) {
-                    messageChainBuilder.add("❌ 经验值小于 15" + "\n" + "请先签到");
-                    return messageChainBuilder.asMessageChain();
+                    groupMessage.getMessageChainBuilder().add("❌ 经验值小于 15" + "\n" + "请先签到");
+                    return groupMessage.getMessageChainBuilderAsMessageChain();
                 }
             }
             return fishAFish(groupMessage, groupCoin);
         }
-        return messageChainBuilder.asMessageChain();
+        return groupMessage.getMessageChainBuilderAsMessageChain();
     }
 
     //直接获取一条鱼
@@ -94,7 +93,6 @@ public class FishingFunction {
 
     //返回钓到的鱼，生成对应消息
     public static Message fishAFish(GroupMessage groupMessage, GroupCoin groupCoin) {
-        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         //直接获取数据库中对应人的鱼筐
         GroupUser groupUser = groupMessage.getGroupUser();
         GroupFishing groupFishing = groupFishingService.getGroupFishingByGroupUser(groupUser);
@@ -107,12 +105,12 @@ public class FishingFunction {
             int status = groupCoinService.updateCoin(groupCoin);
             if (status == 0) {
                 //插入失败提示
-                messageChainBuilder.add("❌ 扣除金币失败，请联系开发者查看数据库连接问题");
+                groupMessage.getMessageChainBuilder().add("❌ 扣除金币失败，请联系开发者查看数据库连接问题");
             } else {
                 //拼接回复消息
-                messageChainBuilder.add("🤔 你啥都没钓到 扣除 10 金币");
+                groupMessage.getMessageChainBuilder().add("🤔 你啥都没钓到 扣除 10 金币");
             }
-            return messageChainBuilder.asMessageChain();
+            return groupMessage.getMessageChainBuilderAsMessageChain();
         }
         //判断数据库中是否有这个人的鱼筐
         if (groupFishing == null) {
@@ -122,17 +120,17 @@ public class FishingFunction {
             //判断插入是否成功
             if (status == 0) {
                 //插入失败提示
-                messageChainBuilder.add("❌ 首次钓鱼失败，请联系开发者查看数据库连接问题");
+                groupMessage.getMessageChainBuilder().add("❌ 首次钓鱼失败，请联系开发者查看数据库连接问题");
             } else {
                 //扣除金币
                 groupCoin.minusCoin(10L);
                 int statusCost = groupCoinService.updateCoin(groupCoin);
                 if (statusCost == 0) {
                     //插入失败提示
-                    messageChainBuilder.add("❌ 扣除金币，请联系开发者查看数据库连接问题");
+                    groupMessage.getMessageChainBuilder().add("❌ 扣除金币，请联系开发者查看数据库连接问题");
                 } else {
                     //插入成功提示
-                    messageChainBuilder.add("✔ 首次钓鱼成功 扣除 10 金币" + "\n" +
+                    groupMessage.getMessageChainBuilder().add("✔ 首次钓鱼成功 扣除 10 金币" + "\n" +
                             "🎣 你钓到了一条 \"" + gameFishing.getFishName() + "\"\n" +
                             "🗑 鱼筐状态 1 / 5"
                     );
@@ -147,29 +145,28 @@ public class FishingFunction {
             int status = groupFishingService.updateGroupFishing(groupFishing);
             if (status == 0) {
                 //插入失败提示
-                messageChainBuilder.add("❌ 钓鱼失败，请联系开发者查看数据库连接问题");
+                groupMessage.getMessageChainBuilder().add("❌ 钓鱼失败，请联系开发者查看数据库连接问题");
             } else {
                 //扣除金币
                 groupCoin.minusCoin(10L);
                 int statusCost = groupCoinService.updateCoin(groupCoin);
                 if (statusCost == 0) {
                     //插入失败提示
-                    messageChainBuilder.add("❌ 扣除金币，请联系开发者查看数据库连接问题");
+                    groupMessage.getMessageChainBuilder().add("❌ 扣除金币，请联系开发者查看数据库连接问题");
                 } else {
                     //插入成功提示
-                    messageChainBuilder.add("✔ 钓鱼成功 扣除 10 金币" + "\n" +
+                    groupMessage.getMessageChainBuilder().add("✔ 钓鱼成功 扣除 10 金币" + "\n" +
                             "🎣 你钓到了一条 \"" + gameFishing.getFishName() + "\"\n" +
                             "🗑 鱼筐状态 " + groupFishing.getSlotCount() + " / 5"
                     );
                 }
             }
         }
-        return messageChainBuilder.asMessageChain();
+        return groupMessage.getMessageChainBuilderAsMessageChain();
     }
 
     //群内鱼种查询
     public static Message fishTypeQuery(GroupMessage groupMessage) {
-        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         MessageChainBuilder normalFish = new MessageChainBuilder();
         MessageChainBuilder specialFish = new MessageChainBuilder();
         //消息模板
@@ -201,20 +198,19 @@ public class FishingFunction {
         if (noSpecialFish) {
             specialFish.add("无" + "\n" +"可通过 \"bot add fish 鱼名 鱼价值金币 概率\" 添加");
         }
-        messageChainBuilder.add(normalFish.asMessageChain());
-        messageChainBuilder.add(specialFish.asMessageChain());
-        return messageChainBuilder.asMessageChain();
+        groupMessage.getMessageChainBuilder().add(normalFish.asMessageChain());
+        groupMessage.getMessageChainBuilder().add(specialFish.asMessageChain());
+        return groupMessage.getMessageChainBuilderAsMessageChain();
     }
 
     //鱼筐查询
     public static Message fishTubQuery(GroupMessage groupMessage) {
-        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         GroupFishing groupFishing = groupFishingService.getGroupFishingByGroupUser(groupMessage.getGroupUser());
-        messageChainBuilder.add("🗑️ 鱼筐状态" + "\n");
+        groupMessage.getMessageChainBuilder().add("🗑️ 鱼筐状态" + "\n");
         //判断鱼筐是否为空
         if (groupFishing == null || groupFishing.getSlotCount() == 0) {
             //为空则直接返回
-            messageChainBuilder.add("你的鱼筐空空如也，快去钓鱼试试吧");
+            groupMessage.getMessageChainBuilder().add("你的鱼筐空空如也，快去钓鱼试试吧");
         } else {
             int count = groupFishing.getSlotCount();
             //不为空则返回对应的鱼
@@ -223,26 +219,25 @@ public class FishingFunction {
                 if (tmpFishId == null) {
                     ++count;
                 } else {
-                    messageChainBuilder.add(
+                    groupMessage.getMessageChainBuilder().add(
                             "Slot " + (i + 1) + " " + gameFishingService.getFishNameById(tmpFishId) + "\n"
                     );
                 }
             }
         }
-        return messageChainBuilder.asMessageChain();
+        return groupMessage.getMessageChainBuilderAsMessageChain();
     }
 
     //卖鱼
     public static Message sellFish(GroupMessage groupMessage) {
-        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         //鱼筐坑位编号
         int slotId;
         //使用try-catch，避免后面为非数字
         try {
             slotId = Integer.parseInt(groupMessage.getMessage().replaceAll("卖鱼", ""));
         } catch (NumberFormatException numberFormatException) {
-            messageChainBuilder.add("❌ 语法错误" + "\n" + "非数字");
-            return messageChainBuilder.asMessageChain();
+            groupMessage.getMessageChainBuilder().add("❌ 语法错误" + "\n" + "非数字");
+            return groupMessage.getMessageChainBuilderAsMessageChain();
         }
         //判断slot是否在范围内
         if (slotId >= 1 && slotId <= 5) {
@@ -251,7 +246,7 @@ public class FishingFunction {
             String fishId = groupFishingService.getGroupFishingByGroupUser(groupUser).getFishBySlot(slotId);
             //如果为null，则返回无鱼
             if (fishId == null) {
-                messageChainBuilder.add("❌ 当前位置里面没有鱼");
+                groupMessage.getMessageChainBuilder().add("❌ 当前位置里面没有鱼");
             } else {
                 //获取当前要卖掉的鱼的价值
                 Long fishValue = gameFishingService.getFishValueById(fishId) / 2;
@@ -259,13 +254,13 @@ public class FishingFunction {
                 GroupCoin groupCoin = groupCoinService.getCoinByGroupUser(groupUser);
                 //判断金币是否为空
                 if (groupCoin == null) {
-                    messageChainBuilder.add("❌ 从未领金币");
+                    groupMessage.getMessageChainBuilder().add("❌ 从未领金币");
                 } else {
                     //获取当前用户的钓鱼数据
                     GroupFishing groupFishing = groupFishingService.getGroupFishingByGroupUser(groupUser);
                     //判断钓鱼数据是否为空
                     if (groupFishing == null) {
-                        messageChainBuilder.add("❌ 从未钓鱼");
+                        groupMessage.getMessageChainBuilder().add("❌ 从未钓鱼");
                     } else {
                         //金币数据加上卖掉的鱼的价值
                         groupCoin.addCoin(fishValue);
@@ -276,22 +271,22 @@ public class FishingFunction {
                         int status2 = groupFishingService.updateGroupFishing(groupFishing);
                         //判断是否插入成功
                         if (status1 == 0 && status2 == 0) {
-                            messageChainBuilder.add("❌ 卖鱼失败，请联系开发者查看数据库连接问题");
+                            groupMessage.getMessageChainBuilder().add("❌ 卖鱼失败，请联系开发者查看数据库连接问题");
                         } else {
-                            messageChainBuilder.add("✔ 卖鱼成功" + "\n" +
+                            groupMessage.getMessageChainBuilder().add("✔ 卖鱼成功" + "\n" +
                                     "💴 你卖掉了一条 \"" + gameFishingService.getFishNameById(fishId) + "\"\n" +
                                     "💰 获得 " + fishValue + " 金币，当前余额为 " + groupCoin.getCoin() + " 金币"
                             );
                         }
                     }
                 }
-                return messageChainBuilder.asMessageChain();
+                return groupMessage.getMessageChainBuilderAsMessageChain();
             }
         } else {
-            messageChainBuilder.add("❌ 语法错误" + "\n" + "数字超出鱼筐大小");
-            return messageChainBuilder.asMessageChain();
+            groupMessage.getMessageChainBuilder().add("❌ 语法错误" + "\n" + "数字超出鱼筐大小");
+            return groupMessage.getMessageChainBuilderAsMessageChain();
         }
-        return messageChainBuilder.asMessageChain();
+        return groupMessage.getMessageChainBuilderAsMessageChain();
     }
 
     //清理钓鱼数据

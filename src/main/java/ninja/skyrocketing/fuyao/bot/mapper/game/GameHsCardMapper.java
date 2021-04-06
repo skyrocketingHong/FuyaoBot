@@ -9,6 +9,6 @@ import java.util.List;
 
 @Mapper
 public interface GameHsCardMapper extends BaseMapper<GameHsCard> {
-    @Select("select * from game_hs_card where `set` = #{set,jdbcType=VARCHAR} and rarity != 'FREE' order by rand() limit 5")
-    List<GameHsCard> selectBySetOrderByRandom(String setName);
+    @Select("select * from game_hs_card where rarity != 'FREE' order by rand() limit 5")
+    List<GameHsCard> selectBySetOrderByRandom();
 }
