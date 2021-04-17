@@ -3,7 +3,6 @@ package ninja.skyrocketing.fuyao.bot.function;
 import cn.hutool.core.date.DateUtil;
 import lombok.NoArgsConstructor;
 import net.mamoe.mirai.message.data.Message;
-import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupExp;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupExpRankName;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessage;

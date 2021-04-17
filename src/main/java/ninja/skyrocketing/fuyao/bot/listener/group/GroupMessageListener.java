@@ -7,8 +7,7 @@ import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.ListeningStatus;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
-import net.mamoe.mirai.message.data.Message;
-import net.mamoe.mirai.message.data.MessageChainBuilder;
+import net.mamoe.mirai.message.data.*;
 import ninja.skyrocketing.fuyao.bot.function.EasterEggFunction;
 import ninja.skyrocketing.fuyao.bot.function.NotificationFunction;
 import ninja.skyrocketing.fuyao.bot.sender.group.GroupMessageSender;
@@ -47,18 +46,20 @@ public class GroupMessageListener extends SimpleListenerHost {
         GroupMessageListener.botReplyMessageService = botReplyMessageService;
     }
 
-    //监听所有群消息
+    /**
+     监听所有群消息
+    */
     @EventHandler
     public ListeningStatus onMessage(GroupMessageEvent event) throws Exception {
-        //获取消息
-        Message messageInGroup = event.getMessage();
-        String messageInGroupToString = messageInGroup.toString();
-        String messageInGroupContentToString = messageInGroup.contentToString();
         //判断是否为黑名单用户或群
         if (botBanedGroupService.isBaned(event.getGroup().getId()) &&
                 botBanedUserService.isBaned(event.getSender().getId())) {
             return ListeningStatus.LISTENING;
         }
+        //获取消息
+        Message messageInGroup = event.getMessage();
+        String messageInGroupToString = messageInGroup.toString();
+        String messageInGroupContentToString = messageInGroup.contentToString();
         //判断是否为@机器人
         if (messageInGroupToString.matches(".*\\[mirai:at:" + event.getBot().getId() + "].*") &&
                 !messageInGroupToString.matches(".*\\[mirai:quote:\\[\\d*],\\[\\d*]].*")) {
@@ -93,6 +94,10 @@ public class GroupMessageListener extends SimpleListenerHost {
             NotificationFunction.redPackageNotification(event);
             return ListeningStatus.LISTENING;
         }
+        //拦截视频消息
+        else if (messageInGroupContentToString.matches("[视频]你的QQ暂不支持查看视频短片，请升级到最新版本后查看。")) {
+            return ListeningStatus.LISTENING;
+        }
         //拦截其它可能触发机器人的消息
         //消息复读
         else {
@@ -101,7 +106,9 @@ public class GroupMessageListener extends SimpleListenerHost {
         }
     }
 
-    //处理事件处理时抛出的异常
+    /**
+     * 处理事件处理时抛出的异常
+     * */
     @SneakyThrows
     @Override
     public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {

@@ -9,7 +9,6 @@ import cn.hutool.json.JSONUtil;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Message;
-import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessage;
 import ninja.skyrocketing.fuyao.util.HttpUtil;
 import ninja.skyrocketing.fuyao.util.MessageUtil;

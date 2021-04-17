@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Message;
-import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.fuyao.bot.config.MiraiBotConfig;
 import ninja.skyrocketing.fuyao.bot.pojo.game.GameHsCard;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessage;
@@ -67,7 +66,7 @@ public class SmallGamesFunction {
         List<File> cardImageFileList = new ArrayList<>();
         //生成的新图片的文件名，将卡的id直接拼在一起
         StringBuilder jointCardFileName = new StringBuilder();
-        groupMessage.getMessageChainBuilder().add("贫瘠之地的锤炼\n");
+        groupMessage.getMessageChainBuilder().add("🎁 贫瘠之地的锤炼\n");
         //遍历5张卡
         for (GameHsCard gameHsCard : gameHsCardList) {
             jointCardFileName.append(gameHsCard.getId());

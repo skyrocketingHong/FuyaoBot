@@ -1,7 +1,6 @@
 package ninja.skyrocketing.fuyao.bot.function;
 
 import net.mamoe.mirai.message.data.Message;
-import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessage;
 import ninja.skyrocketing.fuyao.util.HearthstoneUtil;
 

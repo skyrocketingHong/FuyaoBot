@@ -4,7 +4,6 @@ import cn.hutool.core.date.DateUtil;
 import lombok.NoArgsConstructor;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChain;
-import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupCoin;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessage;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupUser;
