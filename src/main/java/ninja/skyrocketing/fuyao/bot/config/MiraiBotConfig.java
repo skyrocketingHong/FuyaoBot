@@ -15,15 +15,14 @@ import ninja.skyrocketing.fuyao.bot.listener.group.GroupEventListener;
 import ninja.skyrocketing.fuyao.bot.listener.group.GroupMessageListener;
 import ninja.skyrocketing.fuyao.bot.pojo.bot.BotQQ;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupRepeaterMessage;
+import ninja.skyrocketing.fuyao.bot.pojo.group.GroupUser;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotConfigService;
 import ninja.skyrocketing.fuyao.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author skyrocketing Hong
@@ -62,6 +61,14 @@ public class MiraiBotConfig {
      * 全局已复读消息变量
      * */
     public static Map<Long, String> GroupRepeatedMessagesMap = new HashMap<>();
+    /**
+     * 全局防止滥用变量
+     * */
+    public static Map<GroupUser, Long> GroupUserTriggerDelay = new HashMap<>();
+    /**
+     * 全局防止滥用（已通知）变量
+     * */
+    public static List<GroupUser> GroupUserTriggerDelayNotified = new ArrayList<>();
 
     /**
      * 根据模式获得不同的qq号

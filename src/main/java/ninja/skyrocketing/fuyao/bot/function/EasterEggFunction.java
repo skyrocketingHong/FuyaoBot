@@ -5,8 +5,11 @@ import ninja.skyrocketing.fuyao.bot.config.MiraiBotConfig;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupRepeaterMessage;
 import ninja.skyrocketing.fuyao.bot.sender.group.GroupMessageSender;
 import ninja.skyrocketing.fuyao.util.MessageUtil;
+import ninja.skyrocketing.fuyao.util.RandomUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author skyrocketing Hong
@@ -26,7 +29,7 @@ public class EasterEggFunction {
         String messageIsRepeated = MiraiBotConfig.GroupRepeatedMessagesMap.get(groupId);
         //查看全局map中是否有这个群
         GroupRepeaterMessage groupRepeaterMessage = MiraiBotConfig.GroupsRepeaterMessagesMap.get(groupId);
-        //如果map里面没有这个群，就将群号作为key，消息和次数作为value（GroupRepeaterMessage类）放进map中，并将次数设置为1次
+        //如果map里面没有这个群，就将群号作为key，消息和次数（GroupRepeaterMessage类）作为value放进map中，并将次数设置为1次
         if (groupRepeaterMessage == null) {
             groupRepeaterMessage = new GroupRepeaterMessage(messageInGroup, 1);
             MiraiBotConfig.GroupsRepeaterMessagesMap.put(groupId, groupRepeaterMessage);
@@ -59,5 +62,19 @@ public class EasterEggFunction {
                 MiraiBotConfig.GroupsRepeaterMessagesMap.remove(groupId);
             }
         }
+    }
+
+    /**
+     * 人工智障回复“为什么”或“***吗”消息
+     * */
+    public static void stupidAiForWhy(GroupMessageEvent event) throws IOException {
+        List<String> whyMessageList = new ArrayList<>();
+        whyMessageList.add("不知道，下一个");
+        whyMessageList.add("你可以试试问一下神奇的魔法海螺");
+        whyMessageList.add("看看有没有群友知道");
+        whyMessageList.add("你可以试试百度啊");
+        whyMessageList.add("你猜为什么");
+        int randomNum = RandomUtil.secureRandomNum(0, whyMessageList.size());
+        GroupMessageSender.sendMessageByGroupId("人工智障扶摇 bot 为您服务：\n" + whyMessageList.get(randomNum), event.getGroup().getId());
     }
 }

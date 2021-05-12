@@ -11,6 +11,8 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
+@Builder
 public class GroupUser {
     private Long groupId;
 

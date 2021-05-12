@@ -81,7 +81,7 @@ public class GroupEventListener extends SimpleListenerHost {
         //清理数据
         DBUtil.cleanDataAfterLeave(event.getGroup().getId(), event.getMember().getId());
         //撤回消息
-        GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup(), 60000);
+        GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup(), 60000L);
         return ListeningStatus.LISTENING;
     }
 
@@ -99,7 +99,7 @@ public class GroupEventListener extends SimpleListenerHost {
         //清理数据
         DBUtil.cleanDataAfterLeave(event.getGroup().getId(), event.getMember().getId());
         //撤回消息
-        GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup(), 60000);
+        GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup(), 60000L);
         return ListeningStatus.LISTENING;
     }
 

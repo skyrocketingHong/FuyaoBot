@@ -2,9 +2,12 @@ package ninja.skyrocketing.fuyao.bot.function;
 
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
+import ninja.skyrocketing.fuyao.bot.config.MiraiBotConfig;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupTimelyMessage;
+import ninja.skyrocketing.fuyao.bot.pojo.group.GroupUser;
 import ninja.skyrocketing.fuyao.bot.sender.group.GroupMessageSender;
 import ninja.skyrocketing.fuyao.bot.service.group.GroupTimelyMessageService;
+import ninja.skyrocketing.fuyao.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -28,7 +31,10 @@ public class TimelyFunction {
         TimelyFunction.groupTimelyMessageService = groupTimelyMessageService;
     }
 
-    //每分钟读取一次数据库
+    /**
+     * 定时消息
+     * 每分钟读取一次数据库
+     * */
     @Scheduled(cron = "0 */1 * * * ?")
     public static void timelyMessage() throws IOException {
         //获取实时时间
@@ -46,6 +52,22 @@ public class TimelyFunction {
                 if (status != 1) {
                     GroupMessageSender.sendMessageByGroupId("❌ 数据库连接有问题，请联系开发者", groupTimelyMessage.getGroupId());
                 }
+            }
+        }
+    }
+
+    /**
+     * 定时处理防刷屏
+     * 每10秒钟判断一次
+     * */
+    @Scheduled(cron = "*/10 * * * * ?")
+    public static void preventAbuse() {
+        long timeStamp = TimeUtil.getTimestamp();
+        for (GroupUser groupUser : MiraiBotConfig.GroupUserTriggerDelay.keySet()) {
+            //当用户已经超过冷却时间时，将用户移除
+            if (MiraiBotConfig.GroupUserTriggerDelay.get(groupUser) + 10 <= timeStamp) {
+                MiraiBotConfig.GroupUserTriggerDelay.remove(groupUser);
+                MiraiBotConfig.GroupUserTriggerDelayNotified.remove(groupUser);
             }
         }
     }

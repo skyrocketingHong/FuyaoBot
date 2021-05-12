@@ -88,6 +88,6 @@ public class TimeUtil {
     * 返回当前时间的时间戳
     * */
     public static Long getTimestamp() {
-        return System.currentTimeMillis();
+        return System.currentTimeMillis() / 1000;
     }
 }

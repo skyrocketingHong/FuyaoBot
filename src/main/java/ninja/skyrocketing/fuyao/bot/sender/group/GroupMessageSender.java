@@ -122,7 +122,7 @@ public class GroupMessageSender {
      * @param group Group
      * @param recall Integer
      */
-    public static void sendMessageByGroupId(MessageChainBuilder message, Group group, Integer recall) throws IOException {
+    public static void sendMessageByGroupId(MessageChainBuilder message, Group group, Long recall) throws IOException {
         group.sendMessage(message.asMessageChain()).recallIn(recall);
         LogUtil.messageLog("(" + recall + " 毫秒后撤回) " + message.toString().replaceAll("\n", ""),
                 group.getId(),

@@ -8,8 +8,10 @@ import net.mamoe.mirai.event.ListeningStatus;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.data.*;
+import ninja.skyrocketing.fuyao.bot.config.MiraiBotConfig;
 import ninja.skyrocketing.fuyao.bot.function.EasterEggFunction;
 import ninja.skyrocketing.fuyao.bot.function.NotificationFunction;
+import ninja.skyrocketing.fuyao.bot.pojo.group.GroupUser;
 import ninja.skyrocketing.fuyao.bot.sender.group.GroupMessageSender;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotBanedGroupService;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotConfigService;
@@ -17,6 +19,7 @@ import ninja.skyrocketing.fuyao.bot.service.bot.BotReplyMessageService;
 import ninja.skyrocketing.fuyao.bot.service.user.BotBanedUserService;
 import ninja.skyrocketing.fuyao.util.LogUtil;
 import ninja.skyrocketing.fuyao.util.MessageUtil;
+import ninja.skyrocketing.fuyao.util.TimeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -56,6 +59,28 @@ public class GroupMessageListener extends SimpleListenerHost {
                 botBanedUserService.isBaned(event.getSender().getId())) {
             return ListeningStatus.LISTENING;
         }
+        GroupUser groupUser = GroupUser.builder().groupId(event.getGroup().getId()).userId(event.getSender().getId()).build();
+        Long timestamp = TimeUtil.getTimestamp();
+        //当触发用户在防止滥用的Map中时，不发送消息
+        if (MiraiBotConfig.GroupUserTriggerDelay.containsKey(groupUser)) {
+            //如果该用户已被提醒过，则不执行任何操作
+            if (MiraiBotConfig.GroupUserTriggerDelayNotified.contains(groupUser)) {
+                return ListeningStatus.LISTENING;
+            }
+            //获取上一次使用的时间戳
+            Long triggerTimeStamp = MiraiBotConfig.GroupUserTriggerDelay.get(groupUser);
+            //计算冷却时间
+            long coolDownTime = 10 - (timestamp - triggerTimeStamp);
+            //生成回复消息
+            MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+            messageChainBuilder.add(MessageUtil.userNotify(event.getSender(), true));
+            messageChainBuilder.add("\n你的冷却时间尚未结束，请等待 " + coolDownTime + "s 后再操作");
+            messageChainBuilder.add("\n(提醒消息将在冷却时间结束后撤回)");
+            //发送消息，并在冷却时间内撤回
+            MiraiBotConfig.GroupUserTriggerDelayNotified.add(groupUser);
+            GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup(), coolDownTime * 1000);
+            return ListeningStatus.LISTENING;
+        }
         //获取消息
         Message messageInGroup = event.getMessage();
         String messageInGroupToString = messageInGroup.toString();
@@ -63,6 +88,8 @@ public class GroupMessageListener extends SimpleListenerHost {
         //判断是否为@机器人
         if (messageInGroupToString.matches(".*\\[mirai:at:" + event.getBot().getId() + "].*") &&
                 !messageInGroupToString.matches(".*\\[mirai:quote:\\[\\d*],\\[\\d*]].*")) {
+            //将触发用户添加进全局map中
+            MiraiBotConfig.GroupUserTriggerDelay.put(groupUser, timestamp);
             //被@后返回帮助文案
             GroupMessageSender.sendMessageByGroupId(botConfigService.getConfigValueByKey("reply"), event.getGroup().getId());
             return ListeningStatus.LISTENING;
@@ -78,8 +105,10 @@ public class GroupMessageListener extends SimpleListenerHost {
                 messageChainBuilder.add(MessageUtil.userNotify(event.getSender(), true));
                 messageChainBuilder.add("\n");
                 messageChainBuilder.add(message);
+                MiraiBotConfig.GroupUserTriggerDelay.put(groupUser, timestamp);
                 GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
             }
+            //将触发用户添加进全局map中
             return ListeningStatus.LISTENING;
         }
         //拦截闪照消息，使用mirai码判断
@@ -96,6 +125,11 @@ public class GroupMessageListener extends SimpleListenerHost {
         }
         //拦截视频消息
         else if (messageInGroupContentToString.matches("[视频]你的QQ暂不支持查看视频短片，请升级到最新版本后查看。")) {
+            return ListeningStatus.LISTENING;
+        }
+        //拦截“为什么”或“***吗”消息
+        else if (messageInGroupContentToString.matches(".*为什么.*|.*吗$")) {
+            EasterEggFunction.stupidAiForWhy(event);
             return ListeningStatus.LISTENING;
         }
         //拦截其它可能触发机器人的消息
