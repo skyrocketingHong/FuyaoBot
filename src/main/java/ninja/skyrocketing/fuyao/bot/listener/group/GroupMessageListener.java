@@ -127,11 +127,11 @@ public class GroupMessageListener extends SimpleListenerHost {
         else if (messageInGroupContentToString.matches("[视频]你的QQ暂不支持查看视频短片，请升级到最新版本后查看。")) {
             return ListeningStatus.LISTENING;
         }
-        //拦截“为什么”或“***吗”消息
-        else if (messageInGroupContentToString.matches(".*为什么.*|.*吗$")) {
-            EasterEggFunction.stupidAiForWhy(event);
-            return ListeningStatus.LISTENING;
-        }
+//        //拦截“为什么”或“***吗”消息
+//        else if (messageInGroupContentToString.matches(".*为什么.*|.*吗$")) {
+//            EasterEggFunction.stupidAiForWhy(event);
+//            return ListeningStatus.LISTENING;
+//        }
         //拦截其它可能触发机器人的消息
         //消息复读
         else {

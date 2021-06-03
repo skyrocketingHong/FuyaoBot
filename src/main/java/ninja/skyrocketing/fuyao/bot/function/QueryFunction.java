@@ -81,6 +81,10 @@ public class QueryFunction {
             String[] trans = nbnhhshArray.getByPath("trans", String.class)
                     .replaceAll("\\[|]", "")
                     .split(",");
+            if (trans[0] == "null") {
+                groupMessage.getMessageChainBuilder().add("没有查询到与 " + "\"" + msg + "\" " + " 相关的结果");
+                return groupMessage.getMessageChainBuilderAsMessageChain();
+            }
             //统计个数
             int count = trans.length;
             //拼接消息
