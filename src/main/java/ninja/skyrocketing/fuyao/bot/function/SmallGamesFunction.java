@@ -3,6 +3,7 @@ package ninja.skyrocketing.fuyao.bot.function;
 import cn.hutool.http.HttpUtil;
 import lombok.NoArgsConstructor;
 import net.mamoe.mirai.contact.Contact;
+import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Message;
 import ninja.skyrocketing.fuyao.bot.config.MiraiBotConfig;
@@ -59,7 +60,7 @@ public class SmallGamesFunction {
     * 炉石开包
     * */
     public static Message hearthStone(GroupMessage groupMessage) throws IOException {
-        MessageReceipt<Contact> messageReceipt = MessageUtil.waitingMessage(groupMessage, "正在开包...");
+        MessageReceipt<Group> messageReceipt = MessageUtil.waitingMessage(groupMessage, "正在开包...");
         //从数据库中随机取出5张卡，放在List中
         List<GameHsCard> gameHsCardList = gameHsCardService.selectBySetOrderByRandom();
         //卡的图片的List，为图片拼接准备

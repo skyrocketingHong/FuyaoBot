@@ -7,6 +7,7 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import net.mamoe.mirai.contact.Contact;
+import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Message;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessage;
@@ -50,7 +51,7 @@ public class QueryFunction {
      * 守望先锋街机模式查询
      **/
     public static Message getOverwatchArcadeModes(GroupMessage groupMessage) throws IOException, ParseException {
-        MessageReceipt<Contact> messageReceipt = MessageUtil.waitingMessage(groupMessage, "正在等待 API 返回数据");
+        MessageReceipt<Group> messageReceipt = MessageUtil.waitingMessage(groupMessage, "正在等待 API 返回数据");
         JSONObject owModes = HttpUtil.readJsonFromURL("https://overwatcharcade.today/api/overwatch/today");
         SimpleDateFormat updateDateTime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
         groupMessage.getMessageChainBuilder().add("今日守望先锋街机模式列表\n更新时间：" +
@@ -66,7 +67,7 @@ public class QueryFunction {
     * nbnhhsh 能不能好好说话
     * */
     public static Message nbnhhsh(GroupMessage groupMessage) {
-        MessageReceipt<Contact> messageReceipt = MessageUtil.waitingMessage(groupMessage, "正在等待 API 返回数据");
+        MessageReceipt<Group> messageReceipt = MessageUtil.waitingMessage(groupMessage, "正在等待 API 返回数据");
         //从消息中分离出需要查询的字符串
         String msg = groupMessage.getMessage().replaceFirst("^wtf\\s+", "");
         //拼接查询参数

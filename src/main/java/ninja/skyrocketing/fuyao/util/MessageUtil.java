@@ -1,6 +1,5 @@
 package ninja.skyrocketing.fuyao.util;
 
-import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.data.GroupHonorType;
@@ -76,16 +75,18 @@ public class MessageUtil {
 
     /**
     * 等待API返回消息时的提醒，在获取到API返回的消息后会撤回
-    * */
+    *
+     * @return*/
     @Deprecated
-    public static MessageReceipt<Contact> waitingForAPI(GroupMessage groupMessage) {
+    public static MessageReceipt<Group> waitingForAPI(GroupMessage groupMessage) {
         return waitingMessage(groupMessage, "正在等待 API 返回数据...");
     }
 
     /**
      * 等待时发送的消息
-     * */
-    public static MessageReceipt<Contact> waitingMessage(GroupMessage groupMessage, String waitingMsg) {
+     *
+     * @return*/
+    public static MessageReceipt<Group> waitingMessage(GroupMessage groupMessage, String waitingMsg) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add(userNotify(groupMessage.getGroupMessageEvent().getSender(), true));
         messageChainBuilder.add("\n");

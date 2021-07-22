@@ -90,14 +90,21 @@ public class MiraiBotConfig {
      * */
     public static void runBot(boolean devMode) throws IOException {
         BotQQ botQQ = setBotQQByMode(devMode);
-        //设备缓存信息
+        //联系人缓存
+        //bot配置
         FuyaoBotApplication.bot = BotFactory.INSTANCE.newBot(
                 botQQ.getQqId(),
                 botQQ.getQqPassword(),
                 new BotConfiguration() {{
                     //设备缓存信息
                     setProtocol(MiraiProtocol.ANDROID_PHONE);
-                    fileBasedDeviceInfo("deviceInfo.json");
+                    fileBasedDeviceInfo("device.json");
+                    //心跳策略
+                    setHeartbeatStrategy(BotConfiguration.HeartbeatStrategy.STAT_HB);
+                    //开启所有列表缓存
+                    enableContactCache();
+                    //可选设置有更新时的保存时间间隔, 默认 60 秒
+                    new ContactListCache().setSaveIntervalMillis(60000);
                 }}
         );
         //登录
