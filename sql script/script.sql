@@ -170,6 +170,25 @@ create table group_function_settings
     settings_value varchar(256) not null comment '设置对应的值'
 );
 
+create table group_rss_message
+(
+    id                 int auto_increment,
+    group_id           bigint                               not null comment '群号',
+    user_id            bigint                               not null comment '用户QQ号',
+    rss_url            varchar(8192)                        not null comment 'RSS链接',
+    add_date           timestamp  default CURRENT_TIMESTAMP null comment '添加时间',
+    enabled            tinyint(1) default 1                 not null comment '是否启用',
+    last_notified_date timestamp                            null comment '最后提醒时间',
+    constraint group_rss_message_id_uindex
+        unique (id)
+)
+    comment 'RSS提醒表';
+
+alter table group_rss_message
+    add constraint `PRIMARY`
+        primary key (id);
+
+
 create table group_timely_message
 (
     group_id       bigint               not null,
@@ -216,5 +235,3 @@ create table user_exp_rank_name
     rank_7     varchar(6) default 'Ⅶ级' null
 )
     comment '私聊签到等级名称';
-
-
