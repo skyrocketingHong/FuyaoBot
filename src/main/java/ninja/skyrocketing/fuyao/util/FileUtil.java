@@ -3,6 +3,8 @@ package ninja.skyrocketing.fuyao.util;
 import cn.hutool.http.HttpUtil;
 import net.mamoe.mirai.message.data.Image;
 import ninja.skyrocketing.fuyao.bot.config.MiraiBotConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.system.ApplicationHome;
 
 import javax.imageio.ImageIO;
@@ -10,6 +12,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,14 +24,18 @@ public class FileUtil {
     //全局文件名分隔符
     public static String separator = File.separator;
 
-    //获取jar包的路径
+    /**
+     * 获取jar包的路径
+     */
     public static String getPath() {
         ApplicationHome applicationHome = new ApplicationHome(FileUtil.class);
         File file = applicationHome.getDir();
         return file.getAbsolutePath();
     }
-
-    //根据QQ号下载头像并保存在jar包同级目录中
+    
+    /**
+     * 根据QQ号下载头像并保存在jar包同级目录中
+     * */
     public static File getAvatarImageFile(long qqId) throws IOException {
         //将QQ号和获取头像的链接拼接起来
         String avatarURL = "http://q1.qlogo.cn/g?b=qq&nk=" + qqId + "&s=640";
@@ -50,15 +57,6 @@ public class FileUtil {
     //http://gchat.qpic.cn/gchatpic_new/0/0-0-{图片ID}/0?term=2
     public static String imageIdToURL(Image image) {
         return "http://gchat.qpic.cn/gchatpic_new/0/0-0-" + image.getImageId().replaceAll("[-{}]|\\.jpg", "") + "/0?term=2";
-    }
-
-    /** 判断jar根目录下是否有dev文件，有的话则为开发环境
-    * @return boolean 存在dev文件为true，否则返回false
-    */
-    public static Boolean isDev() {
-        String path = MiraiBotConfig.JAR_PATH + separator + "dev";
-        File devFile = new File(path);
-        return devFile.exists();
     }
 
     /**
@@ -86,5 +84,21 @@ public class FileUtil {
             width += img.getWidth();
         }
         ImageIO.write(combined, "png", path);
+    }
+    
+    /**
+     * 文本追加写入
+     * */
+    public static void contentWriter(String content, String logFilePath) {
+        try {
+            RandomAccessFile randomFile = new RandomAccessFile(logFilePath, "rw");
+            long fileLength = randomFile.length();
+            randomFile.seek(fileLength);
+            randomFile.write(content.getBytes());
+            randomFile.close();
+        } catch (Exception e) {
+            Logger log =  LoggerFactory.getLogger(FileUtil.class);
+            log.error("文件路径不存在，错误详情: " + e.getMessage());
+        }
     }
 }

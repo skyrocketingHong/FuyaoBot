@@ -71,7 +71,7 @@ public class GroupMessageListener extends SimpleListenerHost {
             //获取上一次使用的时间戳
             Long triggerTimeStamp = MiraiBotConfig.GroupUserTriggerDelay.get(groupUser);
             //计算冷却时间
-            long coolDownTime = 10 - (timestamp - triggerTimeStamp);
+            long coolDownTime = (timestamp - triggerTimeStamp) % 10;
             //生成回复消息
             MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
             messageChainBuilder.add(MessageUtil.userNotify(event.getSender(), true));

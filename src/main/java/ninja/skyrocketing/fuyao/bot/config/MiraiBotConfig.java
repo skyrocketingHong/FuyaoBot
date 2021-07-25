@@ -73,6 +73,7 @@ public class MiraiBotConfig {
     /**
      * 根据模式获得不同的qq号
      * */
+    @Deprecated(since = "4.4.5.61")
     public static BotQQ setBotQQByMode(boolean devMode) {
         BotQQ botQQ = new BotQQ();
         if (devMode) {
@@ -88,13 +89,11 @@ public class MiraiBotConfig {
     /**
      * 运行机器人
      * */
-    public static void runBot(boolean devMode) throws IOException {
-        BotQQ botQQ = setBotQQByMode(devMode);
-        //联系人缓存
+    public static void runBot() throws IOException {
         //bot配置
         FuyaoBotApplication.bot = BotFactory.INSTANCE.newBot(
-                botQQ.getQqId(),
-                botQQ.getQqPassword(),
+                Long.parseLong(botConfigService.getConfigValueByKey("qq_id")),
+                botConfigService.getConfigValueByKey("qq_password"),
                 new BotConfiguration() {{
                     //设备缓存信息
                     setProtocol(MiraiProtocol.ANDROID_PHONE);

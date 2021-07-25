@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.ListeningStatus;
 import net.mamoe.mirai.event.SimpleListenerHost;
+import net.mamoe.mirai.event.events.FriendAddEvent;
 import net.mamoe.mirai.event.events.FriendDeleteEvent;
 import net.mamoe.mirai.event.events.NewFriendRequestEvent;
 import ninja.skyrocketing.fuyao.bot.sender.friend.FriendMessageSender;
@@ -31,16 +32,20 @@ public class FriendEventListener extends SimpleListenerHost {
 
     //一个账号请求添加机器人为好友
     @EventHandler
-    public ListeningStatus onNewFriendRequestEvent(NewFriendRequestEvent event) throws IOException {
+    public ListeningStatus onNewFriendRequestEvent(NewFriendRequestEvent event) {
         event.accept();
         String msg = botConfigService.getConfigValueByKey("reply");
         FriendMessageSender.sendMessageByFriendId(msg, event.getBot().getFriend(event.getFromId()));
         return ListeningStatus.LISTENING;
     }
+    @EventHandler
+    public ListeningStatus onFriendAddEvent(FriendAddEvent event) {
+        return ListeningStatus.LISTENING;
+    }
 
     //好友已被删除（后期完成用户经验和金币后实现）
     @EventHandler
-    public ListeningStatus onFriendDeleteEvent(FriendDeleteEvent event) throws IOException {
+    public ListeningStatus onFriendDeleteEvent(FriendDeleteEvent event) {
         return ListeningStatus.LISTENING;
     }
 }

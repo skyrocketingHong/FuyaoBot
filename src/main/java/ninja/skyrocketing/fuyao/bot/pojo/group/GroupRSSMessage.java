@@ -1,6 +1,6 @@
 package ninja.skyrocketing.fuyao.bot.pojo.group;
 
-import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
 import java.util.Date;
@@ -12,9 +12,9 @@ import java.util.Date;
 @ToString
 @EqualsAndHashCode
 @Builder
+@TableName("group_rss_message")
 public class GroupRSSMessage {
-	@TableField
-	private int id;
+	private Integer id;
 	
 	private long groupId;
 	
@@ -27,4 +27,6 @@ public class GroupRSSMessage {
 	private boolean enabled;
 	
 	private Date lastNotifiedDate;
+	
+	private String lastNotifiedUrl;
 }

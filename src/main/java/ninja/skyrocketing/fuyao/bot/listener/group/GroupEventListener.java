@@ -73,7 +73,7 @@ public class GroupEventListener extends SimpleListenerHost {
      * 群员主动退群
      * */
     @EventHandler
-    public ListeningStatus onQuit(MemberLeaveEvent.Quit event) throws IOException {
+    public ListeningStatus onQuit(MemberLeaveEvent.Quit event) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add("⚠ 群员减少提醒\n群员 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getMember(), false));
@@ -89,7 +89,7 @@ public class GroupEventListener extends SimpleListenerHost {
      * 群员被踢
      * */
     @EventHandler
-    public ListeningStatus onKick(MemberLeaveEvent.Kick event) throws IOException {
+    public ListeningStatus onKick(MemberLeaveEvent.Kick event) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add("⚠ 群员减少提醒\n群员 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getMember(), false));
@@ -107,7 +107,7 @@ public class GroupEventListener extends SimpleListenerHost {
      * 机器人被移出群聊
      * */
     @EventHandler
-    public ListeningStatus onBotKick(BotLeaveEvent.Kick event) throws IOException {
+    public ListeningStatus onBotKick(BotLeaveEvent.Kick event) {
         //清理数据
         DBUtil.cleanDataAfterLeave(event.getGroup().getId());
         //保存log
@@ -118,7 +118,8 @@ public class GroupEventListener extends SimpleListenerHost {
     /**
      * 机器人主动退出群聊
      * */
-    public ListeningStatus onBotKick(BotLeaveEvent.Active event) throws IOException {
+    @EventHandler
+    public ListeningStatus onBotKick(BotLeaveEvent.Active event) {
         //清理数据
         DBUtil.cleanDataAfterLeave(event.getGroup().getId());
         //保存log
@@ -130,12 +131,12 @@ public class GroupEventListener extends SimpleListenerHost {
      * 群员荣誉修改
      */
     @EventHandler
-    public ListeningStatus onMemberHonorChange(MemberHonorChangeEvent event) throws IOException {
+    public ListeningStatus onMemberHonorChange(MemberHonorChangeEvent event) {
         String honorName = MessageUtil.getGroupHonorTypeName(event.getHonorType());
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add("恭喜 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getUser(), true));
-        messageChainBuilder.add("\n于 " + TimeUtil.nowDateTime(new Date()) + " " +
+        messageChainBuilder.add("\n于 " + TimeUtil.dateTimeFormatter(new Date()) + " " +
                 "喜提" +  " \"" + honorName + "\" "
         );
         GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
@@ -146,7 +147,7 @@ public class GroupEventListener extends SimpleListenerHost {
      * 群龙王更改
      * */
     @EventHandler
-    public ListeningStatus onGroupTalkativeChange(GroupTalkativeChangeEvent event) throws IOException {
+    public ListeningStatus onGroupTalkativeChange(GroupTalkativeChangeEvent event) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add("恭喜新龙王 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getNow(), true));
@@ -160,11 +161,11 @@ public class GroupEventListener extends SimpleListenerHost {
      * 群员头衔修改
      * */
     @EventHandler
-    public ListeningStatus onMemberSpecialTitleChange(MemberSpecialTitleChangeEvent event) throws IOException {
+    public ListeningStatus onMemberSpecialTitleChange(MemberSpecialTitleChangeEvent event) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add("恭喜 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getMember(), false));
-        messageChainBuilder.add("\n于 " + TimeUtil.nowDateTime(new Date()) + " " +
+        messageChainBuilder.add("\n于 " + TimeUtil.dateTimeFormatter(new Date()) + " " +
                 "喜提 \"" + event.getNew() + "\" 头衔\n"
         );
         messageChainBuilder.add(new At(event.getMember().getId()));
@@ -176,7 +177,7 @@ public class GroupEventListener extends SimpleListenerHost {
      * 机器人被邀请加入群
      * */
     @EventHandler
-    public ListeningStatus onBotInvitedJoinGroupRequestEvent(BotInvitedJoinGroupRequestEvent event) throws IOException {
+    public ListeningStatus onBotInvitedJoinGroupRequestEvent(BotInvitedJoinGroupRequestEvent event) {
         if (Objects.equals(event.getBot().getFriend(event.getInvitorId()), event.getInvitor())) {
             event.accept();
             LogUtil.eventLog(event.toString(), "机器人被邀请入群 (已同意)");
@@ -190,7 +191,7 @@ public class GroupEventListener extends SimpleListenerHost {
      * 机器人成功加入了一个新群 (可能是主动加入)
      * */
     @EventHandler
-    public ListeningStatus onBotJoinGroupEvent(BotJoinGroupEvent.Active event) throws IOException {
+    public ListeningStatus onBotJoinGroupEvent(BotJoinGroupEvent.Active event) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add("大家好啊，我是扶摇bot\n");
         messageChainBuilder.add(botConfigService.getConfigValueByKey("reply"));
@@ -202,7 +203,7 @@ public class GroupEventListener extends SimpleListenerHost {
      * 机器人成功加入了一个新群 (被群员邀请)
      * */
     @EventHandler
-    public ListeningStatus onBotJoinGroupEvent(BotJoinGroupEvent.Invite event) throws IOException {
+    public ListeningStatus onBotJoinGroupEvent(BotJoinGroupEvent.Invite event) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add("感谢 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getInvitor(), true));
@@ -217,7 +218,7 @@ public class GroupEventListener extends SimpleListenerHost {
      * 机器人成功加入了一个新群 (原群主通过 https://huifu.qq.com/ 恢复原来群主身份并入群, Bot 是原群主)
      * */
     @EventHandler
-    public ListeningStatus onBotJoinGroupEvent(BotJoinGroupEvent.Retrieve event) throws IOException {
+    public ListeningStatus onBotJoinGroupEvent(BotJoinGroupEvent.Retrieve event) {
         LogUtil.eventLog(
                 event.toString(), "机器人成功加入了一个新群 (原群主通过 https://huifu.qq.com/ 恢复原来群主身份并入群, Bot 是原群主)"
         );
@@ -228,7 +229,7 @@ public class GroupEventListener extends SimpleListenerHost {
      * 监听机器人的群名片被修改后，改成默认名片
      */
     @EventHandler
-    public ListeningStatus onMemberCardChangeEvent(MemberCardChangeEvent event) throws IOException {
+    public ListeningStatus onMemberCardChangeEvent(MemberCardChangeEvent event) {
         if (event.getMember().getId() == event.getBot().getId()) {
             event.getMember().setNameCard("");
             LogUtil.eventLog(event.toString(), "机器人群名片被修改");

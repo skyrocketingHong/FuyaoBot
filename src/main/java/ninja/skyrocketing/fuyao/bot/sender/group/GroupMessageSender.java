@@ -11,10 +11,10 @@ import ninja.skyrocketing.fuyao.bot.service.bot.BotAdminUserService;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotFunctionTriggerService;
 import ninja.skyrocketing.fuyao.util.InvokeUtil;
 import ninja.skyrocketing.fuyao.util.LogUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
 
 /**
  * @author skyrocketing Hong
@@ -82,8 +82,14 @@ public class GroupMessageSender {
     /**
      * 根据实现类字符串执行对应的代码
      */
-    public static Message runByInvoke(String str, GroupMessage groupMessage) throws Exception {
-        return InvokeUtil.runByInvoke(str, groupMessage);
+    public static Message runByInvoke(String str, GroupMessage groupMessage) {
+        try {
+            return InvokeUtil.runByInvoke(str, groupMessage);
+        } catch (Exception e) {
+            Logger logger = LoggerFactory.getLogger(GroupMessageSender.class);
+            logger.error("查找运行类时错误，错误详情: " + e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -91,8 +97,13 @@ public class GroupMessageSender {
      * @param message Message
      * @param group Group
      */
-    public static void sendMessageByGroupId(Message message, Group group) throws IOException {
-        group.sendMessage(message);
+    public static void sendMessageByGroupId(Message message, Group group) {
+        try {
+            group.sendMessage(message);
+        } catch (Exception e) {
+            Logger logger = LoggerFactory.getLogger(GroupMessageSender.class);
+            logger.error("在" + group.getName() + " (" + group.getId() + ") 中发消息时出现错误，错误详情: " + e.getMessage());
+        }
         LogUtil.messageLog(message.toString(), group.getId(), true, group.getName());
     }
 
@@ -101,7 +112,7 @@ public class GroupMessageSender {
      * @param message MessageChainBuilder
      * @param group Group
      */
-    public static void sendMessageByGroupId(MessageChainBuilder message, Group group) throws IOException {
+    public static void sendMessageByGroupId(MessageChainBuilder message, Group group) {
         Message asMessageChain = message.asMessageChain();
         sendMessageByGroupId(asMessageChain, group);
     }
@@ -111,7 +122,7 @@ public class GroupMessageSender {
      * @param message String
      * @param groupId Long
      */
-    public static void sendMessageByGroupId(String message, Long groupId) throws IOException {
+    public static void sendMessageByGroupId(String message, Long groupId) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add(message);
         sendMessageByGroupId(messageChainBuilder, FuyaoBotApplication.bot.getGroup(groupId));
@@ -122,7 +133,7 @@ public class GroupMessageSender {
      * @param group Group
      * @param recall Integer
      */
-    public static void sendMessageByGroupId(MessageChainBuilder message, Group group, Long recall) throws IOException {
+    public static void sendMessageByGroupId(MessageChainBuilder message, Group group, Long recall) {
         group.sendMessage(message.asMessageChain()).recallIn(recall);
         LogUtil.messageLog("(" + recall + " 毫秒后撤回) " + message.toString().replaceAll("\n", ""),
                 group.getId(),

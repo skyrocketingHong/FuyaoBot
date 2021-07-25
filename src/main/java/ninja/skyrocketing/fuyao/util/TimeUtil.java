@@ -20,11 +20,11 @@ public class TimeUtil {
     }
 
     //直接获取格式化后的当前时间
-    public static String nowDateTime(Date date) {
+    public static String dateTimeFormatter(Date date) {
         return dateFormatter(date) + " " + timeFormatter(date);
     }
     public static String nowDateTime() {
-        return nowDateTime(new Date());
+        return dateTimeFormatter(new Date());
     }
 
     //将日期时间作为文件名
@@ -85,9 +85,16 @@ public class TimeUtil {
     }
 
     /**
-    * 返回当前时间的时间戳
+    * 返回当前时间的时间戳(秒)
     * */
     public static Long getTimestamp() {
         return System.currentTimeMillis() / 1000;
+    }
+    
+    /**
+     * 返回当前时间的时间戳(毫秒)
+     * */
+    public static Long getTimestampMillis() {
+        return System.currentTimeMillis();
     }
 }

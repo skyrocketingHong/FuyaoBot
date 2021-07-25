@@ -2,7 +2,6 @@ package ninja.skyrocketing.fuyao;
 
 import net.mamoe.mirai.Bot;
 import ninja.skyrocketing.fuyao.bot.config.MiraiBotConfig;
-import ninja.skyrocketing.fuyao.util.FileUtil;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;
@@ -47,7 +46,7 @@ public class FuyaoBotApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		//运行机器人
-		MiraiBotConfig.runBot(FileUtil.isDev());
+		MiraiBotConfig.runBot();
 
 		// Spring线程阻塞
 		Thread.currentThread().join();

@@ -18,7 +18,7 @@ public class FriendMessageSender {
      * @param message Message
      * @param friend Friend
      */
-    public static void sendMessageByFriendId(Message message, Friend friend) throws IOException {
+    public static void sendMessageByFriendId(Message message, Friend friend) {
         friend.sendMessage(message);
         LogUtil.messageLog(message.toString(), friend.getId(), false, friend.getNick());
     }
@@ -28,7 +28,7 @@ public class FriendMessageSender {
      * @param message MessageChainBuilder
      * @param friend Friend
      */
-    public static void sendMessageByFriendId(MessageChainBuilder message, Friend friend) throws IOException {
+    public static void sendMessageByFriendId(MessageChainBuilder message, Friend friend) {
         Message asMessageChain = message.asMessageChain();
         sendMessageByFriendId(asMessageChain, friend);
     }
@@ -38,7 +38,7 @@ public class FriendMessageSender {
      * @param message String
      * @param friend Friend
      */
-    public static void sendMessageByFriendId(String message, Friend friend) throws IOException {
+    public static void sendMessageByFriendId(String message, Friend friend) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add(message);
         sendMessageByFriendId(messageChainBuilder, friend);

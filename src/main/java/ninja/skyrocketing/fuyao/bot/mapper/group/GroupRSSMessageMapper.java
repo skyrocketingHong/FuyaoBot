@@ -11,4 +11,7 @@ import java.util.List;
 public interface GroupRSSMessageMapper extends BaseMapper<GroupRSSMessage> {
 	@Select("select * from group_rss_message")
 	List<GroupRSSMessage> getAllGroupRSSMessage();
+	
+	@Select("select distinct rss_url from group_rss_message where enabled is true")
+	List<String> getAllRSSUrl();
 }
