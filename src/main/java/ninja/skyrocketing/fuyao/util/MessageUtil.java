@@ -75,8 +75,8 @@ public class MessageUtil {
 
     /**
     * 等待API返回消息时的提醒，在获取到API返回的消息后会撤回
-    *
-     * @return*/
+    * @return
+    */
     @Deprecated
     public static MessageReceipt<Group> waitingForAPI(GroupMessage groupMessage) {
         return waitingMessage(groupMessage, "正在等待 API 返回数据...");
@@ -84,8 +84,8 @@ public class MessageUtil {
 
     /**
      * 等待时发送的消息
-     *
-     * @return*/
+     * @return
+     */
     public static MessageReceipt<Group> waitingMessage(GroupMessage groupMessage, String waitingMsg) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add(userNotify(groupMessage.getGroupMessageEvent().getSender(), true));
@@ -95,9 +95,23 @@ public class MessageUtil {
     }
 
     /**
-    * 将Message toString后去除source
+    * 将Message toString 后去除 source
     * */
     public static String removeSource(Message message) {
         return message.toString().replaceFirst("\\[mirai:source:\\[-?\\d+],\\[-?\\d+]]","");
+    }
+    
+    /**
+     * 从Message中提取消息ID
+     * */
+    public static int getMessageIDInGroup(Message message) {
+        return Integer.parseInt(message.toString().replaceAll("\\[mirai:source:\\[","").replaceAll("],\\[\\d*]", "").replaceAll("]" + message.contentToString(), ""));
+    }
+    
+    /**
+     * 判断消息是否相等
+     * */
+    public static boolean isSame(String a, String b, String c) {
+        return a.equals(b) && a.equals(c);
     }
 }

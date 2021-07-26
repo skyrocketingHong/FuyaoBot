@@ -14,8 +14,8 @@ import ninja.skyrocketing.fuyao.bot.listener.friend.FriendMessageListener;
 import ninja.skyrocketing.fuyao.bot.listener.group.GroupEventListener;
 import ninja.skyrocketing.fuyao.bot.listener.group.GroupMessageListener;
 import ninja.skyrocketing.fuyao.bot.pojo.bot.BotQQ;
-import ninja.skyrocketing.fuyao.bot.pojo.group.GroupRepeaterMessage;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupUser;
+import ninja.skyrocketing.fuyao.bot.sender.friend.FriendMessageSender;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotConfigService;
 import ninja.skyrocketing.fuyao.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +36,8 @@ public class MiraiBotConfig {
     public MiraiBotConfig(BotConfigService botConfigService) {
         MiraiBotConfig.botConfigService = botConfigService;
     }
+    
+    public static GlobalVariables globalVariables = new GlobalVariables();
 
     /**
      * 全局jar根目录
@@ -54,14 +56,6 @@ public class MiraiBotConfig {
      * */
     public static final String HS_CACHE_PATH = CACHE_PATH + FileUtil.separator + "Hearthstone";
     /**
-     * 全局复读消息变量
-     * */
-    public static Map<Long, GroupRepeaterMessage> GroupsRepeaterMessagesMap = new HashMap<>();
-    /**
-     * 全局已复读消息变量
-     * */
-    public static Map<Long, String> GroupRepeatedMessagesMap = new HashMap<>();
-    /**
      * 全局防止滥用变量
      * */
     public static Map<GroupUser, Long> GroupUserTriggerDelay = new HashMap<>();
@@ -69,6 +63,15 @@ public class MiraiBotConfig {
      * 全局防止滥用（已通知）变量
      * */
     public static List<GroupUser> GroupUserTriggerDelayNotified = new ArrayList<>();
+    /**
+     * 全局新加群个数和新好友个数
+     * */
+    public static Map<String, Integer> NewRelationshipMap = new HashMap<>() {
+        {
+            put("new_group", 0);
+            put("new_friend", 0);
+        }
+    };
 
     /**
      * 根据模式获得不同的qq号
@@ -122,9 +125,10 @@ public class MiraiBotConfig {
 
         //发送启动成功消息
         Date endDate = new Date();
-        FuyaoBotApplication.bot.getFriend(Long.parseLong(botConfigService.getConfigValueByKey("admin_user"))).sendMessage(
+        FriendMessageSender.sendMessageByFriendId(
                 "✔ 启动成功" + "\n" +
-                        "耗费时间：" + DateUtil.between(FuyaoBotApplication.startDate, endDate, DateUnit.SECOND) + "s"
+                        "耗费时间：" + DateUtil.between(FuyaoBotApplication.StartDate, endDate, DateUnit.SECOND) + "s",
+                FuyaoBotApplication.bot.getFriend(Long.parseLong(botConfigService.getConfigValueByKey("admin_user")))
         );
 
         //挂载该机器人的线程

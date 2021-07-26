@@ -7,12 +7,11 @@ import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.FriendAddEvent;
 import net.mamoe.mirai.event.events.FriendDeleteEvent;
 import net.mamoe.mirai.event.events.NewFriendRequestEvent;
+import ninja.skyrocketing.fuyao.bot.config.MiraiBotConfig;
 import ninja.skyrocketing.fuyao.bot.sender.friend.FriendMessageSender;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
 
 /**
  * @author skyrocketing Hong
@@ -36,6 +35,7 @@ public class FriendEventListener extends SimpleListenerHost {
         event.accept();
         String msg = botConfigService.getConfigValueByKey("reply");
         FriendMessageSender.sendMessageByFriendId(msg, event.getBot().getFriend(event.getFromId()));
+        MiraiBotConfig.NewRelationshipMap.put("new_friend", MiraiBotConfig.NewRelationshipMap.get("new_friend") + 1);
         return ListeningStatus.LISTENING;
     }
     @EventHandler

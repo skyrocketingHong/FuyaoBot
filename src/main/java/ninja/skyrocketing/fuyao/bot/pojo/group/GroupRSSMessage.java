@@ -16,9 +16,9 @@ import java.util.Date;
 public class GroupRSSMessage {
 	private Integer id;
 	
-	private long groupId;
+	private Long groupId;
 	
-	private long userId;
+	private Long userId;
 	
 	private String rssUrl;
 	

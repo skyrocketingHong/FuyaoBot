@@ -24,7 +24,7 @@ public class FuyaoBotApplication implements CommandLineRunner {
 	/**
 	 * 生成启动时间
 	 * */
-	public static Date startDate = new Date();
+	public static Date StartDate = new Date();
 
 	/**
 	 * 机器人实例

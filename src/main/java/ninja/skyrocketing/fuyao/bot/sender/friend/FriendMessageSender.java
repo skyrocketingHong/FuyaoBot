@@ -5,8 +5,6 @@ import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.fuyao.util.LogUtil;
 
-import java.io.IOException;
-
 /**
  * @author skyrocketing Hong
  * @date 2021-03-14 14:07:14

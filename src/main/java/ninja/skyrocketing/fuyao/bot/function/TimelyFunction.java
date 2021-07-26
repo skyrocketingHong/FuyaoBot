@@ -4,17 +4,19 @@ import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
-import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import ninja.skyrocketing.fuyao.FuyaoBotApplication;
 import ninja.skyrocketing.fuyao.bot.config.MiraiBotConfig;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupRSSMessage;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupTimelyMessage;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupUser;
+import ninja.skyrocketing.fuyao.bot.sender.friend.FriendMessageSender;
 import ninja.skyrocketing.fuyao.bot.sender.group.GroupMessageSender;
+import ninja.skyrocketing.fuyao.bot.service.bot.BotConfigService;
 import ninja.skyrocketing.fuyao.bot.service.group.GroupRSSMessageService;
 import ninja.skyrocketing.fuyao.bot.service.group.GroupTimelyMessageService;
 import ninja.skyrocketing.fuyao.util.TimeUtil;
@@ -24,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -37,14 +38,17 @@ import java.util.*;
 public class TimelyFunction {
     private static GroupTimelyMessageService groupTimelyMessageService;
     private static GroupRSSMessageService groupRSSMessageService;
+    private static BotConfigService botConfigService;
 
     @Autowired
     private TimelyFunction(
             GroupTimelyMessageService groupTimelyMessageService,
-            GroupRSSMessageService groupRSSMessageService
+            GroupRSSMessageService groupRSSMessageService,
+            BotConfigService botConfigService
     ) {
         TimelyFunction.groupTimelyMessageService = groupTimelyMessageService;
         TimelyFunction.groupRSSMessageService = groupRSSMessageService;
+        TimelyFunction.botConfigService = botConfigService;
     }
 
     /**
@@ -52,7 +56,7 @@ public class TimelyFunction {
      * 每分钟读取一次数据库
      * */
     @Scheduled(cron = "0 */1 * * * ?")
-    public static void timelyMessage() throws IOException {
+    public static void timelyMessage() {
         //获取实时时间
         Date nowDate = DateUtil.date();
         //从数据库中获取所有定时消息并迭代
@@ -90,10 +94,9 @@ public class TimelyFunction {
     
     /**
      * 定时获取RSS源更新
-     * 每1分钟获取一次，然后判断时间戳
      * */
     @Scheduled(cron = "*/30 * * * * ?")
-    public void rssMessage() throws FeedException {
+    public static void rssMessage() {
         //构造PushMessage内部类
         @Getter
         @Setter
@@ -114,9 +117,9 @@ public class TimelyFunction {
             SyndFeed feed;
             try {
                 feed = new SyndFeedInput().build(new XmlReader(new URL(rssUrl)));
-            } catch (IOException e) {
+            } catch (Exception e) {
                 Logger log =  LoggerFactory.getLogger(TimelyFunction.class);
-                log.error("加载 \"" + rssUrl + "\" 时超时，错误详情: " + e.getMessage());
+                log.error("获取 \"" + rssUrl + "\" 时出现错误，错误详情: " + e.getMessage());
                 urlAndPushMessageMap.remove(rssUrl);
                 continue;
             }
@@ -170,5 +173,20 @@ public class TimelyFunction {
                 }
             }
         }
+    }
+    
+    /**
+     * 每天早上5:59:50发送新好友和新群聊的统计
+     * */
+    @Scheduled(cron = "50 59 5 * * ?")
+    public void newRelationshipNotify() {
+        String msg = "📊 截至 " + TimeUtil.dateTimeFormatter(new Date()) + "\n" +
+                "已被 " + MiraiBotConfig.NewRelationshipMap.get("new_friend") + " 人添加为好友" +
+                "已被拉入 " + MiraiBotConfig.NewRelationshipMap.get("new_group") + " 个群聊" +
+                "(开始统计时间: " + TimeUtil.dateFormatter(FuyaoBotApplication.StartDate) + ")";
+        FriendMessageSender.sendMessageByFriendId(
+                msg,
+                FuyaoBotApplication.bot.getFriend(Long.parseLong(botConfigService.getConfigValueByKey("admin_user")))
+        );
     }
 }

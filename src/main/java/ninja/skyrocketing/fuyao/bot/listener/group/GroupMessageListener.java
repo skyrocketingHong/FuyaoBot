@@ -3,15 +3,19 @@ package ninja.skyrocketing.fuyao.bot.listener.group;
 import kotlin.coroutines.CoroutineContext;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
+import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.ListeningStatus;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
+import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
+import ninja.skyrocketing.fuyao.bot.config.GlobalVariables;
 import ninja.skyrocketing.fuyao.bot.config.MiraiBotConfig;
 import ninja.skyrocketing.fuyao.bot.function.EasterEggFunction;
 import ninja.skyrocketing.fuyao.bot.function.NotificationFunction;
+import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessageInfo;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupUser;
 import ninja.skyrocketing.fuyao.bot.sender.group.GroupMessageSender;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotBanedGroupService;
@@ -92,11 +96,16 @@ public class GroupMessageListener extends SimpleListenerHost {
             //将触发用户添加进全局map中
             MiraiBotConfig.GroupUserTriggerDelay.put(groupUser, timestamp);
             //被@后返回帮助文案
-            GroupMessageSender.sendMessageByGroupId(botConfigService.getConfigValueByKey("reply"), event.getGroup().getId());
+            MessageReceipt<Group> receipt = GroupMessageSender.sendMessageByGroupIdWithReceipt(botConfigService.getConfigValueByKey("reply"), event.getGroup());
+            GroupMessageInfo groupMessageInfo = new GroupMessageInfo(event);
+            //存放触发消息
+            GlobalVariables.getGlobalVariables().getTriggerGroupMessageInfoMap().put(groupMessageInfo, false);
+            //存放出发后的回复的回执
+            GlobalVariables.getGlobalVariables().getGroupSentMessageReceipt().put(groupMessageInfo, receipt);
             return ListeningStatus.LISTENING;
         }
         //不是@机器人就继续处理消息
-        //拦截以~开头的消息
+        //拦截以触发指令开头的消息
         else if (messageInGroupContentToString.matches("^[~～/].+")) {
             //调用消息对应的实现类，并保存返回值（对应的回复）
             Message message = GroupMessageSender.sender(event);
@@ -107,9 +116,13 @@ public class GroupMessageListener extends SimpleListenerHost {
                 messageChainBuilder.add("\n");
                 messageChainBuilder.add(message);
                 MiraiBotConfig.GroupUserTriggerDelay.put(groupUser, timestamp);
-                GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
+                MessageReceipt<Group> receipt = GroupMessageSender.sendMessageByGroupIdWithReceipt(messageChainBuilder, event.getGroup());
+                GroupMessageInfo groupMessageInfo = new GroupMessageInfo(event);
+                //存放触发消息
+                GlobalVariables.getGlobalVariables().getTriggerGroupMessageInfoMap().put(groupMessageInfo, false);
+                //存放出发后的回复的回执
+                GlobalVariables.getGlobalVariables().getGroupSentMessageReceipt().put(groupMessageInfo, receipt);
             }
-            //将触发用户添加进全局map中
             return ListeningStatus.LISTENING;
         }
         //拦截闪照消息，使用mirai码判断

@@ -12,6 +12,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
+@Deprecated
 public class GroupRepeaterMessage {
     private String message;
 

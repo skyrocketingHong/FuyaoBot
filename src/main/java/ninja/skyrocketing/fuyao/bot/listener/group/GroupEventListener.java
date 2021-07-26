@@ -9,6 +9,9 @@ import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
+import ninja.skyrocketing.fuyao.bot.config.GlobalVariables;
+import ninja.skyrocketing.fuyao.bot.config.MiraiBotConfig;
+import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessageInfo;
 import ninja.skyrocketing.fuyao.bot.sender.group.GroupMessageSender;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotConfigService;
 import ninja.skyrocketing.fuyao.util.DBUtil;
@@ -16,6 +19,8 @@ import ninja.skyrocketing.fuyao.util.LogUtil;
 import ninja.skyrocketing.fuyao.util.MessageUtil;
 import ninja.skyrocketing.fuyao.util.TimeUtil;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +40,36 @@ public class GroupEventListener extends SimpleListenerHost {
     @Autowired
     public GroupEventListener(BotConfigService botConfigService) {
         GroupEventListener.botConfigService = botConfigService;
+    }
+    
+    /**
+     * 当用户将触发机器人的消息撤回后，自动撤回机器人发的消息
+     * */
+    @EventHandler
+    public ListeningStatus onGroupRecall(MessageRecallEvent.GroupRecall event) {
+        GroupMessageInfo groupMessageInfo = new GroupMessageInfo(event.getGroup().getId(), event.getMessageIds()[0]);
+        System.out.println(GlobalVariables.getGlobalVariables().getTriggerGroupMessageInfoMap().containsKey(groupMessageInfo));
+        if (GlobalVariables.getGlobalVariables().getTriggerGroupMessageInfoMap().containsKey(groupMessageInfo)) {
+            try {
+                if (!GlobalVariables.getGlobalVariables().getTriggerGroupMessageInfoMap().get(groupMessageInfo)) {
+                    GlobalVariables.getGlobalVariables().recallAndDeleteByGroupMessageInfo(groupMessageInfo);
+                    return ListeningStatus.LISTENING;
+                } else {
+                    int messageId = groupMessageInfo.getMessageId();
+                    for (int i = 1; i < 3; ++i) {
+                        groupMessageInfo.setMessageId(messageId + i);
+                        if (GlobalVariables.getGlobalVariables().getGroupSentMessageReceipt().get(groupMessageInfo) != null) {
+                            GlobalVariables.getGlobalVariables().recallAndDeleteByGroupMessageInfo(groupMessageInfo);
+                            return ListeningStatus.LISTENING;
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                Logger log =  LoggerFactory.getLogger(GroupEventListener.class);
+                log.error("撤回消息时出现错误，错误详情: " + e.getMessage());
+            }
+        }
+        return ListeningStatus.LISTENING;
     }
 
     /**
@@ -188,18 +223,6 @@ public class GroupEventListener extends SimpleListenerHost {
     }
 
     /**
-     * 机器人成功加入了一个新群 (可能是主动加入)
-     * */
-    @EventHandler
-    public ListeningStatus onBotJoinGroupEvent(BotJoinGroupEvent.Active event) {
-        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("大家好啊，我是扶摇bot\n");
-        messageChainBuilder.add(botConfigService.getConfigValueByKey("reply"));
-        GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
-        return ListeningStatus.LISTENING;
-    }
-
-    /**
      * 机器人成功加入了一个新群 (被群员邀请)
      * */
     @EventHandler
@@ -208,9 +231,20 @@ public class GroupEventListener extends SimpleListenerHost {
         messageChainBuilder.add("感谢 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getInvitor(), true));
         messageChainBuilder.add(" 邀请\n");
+        GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
+        return ListeningStatus.LISTENING;
+    }
+    
+    /**
+     * 机器人成功加入了一个新群 (可能是主动加入)
+     * */
+    @EventHandler
+    public ListeningStatus onBotJoinGroupEvent(BotJoinGroupEvent.Active event) {
+        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add("大家好啊，我是扶摇bot\n");
         messageChainBuilder.add(botConfigService.getConfigValueByKey("reply"));
         GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
+        MiraiBotConfig.NewRelationshipMap.put("new_group", MiraiBotConfig.NewRelationshipMap.get("new_group") + 1);
         return ListeningStatus.LISTENING;
     }
 

@@ -23,7 +23,7 @@ public class NotificationFunction {
     /**
     * 闪照提醒消息
     * */
-    public static void flashImageNotification(GroupMessageEvent event) throws IOException {
+    public static void flashImageNotification(GroupMessageEvent event) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         //向群内发送闪照消息
         messageChainBuilder.add(MessageUtil.userNotify(event.getSender(),true));
