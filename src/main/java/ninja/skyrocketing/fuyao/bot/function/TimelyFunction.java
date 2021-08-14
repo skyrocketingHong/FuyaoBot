@@ -131,7 +131,7 @@ public class TimelyFunction {
             //最终推送文案
             String resultMessage;
             //处理即刻“一觉醒来发生了什么”
-            if (rssUrl.contains("jike/topic/text/553870e8e4b0cafb0a1bef68")) {
+            if (rssUrl.contains("553870e8e4b0cafb0a1bef68")) {
                 resultMessage = "☀ 群友们早上好啊\n下面是“一觉醒来发生了什么”（来自\"即刻\" APP）\n" +
                         firstEntry.getDescription().getValue()
                                 .replace("<br>", "\n")
@@ -164,11 +164,12 @@ public class TimelyFunction {
                             || !Objects.equals(singleGroupRSSMessage.getLastNotifiedUrl(), url)
                     ) {
                         //发送消息
-                        GroupMessageSender.sendMessageByGroupId(pushMessage.getMessage(), singleGroupRSSMessage.getGroupId());
-                        //将当前推送时间和推送URL写回数据库，便于下次判断
-                        singleGroupRSSMessage.setLastNotifiedDate(new Date());
-                        singleGroupRSSMessage.setLastNotifiedUrl(url);
-                        groupRSSMessageService.updateGroupRSSMessage(singleGroupRSSMessage);
+                        if (GroupMessageSender.sendMessageByGroupId(pushMessage.getMessage(), singleGroupRSSMessage.getGroupId())) {
+                            //将当前推送时间和推送URL写回数据库，便于下次判断
+                            singleGroupRSSMessage.setLastNotifiedDate(new Date());
+                            singleGroupRSSMessage.setLastNotifiedUrl(url);
+                            groupRSSMessageService.updateGroupRSSMessage(singleGroupRSSMessage);
+                        }
                     }
                 }
             }

@@ -98,15 +98,23 @@ public class GroupMessageSender {
      * 根据群号发消息并保存日志
      * @param message Message
      * @param group Group
+     * @return boolean
      */
-    public static void sendMessageByGroupId(Message message, Group group) {
+    public static boolean sendMessageByGroupId(Message message, Group group) {
+        if (group.getSettings().isMuteAll() || group.getBotMuteRemaining() > 0) {
+            Logger logger = LoggerFactory.getLogger(GroupMessageSender.class);
+            logger.error("在" + group.getName() + " (" + group.getId() + ") 中发消息时出现错误，错误详情: " + "群被全员禁言或机器人被禁言");
+            return false;
+        }
         try {
             group.sendMessage(message);
         } catch (Exception e) {
             Logger logger = LoggerFactory.getLogger(GroupMessageSender.class);
             logger.error("在" + group.getName() + " (" + group.getId() + ") 中发消息时出现错误，错误详情: " + e.getMessage());
+            return false;
         }
         LogUtil.messageLog(message.toString(), group.getId(), true, group.getName());
+        return true;
     }
     
     /**
@@ -152,9 +160,9 @@ public class GroupMessageSender {
      * @param message MessageChainBuilder
      * @param group Group
      */
-    public static void sendMessageByGroupId(MessageChainBuilder message, Group group) {
+    public static boolean sendMessageByGroupId(MessageChainBuilder message, Group group) {
         Message asMessageChain = message.asMessageChain();
-        sendMessageByGroupId(asMessageChain, group);
+        return sendMessageByGroupId(asMessageChain, group);
     }
 
     /**
@@ -162,10 +170,10 @@ public class GroupMessageSender {
      * @param message String
      * @param groupId Long
      */
-    public static void sendMessageByGroupId(String message, Long groupId) {
+    public static boolean sendMessageByGroupId(String message, Long groupId) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add(message);
-        sendMessageByGroupId(messageChainBuilder, FuyaoBotApplication.bot.getGroup(groupId));
+        return sendMessageByGroupId(messageChainBuilder, FuyaoBotApplication.bot.getGroup(groupId));
     }
     
     /**

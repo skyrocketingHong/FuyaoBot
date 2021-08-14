@@ -24,6 +24,7 @@ import ninja.skyrocketing.fuyao.bot.service.bot.BotReplyMessageService;
 import ninja.skyrocketing.fuyao.bot.service.user.BotBanedUserService;
 import ninja.skyrocketing.fuyao.util.LogUtil;
 import ninja.skyrocketing.fuyao.util.MessageUtil;
+import ninja.skyrocketing.fuyao.util.RandomUtil;
 import ninja.skyrocketing.fuyao.util.TimeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,20 +133,23 @@ public class GroupMessageListener extends SimpleListenerHost {
             return ListeningStatus.LISTENING;
         }
         //拦截红包消息
-        else if (messageInGroupContentToString.matches("\\[QQ红包].+新版手机QQ查.+")) {
+        else if (messageInGroupContentToString.matches("\\[QQ红包].+新版手机QQ查.+\\[不支持的消息.*]")) {
             //红包消息通知
             NotificationFunction.redPackageNotification(event);
             return ListeningStatus.LISTENING;
         }
         //拦截视频消息
-        else if (messageInGroupContentToString.matches("[视频]你的QQ暂不支持查看视频短片，请升级到最新版本后查看。")) {
+        else if (messageInGroupContentToString.matches("\\[不支持的消息#\\d+]\\[视频]你的QQ暂不支持查看视频短片，请升级到最新版本后查看。")) {
             return ListeningStatus.LISTENING;
         }
-//        //拦截“为什么”或“***吗”消息
-//        else if (messageInGroupContentToString.matches(".*为什么.*|.*吗$")) {
-//            EasterEggFunction.stupidAiForWhy(event);
-//            return ListeningStatus.LISTENING;
-//        }
+        //拦截“为什么”或“***吗”消息
+        else if (messageInGroupContentToString.matches(".*为什么.*|.*吗$")) {
+            int randomNum = RandomUtil.randomNum(100);
+            if (randomNum > 89) {
+                EasterEggFunction.stupidAiForWhy(event);
+            }
+            return ListeningStatus.LISTENING;
+        }
         //拦截其它可能触发机器人的消息
         //消息复读
         else {

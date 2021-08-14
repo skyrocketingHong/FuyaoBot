@@ -105,7 +105,7 @@ public class MessageUtil {
      * 从Message中提取消息ID
      * */
     public static int getMessageIDInGroup(Message message) {
-        return Integer.parseInt(message.toString().replaceAll("\\[mirai:source:\\[","").replaceAll("],\\[\\d*]", "").replaceAll("]" + message.contentToString(), ""));
+        return Integer.parseInt(message.toString().replaceAll("\\[mirai:source:\\[","").replaceAll("],\\[-?\\d+]].*", ""));
     }
     
     /**
