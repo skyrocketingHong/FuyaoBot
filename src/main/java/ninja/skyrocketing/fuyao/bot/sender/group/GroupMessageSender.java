@@ -7,6 +7,7 @@ import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.fuyao.FuyaoBotApplication;
+import ninja.skyrocketing.fuyao.bot.function.ConfigFunction;
 import ninja.skyrocketing.fuyao.bot.pojo.bot.BotFunctionTrigger;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessage;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotAdminUserService;
@@ -114,6 +115,8 @@ public class GroupMessageSender {
             return false;
         }
         LogUtil.messageLog(message.toString(), group.getId(), true, group.getName());
+        //添加机器人群名片判断，防止恶意修改
+        ConfigFunction.botNameCardCheck(group);
         return true;
     }
     
@@ -132,6 +135,8 @@ public class GroupMessageSender {
             return null;
         }
         LogUtil.messageLog(message.toString(), group.getId(), true, group.getName());
+        //添加机器人群名片判断，防止恶意修改
+        ConfigFunction.botNameCardCheck(group);
         return messageReceipt;
     }
     
@@ -189,6 +194,8 @@ public class GroupMessageSender {
                 true,
                 group.getName()
         );
+        //添加机器人群名片判断，防止恶意修改
+        ConfigFunction.botNameCardCheck(group);
     }
     
     /**

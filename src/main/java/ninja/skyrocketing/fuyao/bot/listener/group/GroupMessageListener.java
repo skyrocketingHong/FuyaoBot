@@ -133,13 +133,13 @@ public class GroupMessageListener extends SimpleListenerHost {
             return ListeningStatus.LISTENING;
         }
         //拦截红包消息
-        else if (messageInGroupContentToString.matches("\\[QQ红包].+新版手机QQ查.+\\[不支持的消息.*]")) {
+        else if (messageInGroupContentToString.matches("\\[QQ红包].+新版手机QQ查.+\\[不支持的消息#-?\\d+]")) {
             //红包消息通知
             NotificationFunction.redPackageNotification(event);
             return ListeningStatus.LISTENING;
         }
         //拦截视频消息
-        else if (messageInGroupContentToString.matches("\\[不支持的消息#\\d+]\\[视频]你的QQ暂不支持查看视频短片，请升级到最新版本后查看。")) {
+        else if (messageInGroupContentToString.matches("\\[不支持的消息#-?\\d+]\\[视频]你的QQ暂不支持查看视频短片，请升级到最新版本后查看。")) {
             return ListeningStatus.LISTENING;
         }
         //拦截“为什么”或“***吗”消息

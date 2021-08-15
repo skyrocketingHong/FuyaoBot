@@ -265,7 +265,7 @@ public class GroupEventListener extends SimpleListenerHost {
     @EventHandler
     public ListeningStatus onMemberCardChangeEvent(MemberCardChangeEvent event) {
         if (event.getMember().getId() == event.getBot().getId()) {
-            event.getMember().setNameCard("");
+            event.getMember().setNameCard(event.getBot().getNick());
             LogUtil.eventLog(event.toString(), "机器人群名片被修改");
         }
         return ListeningStatus.LISTENING;
