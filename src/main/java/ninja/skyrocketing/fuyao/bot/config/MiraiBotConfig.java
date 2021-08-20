@@ -63,15 +63,6 @@ public class MiraiBotConfig {
      * 全局防止滥用（已通知）变量
      * */
     public static List<GroupUser> GroupUserTriggerDelayNotified = new ArrayList<>();
-    /**
-     * 全局新加群个数和新好友个数
-     * */
-    public static Map<String, Integer> NewRelationshipMap = new HashMap<>() {
-        {
-            put("new_group", 0);
-            put("new_friend", 0);
-        }
-    };
 
     /**
      * 根据模式获得不同的qq号

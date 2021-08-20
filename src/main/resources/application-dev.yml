@@ -50,3 +50,6 @@ spring:
     username: ''
   devtools:
     add-properties: false
+fuyao-bot:
+  rss:
+    morning-url: ''

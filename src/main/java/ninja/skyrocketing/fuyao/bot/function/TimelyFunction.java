@@ -4,29 +4,26 @@ import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
-import com.rometools.rome.io.SyndFeedInput;
-import com.rometools.rome.io.XmlReader;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import ninja.skyrocketing.fuyao.FuyaoBotApplication;
+import ninja.skyrocketing.fuyao.bot.config.GlobalVariables;
 import ninja.skyrocketing.fuyao.bot.config.MiraiBotConfig;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupRSSMessage;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupTimelyMessage;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupUser;
-import ninja.skyrocketing.fuyao.bot.sender.friend.FriendMessageSender;
 import ninja.skyrocketing.fuyao.bot.sender.group.GroupMessageSender;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotConfigService;
 import ninja.skyrocketing.fuyao.bot.service.group.GroupRSSMessageService;
 import ninja.skyrocketing.fuyao.bot.service.group.GroupTimelyMessageService;
+import ninja.skyrocketing.fuyao.util.HttpUtil;
 import ninja.skyrocketing.fuyao.util.TimeUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.net.URL;
 import java.util.*;
 
 /**
@@ -39,7 +36,7 @@ public class TimelyFunction {
     private static GroupTimelyMessageService groupTimelyMessageService;
     private static GroupRSSMessageService groupRSSMessageService;
     private static BotConfigService botConfigService;
-
+    
     @Autowired
     private TimelyFunction(
             GroupTimelyMessageService groupTimelyMessageService,
@@ -50,11 +47,11 @@ public class TimelyFunction {
         TimelyFunction.groupRSSMessageService = groupRSSMessageService;
         TimelyFunction.botConfigService = botConfigService;
     }
-
+    
     /**
      * 定时消息
      * 每分钟读取一次数据库
-     * */
+     */
     @Scheduled(cron = "0 */1 * * * ?")
     public static void timelyMessage() {
         //获取实时时间
@@ -75,11 +72,11 @@ public class TimelyFunction {
             }
         }
     }
-
+    
     /**
      * 定时处理防刷屏
      * 每10秒钟判断一次
-     * */
+     */
     @Scheduled(cron = "*/10 * * * * ?")
     public static void preventAbuse() {
         long timeStamp = TimeUtil.getTimestamp();
@@ -94,9 +91,10 @@ public class TimelyFunction {
     
     /**
      * 定时获取RSS源更新
-     * */
+     * 每30秒抓取一次
+     */
     @Scheduled(cron = "*/30 * * * * ?")
-    public static void rssMessage() {
+    public void rssMessage() {
         //构造PushMessage内部类
         @Getter
         @Setter
@@ -114,12 +112,8 @@ public class TimelyFunction {
         Map<String, PushMessage> urlAndPushMessageMap = new HashMap<>();
         for (String rssUrl : allRSSUrl) {
             //获取RSS Feed
-            SyndFeed feed;
-            try {
-                feed = new SyndFeedInput().build(new XmlReader(new URL(rssUrl)));
-            } catch (Exception e) {
-                Logger log =  LoggerFactory.getLogger(TimelyFunction.class);
-                log.error("获取 \"" + rssUrl + "\" 时出现错误，错误详情: " + e.getMessage());
+            SyndFeed feed = HttpUtil.getRSSFeed(rssUrl);
+            if (feed == null) {
                 urlAndPushMessageMap.remove(rssUrl);
                 continue;
             }
@@ -129,22 +123,11 @@ public class TimelyFunction {
             Date firstEntryPublishedDate = firstEntry.getPublishedDate();
             //直接抓取目前最新的一篇文章
             //最终推送文案
-            String resultMessage;
-            //处理即刻“一觉醒来发生了什么”
-            if (rssUrl.contains("553870e8e4b0cafb0a1bef68")) {
-                resultMessage = "☀ 群友们早上好啊\n下面是“一觉醒来发生了什么”（来自\"即刻\" APP）\n" +
-                        firstEntry.getDescription().getValue()
-                                .replace("<br>", "\n")
-                                .replace("\n（欢迎到评论区理性发言，友好讨论）",  "")
-                                .replace("详情点击👉", "新闻详情请点击👇\n")
-                ;
-            } else {
-                resultMessage =
-                        "🔔 \"" + feed.getTitle() + "\""  +
-                                " 在 " + TimeUtil.dateTimeFormatter(firstEntryPublishedDate) +
-                                " 推送了：\n" +
-                                firstEntry.getTitle() + "\n" + firstEntry.getLink();
-            }
+            String resultMessage =
+                    "🔔 \"" + feed.getTitle() + "\"" +
+                            " 在 " + TimeUtil.dateTimeFormatter(firstEntryPublishedDate) +
+                            " 推送了：\n" +
+                            firstEntry.getTitle() + "\n" + firstEntry.getLink();
             PushMessage pushMessage = new PushMessage(resultMessage, firstEntryPublishedDate, firstEntry.getLink());
             urlAndPushMessageMap.put(rssUrl, pushMessage);
         }
@@ -177,17 +160,45 @@ public class TimelyFunction {
     }
     
     /**
-     * 每天早上5:59:50发送新好友和新群聊的统计
-     * */
-    @Scheduled(cron = "50 59 5 * * ?")
-    public void newRelationshipNotify() {
-        String msg = "📊 截至 " + TimeUtil.dateTimeFormatter(new Date()) + "\n" +
-                "已被 " + MiraiBotConfig.NewRelationshipMap.get("new_friend") + " 人添加为好友" +
-                "已被拉入 " + MiraiBotConfig.NewRelationshipMap.get("new_group") + " 个群聊" +
-                "(开始统计时间: " + TimeUtil.dateFormatter(FuyaoBotApplication.StartDate) + ")";
-        FriendMessageSender.sendMessageByFriendId(
-                msg,
-                FuyaoBotApplication.bot.getFriend(Long.parseLong(botConfigService.getConfigValueByKey("admin_user")))
-        );
+     * 每天早上7点55发送问候消息
+     */
+    @Value("${fuyao-bot.rss.morning-url}")
+    private String morningRSSURL;
+    @Scheduled(cron = "0 55 7 * * ?")
+    public void morningMessage() {
+        //获取RSS Feed
+        SyndFeed feed = HttpUtil.getRSSFeed(morningRSSURL);
+        String resultMessage;
+        if (feed == null) {
+            resultMessage = "☀ 群友们早上好啊\n由于系统原因今天没有“一觉醒来发生了什么”";
+        } else {
+            //获取首条消息
+            SyndEntry firstEntry = feed.getEntries().get(0);
+            //获取首条消息的推送时间
+            Date firstEntryPublishedDate = firstEntry.getPublishedDate();
+            if (DateUtil.isSameDay(firstEntryPublishedDate, new Date())) {
+                //最终推送文案
+                resultMessage = "☀ 群友们早上好啊\n下面是“一觉醒来发生了什么”（来自\"即刻\" APP）\n" +
+                        firstEntry.getDescription().getValue()
+                                .replace("<br>", "\n")
+                                .replace("\n（欢迎到评论区理性发言，友好讨论）", "")
+                                .replace("详情点击👉", "新闻详情请点击👇\n");
+            } else {
+                resultMessage = "☀ 群友们早上好啊\n由于系统故障，今天没有“一觉醒来发生了什么”";
+            }
+        }
+        for (Map.Entry<Long, Integer> entry : GlobalVariables.getGlobalVariables().getGroupMessagesCount().entrySet()) {
+            if (entry.getValue() >= 3) {
+                GroupMessageSender.sendMessageByGroupId(resultMessage, entry.getKey());
+            }
+            if (entry.getValue() >= 10) {
+                String message = "📊 消息数量统计\n" +
+                        TimeUtil.dateTimeFormatter(FuyaoBotApplication.StartDate) + "至 " + TimeUtil.nowDateTime() + "\n" +
+                        "本群共发送消息 " + entry.getValue() + " 条";
+                GroupMessageSender.sendMessageByGroupId(message, entry.getKey());
+            }
+            //从map中移除已遍历的群
+            GlobalVariables.getGlobalVariables().getGroupMessagesCount().remove(entry.getKey());
+        }
     }
 }

@@ -4,7 +4,7 @@ logging:
       skyrocketing:
         fuyao:
           bot:
-            mapper: debug
+            mapper: error
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
@@ -50,3 +50,6 @@ spring:
     username: ''
   devtools:
     add-properties: false
+fuyao-bot:
+  rss:
+    morning-url: ''

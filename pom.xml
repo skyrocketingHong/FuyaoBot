@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>ninja.skyrocketing.fuyao</groupId>
 	<artifactId>fuyao-bot</artifactId>
-	<version>4.4.8.64</version>
+	<version>4.4.9.65</version>
 	<name>Fuyao bot</name>
 	<description>A QQ bot named Fuyao and bases on Mirai, Spring Boot, MySQL and Mybatis Plus.</description>
 
@@ -78,7 +78,7 @@
 		<!--druid连接池-->
 		<dependency>
 			<groupId>com.alibaba</groupId>
-			<artifactId>druid</artifactId>
+			<artifactId>druid-spring-boot-starter</artifactId>
 			<version>1.2.6</version>
 		</dependency>
 		<!--hutool工具包-->
@@ -97,7 +97,7 @@
 		<dependency>
 			<groupId>com.baomidou</groupId>
 			<artifactId>mybatis-plus-boot-starter</artifactId>
-			<version>3.4.2</version>
+			<version>3.4.3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.baomidou</groupId>

@@ -35,7 +35,6 @@ public class FriendEventListener extends SimpleListenerHost {
         event.accept();
         String msg = botConfigService.getConfigValueByKey("reply");
         FriendMessageSender.sendMessageByFriendId(msg, event.getBot().getFriend(event.getFromId()));
-        MiraiBotConfig.NewRelationshipMap.put("new_friend", MiraiBotConfig.NewRelationshipMap.get("new_friend") + 1);
         return ListeningStatus.LISTENING;
     }
     @EventHandler

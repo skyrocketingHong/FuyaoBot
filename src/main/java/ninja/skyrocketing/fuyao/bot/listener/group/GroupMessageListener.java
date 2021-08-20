@@ -30,6 +30,8 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 /**
  * @author skyrocketing Hong
  * @date 2020-11-28 14:55:32
@@ -60,12 +62,20 @@ public class GroupMessageListener extends SimpleListenerHost {
     */
     @EventHandler
     public ListeningStatus onMessage(GroupMessageEvent event) throws Exception {
+        long groupId = event.getGroup().getId();
+        //记录消息数量
+        GlobalVariables.getGlobalVariables().getGroupMessagesCount().compute(groupId, (k, v) -> {
+            if (v == null) {
+                return 1;
+            }
+            return ++v;
+        });
         //判断是否为黑名单用户或群
-        if (botBanedGroupService.isBaned(event.getGroup().getId()) &&
+        if (botBanedGroupService.isBaned(groupId) &&
                 botBanedUserService.isBaned(event.getSender().getId())) {
             return ListeningStatus.LISTENING;
         }
-        GroupUser groupUser = GroupUser.builder().groupId(event.getGroup().getId()).userId(event.getSender().getId()).build();
+        GroupUser groupUser = GroupUser.builder().groupId(groupId).userId(event.getSender().getId()).build();
         Long timestamp = TimeUtil.getTimestamp();
         //当触发用户在防止滥用的Map中时，不发送消息
         if (MiraiBotConfig.GroupUserTriggerDelay.containsKey(groupUser)) {
@@ -140,14 +150,6 @@ public class GroupMessageListener extends SimpleListenerHost {
         }
         //拦截视频消息
         else if (messageInGroupContentToString.matches("\\[不支持的消息#-?\\d+]\\[视频]你的QQ暂不支持查看视频短片，请升级到最新版本后查看。")) {
-            return ListeningStatus.LISTENING;
-        }
-        //拦截“为什么”或“***吗”消息
-        else if (messageInGroupContentToString.matches(".*为什么.*|.*吗$")) {
-            int randomNum = RandomUtil.randomNum(100);
-            if (randomNum > 89) {
-                EasterEggFunction.stupidAiForWhy(event);
-            }
             return ListeningStatus.LISTENING;
         }
         //拦截其它可能触发机器人的消息

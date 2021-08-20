@@ -244,7 +244,6 @@ public class GroupEventListener extends SimpleListenerHost {
         messageChainBuilder.add("大家好啊，我是扶摇bot\n");
         messageChainBuilder.add(botConfigService.getConfigValueByKey("reply"));
         GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
-        MiraiBotConfig.NewRelationshipMap.put("new_group", MiraiBotConfig.NewRelationshipMap.get("new_group") + 1);
         return ListeningStatus.LISTENING;
     }
 
