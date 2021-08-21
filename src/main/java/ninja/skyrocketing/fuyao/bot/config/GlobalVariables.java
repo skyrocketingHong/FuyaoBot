@@ -5,10 +5,11 @@ import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.message.MessageReceipt;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessageInfo;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author skyrocketing Hong
@@ -40,7 +41,7 @@ public class GlobalVariables {
 	 * Key为GroupMessageInfo，Value为是否为触发消息的前驱
 	 * */
 	private Map<GroupMessageInfo, Boolean> TriggerGroupMessageInfoMap = new HashMap<>();
-
+	
 	/**
 	 * 撤回消息并删除触发消息和被触发后发送消息的回执
 	 * */
@@ -49,9 +50,13 @@ public class GlobalVariables {
 		GroupSentMessageReceipt.remove(groupMessageInfo);
 		TriggerGroupMessageInfoMap.remove(groupMessageInfo);
 	}
-
+	
 	/**
-	 * 群内消息数量统计
+	 * 群内消息数量统计map
 	 * */
-	private Map<Long, Integer> GroupMessagesCount = new HashMap<>();
+	private Map<Long, Integer> GroupMessagesCount = new ConcurrentHashMap<>();
+	/**
+	 * 需要发送早间新闻的list
+	 * */
+	private List<Long> MorningMessageList = new ArrayList<>();
 }

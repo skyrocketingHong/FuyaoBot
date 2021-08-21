@@ -7,7 +7,6 @@ import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.FriendAddEvent;
 import net.mamoe.mirai.event.events.FriendDeleteEvent;
 import net.mamoe.mirai.event.events.NewFriendRequestEvent;
-import ninja.skyrocketing.fuyao.bot.config.MiraiBotConfig;
 import ninja.skyrocketing.fuyao.bot.sender.friend.FriendMessageSender;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotConfigService;
 import org.springframework.beans.factory.annotation.Autowired;

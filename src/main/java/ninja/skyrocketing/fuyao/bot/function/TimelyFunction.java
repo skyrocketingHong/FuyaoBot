@@ -160,11 +160,11 @@ public class TimelyFunction {
     }
     
     /**
-     * 每天早上7点55发送问候消息
+     * 每天早上7点40分发送问候消息
      */
     @Value("${fuyao-bot.rss.morning-url}")
     private String morningRSSURL;
-    @Scheduled(cron = "0 55 7 * * ?")
+    @Scheduled(cron = "0 40 7 * * ?")
     public void morningMessage() {
         //获取RSS Feed
         SyndFeed feed = HttpUtil.getRSSFeed(morningRSSURL);
@@ -184,21 +184,45 @@ public class TimelyFunction {
                                 .replace("\n（欢迎到评论区理性发言，友好讨论）", "")
                                 .replace("详情点击👉", "新闻详情请点击👇\n");
             } else {
-                resultMessage = "☀ 群友们早上好啊\n由于系统故障，今天没有“一觉醒来发生了什么”";
+                resultMessage = "☀ 群友们早上好啊\n由于\"即刻\" APP 没有推送，今天没有“一觉醒来发生了什么”";
             }
         }
+        for (Long groupId : GlobalVariables.getGlobalVariables().getMorningMessageList()) {
+            GroupMessageSender.sendMessageByGroupId(resultMessage, groupId);
+        }
+        GlobalVariables.getGlobalVariables().getMorningMessageList().clear();
+    }
+    /**
+     * 每天0点发送消息数量统计并将满足要求的群放入list中
+     * */
+    @Scheduled(cron = "0 0 0 * * ?")
+    public static void groupMessageCount() {
+        //结束统计时间
+        Date endDate = new Date();
+        String endDateStr = TimeUtil.dateTimeFormatter(endDate);
+        //开始统计时间
+        Date startDate;
+        //如果bot启动时间在当前发送消息的时间的24小时内，则使用启动时间作为开始统计时间
+        if (DateUtil.between(FuyaoBotApplication.StartDate, endDate, DateUnit.HOUR) < 24) {
+            startDate = FuyaoBotApplication.StartDate;
+        } else {
+            startDate = DateUtil.offsetHour(endDate, -24);
+        }
+        String startDateStr = TimeUtil.dateTimeFormatter(startDate);
+        
         for (Map.Entry<Long, Integer> entry : GlobalVariables.getGlobalVariables().getGroupMessagesCount().entrySet()) {
             if (entry.getValue() >= 3) {
-                GroupMessageSender.sendMessageByGroupId(resultMessage, entry.getKey());
+                //将满足要求的群放入list中
+                GlobalVariables.getGlobalVariables().getMorningMessageList().add(entry.getKey());
             }
             if (entry.getValue() >= 10) {
-                String message = "📊 消息数量统计\n" +
-                        TimeUtil.dateTimeFormatter(FuyaoBotApplication.StartDate) + "至 " + TimeUtil.nowDateTime() + "\n" +
+                String message = "📊 发送消息数量统计\n" +
+                        startDateStr + " 至 " + endDateStr + "\n" +
                         "本群共发送消息 " + entry.getValue() + " 条";
                 GroupMessageSender.sendMessageByGroupId(message, entry.getKey());
             }
-            //从map中移除已遍历的群
-            GlobalVariables.getGlobalVariables().getGroupMessagesCount().remove(entry.getKey());
         }
+        //从map中移除所有统计记录
+        GlobalVariables.getGlobalVariables().getGroupMessagesCount().clear();
     }
 }

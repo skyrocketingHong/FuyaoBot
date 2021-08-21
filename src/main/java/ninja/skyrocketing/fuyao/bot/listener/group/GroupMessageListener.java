@@ -24,13 +24,10 @@ import ninja.skyrocketing.fuyao.bot.service.bot.BotReplyMessageService;
 import ninja.skyrocketing.fuyao.bot.service.user.BotBanedUserService;
 import ninja.skyrocketing.fuyao.util.LogUtil;
 import ninja.skyrocketing.fuyao.util.MessageUtil;
-import ninja.skyrocketing.fuyao.util.RandomUtil;
 import ninja.skyrocketing.fuyao.util.TimeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 /**
  * @author skyrocketing Hong
