@@ -96,8 +96,8 @@ public class MiraiBotConfig {
                     setHeartbeatStrategy(BotConfiguration.HeartbeatStrategy.STAT_HB);
                     //开启所有列表缓存
                     enableContactCache();
-                    //可选设置有更新时的保存时间间隔, 默认 60 秒
-                    new ContactListCache().setSaveIntervalMillis(60000);
+                    //可选设置有更新时的保存时间间隔
+                    new ContactListCache().setSaveIntervalMillis(10000);
                 }}
         );
         //登录

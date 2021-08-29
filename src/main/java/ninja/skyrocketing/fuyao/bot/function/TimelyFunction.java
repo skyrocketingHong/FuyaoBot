@@ -164,7 +164,7 @@ public class TimelyFunction {
      */
     @Value("${fuyao-bot.rss.morning-url}")
     private String morningRSSURL;
-    @Scheduled(cron = "0 40 7 * * ?")
+    @Scheduled(cron = "0 29 7 * * ?")
     public void morningMessage() {
         //获取RSS Feed
         SyndFeed feed = HttpUtil.getRSSFeed(morningRSSURL);
@@ -192,11 +192,15 @@ public class TimelyFunction {
         }
         GlobalVariables.getGlobalVariables().getMorningMessageList().clear();
     }
+    
     /**
      * 每天0点发送消息数量统计并将满足要求的群放入list中
      * */
     @Scheduled(cron = "0 0 0 * * ?")
     public static void groupMessageCount() {
+        Map<Long, Integer> GroupMessagesCount = GlobalVariables.getGlobalVariables().getGroupMessagesCount();
+        //从map中移除所有统计记录
+        GlobalVariables.getGlobalVariables().getGroupMessagesCount().clear();
         //结束统计时间
         Date endDate = new Date();
         String endDateStr = TimeUtil.dateTimeFormatter(endDate);
@@ -209,8 +213,7 @@ public class TimelyFunction {
             startDate = DateUtil.offsetHour(endDate, -24);
         }
         String startDateStr = TimeUtil.dateTimeFormatter(startDate);
-        
-        for (Map.Entry<Long, Integer> entry : GlobalVariables.getGlobalVariables().getGroupMessagesCount().entrySet()) {
+        for (Map.Entry<Long, Integer> entry : GroupMessagesCount.entrySet()) {
             if (entry.getValue() >= 3) {
                 //将满足要求的群放入list中
                 GlobalVariables.getGlobalVariables().getMorningMessageList().add(entry.getKey());
@@ -222,7 +225,5 @@ public class TimelyFunction {
                 GroupMessageSender.sendMessageByGroupId(message, entry.getKey());
             }
         }
-        //从map中移除所有统计记录
-        GlobalVariables.getGlobalVariables().getGroupMessagesCount().clear();
     }
 }

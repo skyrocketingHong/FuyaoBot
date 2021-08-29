@@ -1,6 +1,7 @@
 package ninja.skyrocketing.fuyao.bot.sender.group;
 
 import net.mamoe.mirai.contact.Group;
+import net.mamoe.mirai.contact.GroupSettings;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Message;
@@ -102,12 +103,12 @@ public class GroupMessageSender {
      * @return boolean
      */
     public static boolean sendMessageByGroupId(Message message, Group group) {
-        if (group.getSettings().isMuteAll() || group.getBotMuteRemaining() > 0) {
-            Logger logger = LoggerFactory.getLogger(GroupMessageSender.class);
-            logger.error("在" + group.getName() + " (" + group.getId() + ") 中发消息时出现错误，错误详情: " + "群被全员禁言或机器人被禁言");
-            return false;
-        }
         try {
+            if (group.getSettings().isMuteAll() || group.getBotMuteRemaining() > 0) {
+                Logger logger = LoggerFactory.getLogger(GroupMessageSender.class);
+                logger.error("在" + group.getName() + " (" + group.getId() + ") 中发消息时出现错误，错误详情: " + "群被全员禁言或机器人被禁言");
+                return false;
+            }
             group.sendMessage(message);
         } catch (Exception e) {
             Logger logger = LoggerFactory.getLogger(GroupMessageSender.class);

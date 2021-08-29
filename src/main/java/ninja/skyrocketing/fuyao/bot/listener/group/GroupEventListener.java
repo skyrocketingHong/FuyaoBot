@@ -168,7 +168,7 @@ public class GroupEventListener extends SimpleListenerHost {
     public ListeningStatus onMemberHonorChange(MemberHonorChangeEvent event) {
         String honorName = MessageUtil.getGroupHonorTypeName(event.getHonorType());
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("恭喜 ");
+        messageChainBuilder.add("👍 恭喜 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getUser(), true));
         messageChainBuilder.add("\n于 " + TimeUtil.dateTimeFormatter(new Date()) + " " +
                 "喜提" +  " \"" + honorName + "\" "
@@ -183,7 +183,7 @@ public class GroupEventListener extends SimpleListenerHost {
     @EventHandler
     public ListeningStatus onGroupTalkativeChange(GroupTalkativeChangeEvent event) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("恭喜新龙王 ");
+        messageChainBuilder.add("👍 恭喜新龙王 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getNow(), true));
         messageChainBuilder.add("\n前任龙王为 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getPrevious(), false));
@@ -197,7 +197,7 @@ public class GroupEventListener extends SimpleListenerHost {
     @EventHandler
     public ListeningStatus onMemberSpecialTitleChange(MemberSpecialTitleChangeEvent event) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("恭喜 ");
+        messageChainBuilder.add("👍 恭喜 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getMember(), false));
         messageChainBuilder.add("\n于 " + TimeUtil.dateTimeFormatter(new Date()) + " " +
                 "喜提 \"" + event.getNew() + "\" 头衔\n"
@@ -227,7 +227,7 @@ public class GroupEventListener extends SimpleListenerHost {
     @EventHandler
     public ListeningStatus onBotJoinGroupEvent(BotJoinGroupEvent.Invite event) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("感谢 ");
+        messageChainBuilder.add("👏 感谢 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getInvitor(), true));
         messageChainBuilder.add(" 邀请\n");
         GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
@@ -240,7 +240,7 @@ public class GroupEventListener extends SimpleListenerHost {
     @EventHandler
     public ListeningStatus onBotJoinGroupEvent(BotJoinGroupEvent.Active event) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("大家好啊，我是扶摇bot\n");
+        messageChainBuilder.add("👏 大家好啊，我是扶摇bot\n");
         messageChainBuilder.add(botConfigService.getConfigValueByKey("reply"));
         GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
         return ListeningStatus.LISTENING;
@@ -258,7 +258,7 @@ public class GroupEventListener extends SimpleListenerHost {
     }
 
     /**
-     * 监听机器人的群名片被修改后，改成默认名片
+     * 监听群名片被修改后，并将机器人的改成默认名片
      */
     @EventHandler
     public ListeningStatus onMemberCardChangeEvent(MemberCardChangeEvent event) {
@@ -266,6 +266,11 @@ public class GroupEventListener extends SimpleListenerHost {
             event.getMember().setNameCard(event.getBot().getNick());
             LogUtil.eventLog(event.toString(), "机器人群名片被修改");
         }
+        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+        messageChainBuilder.add("💬 群名片修改提醒\n");
+        messageChainBuilder.add(MessageUtil.userNotify(event.getUser(), true));
+        messageChainBuilder.add("\n的群名片从 \"" + event.getOrigin() + "\" 修改为 \"" + event.getNew() + "\"");
+        GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
         return ListeningStatus.LISTENING;
     }
 

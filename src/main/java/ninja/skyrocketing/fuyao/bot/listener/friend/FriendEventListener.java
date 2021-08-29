@@ -36,6 +36,8 @@ public class FriendEventListener extends SimpleListenerHost {
         FriendMessageSender.sendMessageByFriendId(msg, event.getBot().getFriend(event.getFromId()));
         return ListeningStatus.LISTENING;
     }
+    
+    //成功添加了一个新好友的事件
     @EventHandler
     public ListeningStatus onFriendAddEvent(FriendAddEvent event) {
         return ListeningStatus.LISTENING;
