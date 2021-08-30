@@ -3,10 +3,15 @@ package ninja.skyrocketing.fuyao.util;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.data.GroupHonorType;
+import net.mamoe.mirai.event.ListeningStatus;
+import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.*;
 import net.mamoe.mirai.utils.ExternalResource;
+import ninja.skyrocketing.fuyao.bot.config.MiraiBotConfig;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessage;
+import ninja.skyrocketing.fuyao.bot.pojo.group.GroupUser;
+import ninja.skyrocketing.fuyao.bot.sender.group.GroupMessageSender;
 
 import java.io.File;
 import java.io.IOException;
@@ -113,5 +118,33 @@ public class MessageUtil {
      * */
     public static boolean isSame(String a, String b, String c) {
         return a.equals(b) && a.equals(c);
+    }
+    
+    /**
+     * 防止滥用
+     * */
+    public static boolean preventingAbuse(long timestamp, GroupUser groupUser, GroupMessageEvent event) {
+        //当触发用户在防止滥用的Map中时，不发送消息
+        if (MiraiBotConfig.GroupUserTriggerDelay.containsKey(groupUser)) {
+            //如果该用户已被提醒过，则不执行任何操作
+            if (MiraiBotConfig.GroupUserTriggerDelayNotified.contains(groupUser)) {
+                return true;
+            }
+            //计算冷却时间
+            long coolDownTime = (timestamp - MiraiBotConfig.GroupUserTriggerDelay.get(groupUser)) % 10;
+            if (coolDownTime <= 0) {
+                return false;
+            }
+            //生成回复消息
+            MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+            messageChainBuilder.add(MessageUtil.userNotify(event.getSender(), true));
+            messageChainBuilder.add("\n你的冷却时间尚未结束，请等待 " + coolDownTime + "s 后再操作");
+            messageChainBuilder.add("\n(提醒消息将在冷却时间结束后撤回)");
+            //发送消息，并在冷却时间内撤回
+            MiraiBotConfig.GroupUserTriggerDelayNotified.add(groupUser);
+            GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup(), coolDownTime * 1000);
+            return true;
+        }
+        return false;
     }
 }

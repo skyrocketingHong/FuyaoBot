@@ -74,26 +74,6 @@ public class GroupMessageListener extends SimpleListenerHost {
         }
         GroupUser groupUser = GroupUser.builder().groupId(groupId).userId(event.getSender().getId()).build();
         Long timestamp = TimeUtil.getTimestamp();
-        //当触发用户在防止滥用的Map中时，不发送消息
-        if (MiraiBotConfig.GroupUserTriggerDelay.containsKey(groupUser)) {
-            //如果该用户已被提醒过，则不执行任何操作
-            if (MiraiBotConfig.GroupUserTriggerDelayNotified.contains(groupUser)) {
-                return ListeningStatus.LISTENING;
-            }
-            //获取上一次使用的时间戳
-            Long triggerTimeStamp = MiraiBotConfig.GroupUserTriggerDelay.get(groupUser);
-            //计算冷却时间
-            long coolDownTime = (timestamp - triggerTimeStamp) % 10;
-            //生成回复消息
-            MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-            messageChainBuilder.add(MessageUtil.userNotify(event.getSender(), true));
-            messageChainBuilder.add("\n你的冷却时间尚未结束，请等待 " + coolDownTime + "s 后再操作");
-            messageChainBuilder.add("\n(提醒消息将在冷却时间结束后撤回)");
-            //发送消息，并在冷却时间内撤回
-            MiraiBotConfig.GroupUserTriggerDelayNotified.add(groupUser);
-            GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup(), coolDownTime * 1000);
-            return ListeningStatus.LISTENING;
-        }
         //获取消息
         Message messageInGroup = event.getMessage();
         String messageInGroupToString = messageInGroup.toString();
@@ -101,6 +81,10 @@ public class GroupMessageListener extends SimpleListenerHost {
         //判断是否为@机器人
         if (messageInGroupToString.matches(".*\\[mirai:at:" + event.getBot().getId() + "].*") &&
                 !messageInGroupToString.matches(".*\\[mirai:quote:\\[\\d*],\\[\\d*]].*")) {
+            //防滥用判断
+            if (MessageUtil.preventingAbuse(timestamp, groupUser, event)) {
+                return ListeningStatus.LISTENING;
+            }
             //将触发用户添加进全局map中
             MiraiBotConfig.GroupUserTriggerDelay.put(groupUser, timestamp);
             //被@后返回帮助文案
@@ -115,6 +99,10 @@ public class GroupMessageListener extends SimpleListenerHost {
         //不是@机器人就继续处理消息
         //拦截以触发指令开头的消息
         else if (messageInGroupContentToString.matches("^[~～/].+")) {
+            //防滥用判断
+            if (MessageUtil.preventingAbuse(timestamp, groupUser, event)) {
+                return ListeningStatus.LISTENING;
+            }
             //调用消息对应的实现类，并保存返回值（对应的回复）
             Message message = GroupMessageSender.sender(event);
             if (message != null) {

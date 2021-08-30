@@ -183,7 +183,7 @@ public class GroupEventListener extends SimpleListenerHost {
     @EventHandler
     public ListeningStatus onGroupTalkativeChange(GroupTalkativeChangeEvent event) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("👍 恭喜新龙王 ");
+        messageChainBuilder.add("🐉 恭喜新龙王 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getNow(), true));
         messageChainBuilder.add("\n前任龙王为 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getPrevious(), false));
@@ -265,6 +265,7 @@ public class GroupEventListener extends SimpleListenerHost {
         if (event.getMember().getId() == event.getBot().getId()) {
             event.getMember().setNameCard(event.getBot().getNick());
             LogUtil.eventLog(event.toString(), "机器人群名片被修改");
+            return ListeningStatus.LISTENING;
         }
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add("💬 群名片修改提醒\n");

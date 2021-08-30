@@ -160,11 +160,11 @@ public class TimelyFunction {
     }
     
     /**
-     * 每天早上7点40分发送问候消息
+     * 每天早上7点29分1秒发送问候消息
      */
     @Value("${fuyao-bot.rss.morning-url}")
     private String morningRSSURL;
-    @Scheduled(cron = "0 29 7 * * ?")
+    @Scheduled(cron = "1 29 7 * * ?")
     public void morningMessage() {
         //获取RSS Feed
         SyndFeed feed = HttpUtil.getRSSFeed(morningRSSURL);
@@ -194,13 +194,10 @@ public class TimelyFunction {
     }
     
     /**
-     * 每天0点发送消息数量统计并将满足要求的群放入list中
+     * 每天0点0分1秒发送消息数量统计并将满足要求的群放入list中
      * */
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "1 0 0 * * ?")
     public static void groupMessageCount() {
-        Map<Long, Integer> GroupMessagesCount = GlobalVariables.getGlobalVariables().getGroupMessagesCount();
-        //从map中移除所有统计记录
-        GlobalVariables.getGlobalVariables().getGroupMessagesCount().clear();
         //结束统计时间
         Date endDate = new Date();
         String endDateStr = TimeUtil.dateTimeFormatter(endDate);
@@ -213,17 +210,20 @@ public class TimelyFunction {
             startDate = DateUtil.offsetHour(endDate, -24);
         }
         String startDateStr = TimeUtil.dateTimeFormatter(startDate);
-        for (Map.Entry<Long, Integer> entry : GroupMessagesCount.entrySet()) {
+        //消息头
+        String message = "📊 发送消息数量统计\n" +
+                startDateStr + " 至 " + endDateStr + "\n" +
+                "本群共发送消息 ";
+        for (Map.Entry<Long, Integer> entry : GlobalVariables.getGlobalVariables().getGroupMessagesCount().entrySet()) {
             if (entry.getValue() >= 3) {
                 //将满足要求的群放入list中
                 GlobalVariables.getGlobalVariables().getMorningMessageList().add(entry.getKey());
             }
             if (entry.getValue() >= 10) {
-                String message = "📊 发送消息数量统计\n" +
-                        startDateStr + " 至 " + endDateStr + "\n" +
-                        "本群共发送消息 " + entry.getValue() + " 条";
-                GroupMessageSender.sendMessageByGroupId(message, entry.getKey());
+                GroupMessageSender.sendMessageByGroupId(message + entry.getValue() + " 条", entry.getKey());
             }
         }
+        //从map中移除所有统计记录
+        GlobalVariables.getGlobalVariables().getGroupMessagesCount().clear();
     }
 }
