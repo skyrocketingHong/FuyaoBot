@@ -1,4 +1,4 @@
-package ninja.skyrocketing.fuyao.bot.pojo.group;
+package ninja.skyrocketing.fuyao.bot.pojo.user;
 
 import lombok.*;
 
@@ -13,8 +13,8 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class GroupUser {
+public class User {
     private Long groupId;
 
-    private Long userId;
+    private Long userId = 0L;
 }

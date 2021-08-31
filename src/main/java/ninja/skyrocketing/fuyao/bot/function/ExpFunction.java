@@ -5,8 +5,8 @@ import lombok.NoArgsConstructor;
 import net.mamoe.mirai.message.data.Message;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupExp;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupExpRankName;
-import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessage;
-import ninja.skyrocketing.fuyao.bot.pojo.group.GroupUser;
+import ninja.skyrocketing.fuyao.bot.pojo.user.User;
+import ninja.skyrocketing.fuyao.bot.pojo.user.UserMessage;
 import ninja.skyrocketing.fuyao.bot.service.group.GroupExpRankNameService;
 import ninja.skyrocketing.fuyao.bot.service.group.GroupExpService;
 import ninja.skyrocketing.fuyao.util.RandomUtil;
@@ -28,36 +28,39 @@ public class ExpFunction {
     private static GroupExpRankNameService groupExpRankNameService;
 
     @Autowired
-    private ExpFunction(GroupExpService groupExpService, GroupExpRankNameService groupExpRankNameService) {
+    private ExpFunction(
+            GroupExpService groupExpService,
+            GroupExpRankNameService groupExpRankNameService
+    ) {
         ExpFunction.groupExpService = groupExpService;
         ExpFunction.groupExpRankNameService = groupExpRankNameService;
     }
 
     //签到
-    public static Message signIn(GroupMessage groupMessage) {
+    public static Message signIn(UserMessage userMessage) {
         //创建群号和QQ号的实例
-        GroupUser groupUser = groupMessage.getGroupUser();
+        User user = userMessage.getUser();
         //从数据库中获取当前群中的用户的数据
-        GroupExp groupExp = groupExpService.getExpByGroupUser(groupUser);
+        GroupExp groupExp = groupExpService.getExpByGroupUser(user);
         //获取当前日期
         Date nowDate = DateUtil.date();
         //随机生成一个经验值
         int exp = RandomUtil.randomNum(10) + 10;
         //用户不存在时，直接插入一条新的数据
         if (groupExp == null) {
-            groupExp = new GroupExp(groupUser, exp);
+            groupExp = new GroupExp(user, exp);
             int status = groupExpService.insertExp(groupExp);
             //数据库问题，插入失败
             if (status == 0) {
-                groupMessage.getMessageChainBuilder().add("❌ 签到失败" + "\n" + "请联系开发者查看数据库是否出现问题");
-                return groupMessage.getMessageChainBuilderAsMessageChain();
+                userMessage.getMessageChainBuilder().add("❌ 签到失败" + "\n" + "请联系开发者查看数据库是否出现问题");
+                return userMessage.getMessageChainBuilderAsMessageChain();
             }
             //签到成功
-            groupMessage.getMessageChainBuilder().add("✔ 首次签到成功" + "\n" +
+            userMessage.getMessageChainBuilder().add("✔ 首次签到成功" + "\n" +
                     "获取 " + exp + " 经验值" + "\n" +
                     "下次签到时间 " + TimeUtil.dateFormatter(new Date(nowDate.getTime() + 28800000))
             );
-            return groupMessage.getMessageChainBuilderAsMessageChain();
+            return userMessage.getMessageChainBuilderAsMessageChain();
         }
         //用户存在时，再判断是否可以签到
         else {
@@ -65,10 +68,10 @@ public class ExpFunction {
             Date lastSignInDate = groupExp.getSignInDate();
             //如果上次签到时间与当前时间间隔小于8小时，则直接返回消息
             if (nowDate.getTime() - lastSignInDate.getTime() <= 28800000) {
-                groupMessage.getMessageChainBuilder().add("❌ 签到失败" + "\n" +
+                userMessage.getMessageChainBuilder().add("❌ 签到失败" + "\n" +
                         "下次签到时间 " + TimeUtil.dateFormatter(new Date(lastSignInDate.getTime() + 28800000))
                 );
-                return groupMessage.getMessageChainBuilderAsMessageChain();
+                return userMessage.getMessageChainBuilderAsMessageChain();
             }
             //所有条件满足后，直接签到
             else {
@@ -77,34 +80,34 @@ public class ExpFunction {
                 int status = groupExpService.updateExp(groupExp);
                 //数据库问题，插入失败
                 if (status == 0) {
-                    groupMessage.getMessageChainBuilder().add("❌ 签到失败" + "\n" + "请联系开发者查看数据库是否出现问题");
-                    return groupMessage.getMessageChainBuilderAsMessageChain();
+                    userMessage.getMessageChainBuilder().add("❌ 签到失败" + "\n" + "请联系开发者查看数据库是否出现问题");
+                    return userMessage.getMessageChainBuilderAsMessageChain();
                 }
             }
         }
         //签到成功
-        groupMessage.getMessageChainBuilder().add("✔ 签到成功" + "\n" +
+        userMessage.getMessageChainBuilder().add("✔ 签到成功" + "\n" +
                 "获取 " + exp + " 经验值" + "\n" +
                 "下次签到时间 " + TimeUtil.dateFormatter(new Date(groupExp.getSignInDate().getTime() + 28800000))
         );
-        return groupMessage.getMessageChainBuilderAsMessageChain();
+        return userMessage.getMessageChainBuilderAsMessageChain();
     }
 
     //EXP查询
-    public static Message expQuery(GroupMessage groupMessage) {
+    public static Message expQuery(UserMessage userMessage) {
         //创建群号和QQ号的实例
-        GroupUser groupUser = groupMessage.getGroupUser();
+        User user = userMessage.getUser();
         //从数据库中获取当前群中的用户的数据
-        GroupExp groupExp = groupExpService.getExpByGroupUser(groupUser);
+        GroupExp groupExp = groupExpService.getExpByGroupUser(user);
         if (groupExp != null) {
             long exp = groupExp.getExp();
-            groupMessage.getMessageChainBuilder().add("🔰 当前等级 " + expRank(groupMessage.getGroupUser().getGroupId(), exp) + "\n" +
+            userMessage.getMessageChainBuilder().add("🔰 当前等级 " + expRank(userMessage.getUser().getGroupId(), exp) + "\n" +
                     "🍔 经验值为 " + exp
             );
         } else {
-            groupMessage.getMessageChainBuilder().add("❌ 当前群未签到");
+            userMessage.getMessageChainBuilder().add("❌ 当前群未签到");
         }
-        return groupMessage.getMessageChainBuilderAsMessageChain();
+        return userMessage.getMessageChainBuilderAsMessageChain();
     }
 
     //EXP对应等级
@@ -140,6 +143,6 @@ public class ExpFunction {
         if (groupId == 0L) {
 
         }
-        groupExpService.deleteExp(new GroupUser(groupId, userId));
+        groupExpService.deleteExp(new User(groupId, userId));
     }
 }

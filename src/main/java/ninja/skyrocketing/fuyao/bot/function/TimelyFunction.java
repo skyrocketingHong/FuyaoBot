@@ -12,7 +12,7 @@ import ninja.skyrocketing.fuyao.bot.config.GlobalVariables;
 import ninja.skyrocketing.fuyao.bot.config.MiraiBotConfig;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupRSSMessage;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupTimelyMessage;
-import ninja.skyrocketing.fuyao.bot.pojo.group.GroupUser;
+import ninja.skyrocketing.fuyao.bot.pojo.user.User;
 import ninja.skyrocketing.fuyao.bot.sender.group.GroupMessageSender;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotConfigService;
 import ninja.skyrocketing.fuyao.bot.service.group.GroupRSSMessageService;
@@ -80,11 +80,11 @@ public class TimelyFunction {
     @Scheduled(cron = "*/10 * * * * ?")
     public static void preventAbuse() {
         long timeStamp = TimeUtil.getTimestamp();
-        for (GroupUser groupUser : MiraiBotConfig.GroupUserTriggerDelay.keySet()) {
+        for (User user : MiraiBotConfig.GroupUserTriggerDelay.keySet()) {
             //当用户已经超过冷却时间时，将用户移除
-            if (MiraiBotConfig.GroupUserTriggerDelay.get(groupUser) + 10 <= timeStamp) {
-                MiraiBotConfig.GroupUserTriggerDelay.remove(groupUser);
-                MiraiBotConfig.GroupUserTriggerDelayNotified.remove(groupUser);
+            if (MiraiBotConfig.GroupUserTriggerDelay.get(user) + 10 <= timeStamp) {
+                MiraiBotConfig.GroupUserTriggerDelay.remove(user);
+                MiraiBotConfig.userTriggerDelayNotified.remove(user);
             }
         }
     }
@@ -127,7 +127,8 @@ public class TimelyFunction {
                     "🔔 \"" + feed.getTitle() + "\"" +
                             " 在 " + TimeUtil.dateTimeFormatter(firstEntryPublishedDate) +
                             " 推送了：\n" +
-                            firstEntry.getTitle() + "\n" + firstEntry.getLink();
+                            firstEntry.getTitle()
+                            + "\n" + firstEntry.getLink();
             PushMessage pushMessage = new PushMessage(resultMessage, firstEntryPublishedDate, firstEntry.getLink());
             urlAndPushMessageMap.put(rssUrl, pushMessage);
         }
@@ -182,7 +183,7 @@ public class TimelyFunction {
                         firstEntry.getDescription().getValue()
                                 .replace("<br>", "\n")
                                 .replace("\n（欢迎到评论区理性发言，友好讨论）", "")
-                                .replace("详情点击👉", "新闻详情请点击👇\n");
+                                .replace("详情点击👉.*", "");
             } else {
                 resultMessage = "☀ 群友们早上好啊\n由于\"即刻\" APP 没有推送，今天没有“一觉醒来发生了什么”";
             }

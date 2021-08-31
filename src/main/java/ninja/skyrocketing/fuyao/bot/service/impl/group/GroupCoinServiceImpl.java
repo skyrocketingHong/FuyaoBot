@@ -2,7 +2,7 @@ package ninja.skyrocketing.fuyao.bot.service.impl.group;
 
 import ninja.skyrocketing.fuyao.bot.mapper.group.GroupCoinMapper;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupCoin;
-import ninja.skyrocketing.fuyao.bot.pojo.group.GroupUser;
+import ninja.skyrocketing.fuyao.bot.pojo.user.User;
 import ninja.skyrocketing.fuyao.bot.service.group.GroupCoinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,8 +21,8 @@ public class GroupCoinServiceImpl implements GroupCoinService {
     }
 
     @Override
-    public GroupCoin getCoinByGroupUser(GroupUser groupUser) {
-        return groupCoinMapper.selectByPrimaryKey(groupUser.getGroupId(), groupUser.getUserId());
+    public GroupCoin getCoinByGroupUser(User user) {
+        return groupCoinMapper.selectByPrimaryKey(user.getGroupId(), user.getUserId());
     }
 
     @Override
@@ -36,8 +36,8 @@ public class GroupCoinServiceImpl implements GroupCoinService {
     }
 
     @Override
-    public int deleteCoin(GroupUser groupUser) {
-        return groupCoinMapper.deleteByPrimaryKey(groupUser.getGroupId(), groupUser.getUserId());
+    public int deleteCoin(User user) {
+        return groupCoinMapper.deleteByPrimaryKey(user.getGroupId(), user.getUserId());
     }
 
     @Override

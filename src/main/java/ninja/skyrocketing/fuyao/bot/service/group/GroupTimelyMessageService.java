@@ -1,7 +1,7 @@
 package ninja.skyrocketing.fuyao.bot.service.group;
 
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupTimelyMessage;
-import ninja.skyrocketing.fuyao.bot.pojo.group.GroupUser;
+import ninja.skyrocketing.fuyao.bot.pojo.user.User;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
 public interface GroupTimelyMessageService {
     List<GroupTimelyMessage> getAllTimelyMessage();
 
-    int deleteSentMessageByGroupUser(GroupUser groupUser);
+    int deleteSentMessageByGroupUser(User user);
 
     int deleteSentMessageById(Long groupId, Long userId);
 }

@@ -2,12 +2,11 @@ package ninja.skyrocketing.fuyao.bot.function;
 
 import cn.hutool.http.HttpUtil;
 import lombok.NoArgsConstructor;
-import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Message;
 import ninja.skyrocketing.fuyao.bot.config.MiraiBotConfig;
 import ninja.skyrocketing.fuyao.bot.pojo.game.GameHsCard;
-import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessage;
+import ninja.skyrocketing.fuyao.bot.pojo.user.UserMessage;
 import ninja.skyrocketing.fuyao.bot.service.game.GameHsCardService;
 import ninja.skyrocketing.fuyao.util.FileUtil;
 import ninja.skyrocketing.fuyao.util.MessageUtil;
@@ -37,36 +36,36 @@ public class SmallGamesFunction {
     /**
      * 投骰子
      */
-    public static Message rollADice(GroupMessage groupMessage) {
+    public static Message rollADice(UserMessage userMessage) {
         int randomNum = RandomUtil.randomNum(100);
         String[] dice = new String[]{"⚀", "⚁", "⚂", "⚃", "⚄", "⚅"};
-        groupMessage.getMessageChainBuilder().add(dice[randomNum % 6] + " 点数为 " + (randomNum % 6 + 1));
-        return groupMessage.getMessageChainBuilderAsMessageChain();
+        userMessage.getMessageChainBuilder().add(dice[randomNum % 6] + " 点数为 " + (randomNum % 6 + 1));
+        return userMessage.getMessageChainBuilderAsMessageChain();
     }
 
     /**
      * 石头剪刀布
      */
-    public static Message rockPaperScissors(GroupMessage groupMessage) {
+    public static Message rockPaperScissors(UserMessage userMessage) {
         int randomNum = RandomUtil.randomNum(100);
         String[] rockPaperScissorsIcon = new String[]{"✊", "✌", "✋"};
         String[] rockPaperScissorsText = new String[]{" 石头 ", " 剪刀 ", " 布 "};
-        groupMessage.getMessageChainBuilder().add(rockPaperScissorsIcon[randomNum % 3] + " 手势为 " + rockPaperScissorsText[randomNum % 3]);
-        return groupMessage.getMessageChainBuilderAsMessageChain();
+        userMessage.getMessageChainBuilder().add(rockPaperScissorsIcon[randomNum % 3] + " 手势为 " + rockPaperScissorsText[randomNum % 3]);
+        return userMessage.getMessageChainBuilderAsMessageChain();
     }
 
     /**
     * 炉石开包
     * */
-    public static Message hearthStone(GroupMessage groupMessage) throws IOException {
-        MessageReceipt<Group> messageReceipt = MessageUtil.waitingMessage(groupMessage, "正在开包...");
+    public static Message hearthStone(UserMessage userMessage) throws IOException {
+        MessageReceipt messageReceipt = MessageUtil.waitingMessage(userMessage, "正在开包...");
         //从数据库中随机取出5张卡，放在List中
         List<GameHsCard> gameHsCardList = gameHsCardService.selectBySetOrderByRandom();
         //卡的图片的List，为图片拼接准备
         List<File> cardImageFileList = new ArrayList<>();
         //生成的新图片的文件名，将卡的id直接拼在一起
         StringBuilder jointCardFileName = new StringBuilder();
-        groupMessage.getMessageChainBuilder().add("🎁 贫瘠之地的锤炼\n");
+        userMessage.getMessageChainBuilder().add("🎁 贫瘠之地的锤炼\n");
         //遍历5张卡
         for (GameHsCard gameHsCard : gameHsCardList) {
             jointCardFileName.append(gameHsCard.getId());
@@ -78,7 +77,7 @@ public class SmallGamesFunction {
             }
             cardImageFileList.add(cardImageFile);
             //生成消息
-            groupMessage.getMessageChainBuilder().add(gameHsCard.getRarity() + " " + gameHsCard.getName() + "\n");
+            userMessage.getMessageChainBuilder().add(gameHsCard.getRarity() + " " + gameHsCard.getName() + "\n");
         }
         //拼接后的图片的保存位置
         File jointCardFile = new File(MiraiBotConfig.HS_CACHE_PATH + FileUtil.separator + jointCardFileName + ".png");
@@ -86,8 +85,8 @@ public class SmallGamesFunction {
         if (!jointCardFile.exists()) {
             FileUtil.jointPic(cardImageFileList, jointCardFile);
         }
-        groupMessage.getMessageChainBuilder().add(MessageUtil.uploadImageToGroup(groupMessage.getGroupMessageEvent().getGroup(), jointCardFile));
+        userMessage.getMessageChainBuilder().add(MessageUtil.uploadImageToGroup(userMessage.getGroupMessageEvent().getGroup(), jointCardFile));
         messageReceipt.recall();
-        return groupMessage.getMessageChainBuilderAsMessageChain();
+        return userMessage.getMessageChainBuilderAsMessageChain();
     }
 }

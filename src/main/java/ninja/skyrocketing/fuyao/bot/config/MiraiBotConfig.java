@@ -14,7 +14,7 @@ import ninja.skyrocketing.fuyao.bot.listener.friend.FriendMessageListener;
 import ninja.skyrocketing.fuyao.bot.listener.group.GroupEventListener;
 import ninja.skyrocketing.fuyao.bot.listener.group.GroupMessageListener;
 import ninja.skyrocketing.fuyao.bot.pojo.bot.BotQQ;
-import ninja.skyrocketing.fuyao.bot.pojo.group.GroupUser;
+import ninja.skyrocketing.fuyao.bot.pojo.user.User;
 import ninja.skyrocketing.fuyao.bot.sender.friend.FriendMessageSender;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotConfigService;
 import ninja.skyrocketing.fuyao.util.FileUtil;
@@ -58,11 +58,11 @@ public class MiraiBotConfig {
     /**
      * 全局防止滥用变量
      * */
-    public static Map<GroupUser, Long> GroupUserTriggerDelay = new HashMap<>();
+    public static Map<User, Long> GroupUserTriggerDelay = new HashMap<>();
     /**
      * 全局防止滥用（已通知）变量
      * */
-    public static List<GroupUser> GroupUserTriggerDelayNotified = new ArrayList<>();
+    public static List<User> userTriggerDelayNotified = new ArrayList<>();
 
     /**
      * 根据模式获得不同的qq号

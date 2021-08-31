@@ -2,6 +2,7 @@ package ninja.skyrocketing.fuyao.bot.pojo.group;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.*;
+import ninja.skyrocketing.fuyao.bot.pojo.user.User;
 
 /**
  * @author skyrocketing Hong
@@ -31,9 +32,9 @@ public class GroupFishing {
     private String fish5;
 
     //根据坑位ID插入鱼
-    public GroupFishing(GroupUser groupUser, String fishId, int slotId) {
-        this.groupId = groupUser.getGroupId();
-        this.userId = groupUser.getUserId();
+    public GroupFishing(User user, String fishId, int slotId) {
+        this.groupId = user.getGroupId();
+        this.userId = user.getUserId();
         switch (slotId) {
             case 0, 1 -> this.fish1 = fishId;
             case 2 -> this.fish2 = fishId;

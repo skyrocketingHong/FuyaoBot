@@ -2,7 +2,7 @@ package ninja.skyrocketing.fuyao.bot.service.impl.group;
 
 import ninja.skyrocketing.fuyao.bot.mapper.group.GroupExpMapper;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupExp;
-import ninja.skyrocketing.fuyao.bot.pojo.group.GroupUser;
+import ninja.skyrocketing.fuyao.bot.pojo.user.User;
 import ninja.skyrocketing.fuyao.bot.service.group.GroupExpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,8 +20,8 @@ public class GroupExpServiceImpl implements GroupExpService {
     }
 
     @Override
-    public GroupExp getExpByGroupUser(GroupUser groupUser) {
-        return groupExpMapper.selectByPrimaryKey(groupUser.getGroupId(), groupUser.getUserId());
+    public GroupExp getExpByGroupUser(User user) {
+        return groupExpMapper.selectByPrimaryKey(user.getGroupId(), user.getUserId());
     }
 
     @Override
@@ -35,8 +35,8 @@ public class GroupExpServiceImpl implements GroupExpService {
     }
 
     @Override
-    public int deleteExp(GroupUser groupUser) {
-        return groupExpMapper.deleteByPrimaryKey(groupUser.getGroupId(), groupUser.getUserId());
+    public int deleteExp(User user) {
+        return groupExpMapper.deleteByPrimaryKey(user.getGroupId(), user.getUserId());
     }
 
     @Override

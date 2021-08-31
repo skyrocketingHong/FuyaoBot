@@ -271,7 +271,8 @@ public class GroupEventListener extends SimpleListenerHost {
         messageChainBuilder.add("💬 群名片修改提醒\n");
         messageChainBuilder.add(MessageUtil.userNotify(event.getUser(), true));
         messageChainBuilder.add("\n的群名片从 \"" + event.getOrigin() + "\" 修改为 \"" + event.getNew() + "\"");
-        GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
+        messageChainBuilder.add("\n(提醒消息将在1分钟内自动撤回)");
+        GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup(), 60000L);
         return ListeningStatus.LISTENING;
     }
 

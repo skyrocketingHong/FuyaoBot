@@ -1,16 +1,33 @@
 package ninja.skyrocketing.fuyao.bot.sender.friend;
 
 import net.mamoe.mirai.contact.Friend;
+import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
+import ninja.skyrocketing.fuyao.bot.pojo.user.UserMessage;
 import ninja.skyrocketing.fuyao.util.LogUtil;
+import ninja.skyrocketing.fuyao.util.MessageUtil;
+import org.springframework.stereotype.Component;
 
 /**
  * @author skyrocketing Hong
  * @date 2021-03-14 14:07:14
  */
 
+@Component
 public class FriendMessageSender {
+    /**
+     * 消息发送器
+     */
+    public static Message sender(FriendMessageEvent event) {
+        UserMessage userMessage = new UserMessage(event);
+        String className = MessageUtil.matchedClass(userMessage);
+        if (className != null) {
+            return MessageUtil.runByInvoke(className, userMessage);
+        }
+        return null;
+    }
+
     /**
      * 根据群号发消息并保存日志
      * @param message Message

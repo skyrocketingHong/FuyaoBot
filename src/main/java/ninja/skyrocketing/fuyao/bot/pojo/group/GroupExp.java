@@ -2,6 +2,7 @@ package ninja.skyrocketing.fuyao.bot.pojo.group;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.*;
+import ninja.skyrocketing.fuyao.bot.pojo.user.User;
 
 import java.util.Date;
 
@@ -26,15 +27,15 @@ public class GroupExp {
 
     private Date signInDate;
 
-    public GroupExp(GroupUser groupUser, long exp) {
-        this.userId = groupUser.getUserId();
-        this.groupId = groupUser.getGroupId();
+    public GroupExp(User user, long exp) {
+        this.userId = user.getUserId();
+        this.groupId = user.getGroupId();
         this.exp = exp;
     }
 
-    public GroupExp(GroupUser groupUser, long exp, Date date) {
-        this.userId = groupUser.getUserId();
-        this.groupId = groupUser.getGroupId();
+    public GroupExp(User user, long exp, Date date) {
+        this.userId = user.getUserId();
+        this.groupId = user.getGroupId();
         this.exp = exp;
         this.signInDate = date;
     }

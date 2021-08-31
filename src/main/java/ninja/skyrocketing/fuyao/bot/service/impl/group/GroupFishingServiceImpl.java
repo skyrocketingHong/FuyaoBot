@@ -2,7 +2,7 @@ package ninja.skyrocketing.fuyao.bot.service.impl.group;
 
 import ninja.skyrocketing.fuyao.bot.mapper.group.GroupFishingMapper;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupFishing;
-import ninja.skyrocketing.fuyao.bot.pojo.group.GroupUser;
+import ninja.skyrocketing.fuyao.bot.pojo.user.User;
 import ninja.skyrocketing.fuyao.bot.service.group.GroupFishingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,8 +20,8 @@ public class GroupFishingServiceImpl implements GroupFishingService {
     }
 
     @Override
-    public GroupFishing getGroupFishingByGroupUser(GroupUser groupUser) {
-        return groupFishingMapper.selectByPrimaryKey(groupUser.getGroupId(), groupUser.getUserId());
+    public GroupFishing getGroupFishingByGroupUser(User user) {
+        return groupFishingMapper.selectByPrimaryKey(user.getGroupId(), user.getUserId());
     }
 
     @Override
@@ -35,8 +35,8 @@ public class GroupFishingServiceImpl implements GroupFishingService {
     }
 
     @Override
-    public int deleteFishing(GroupUser groupUser) {
-        return groupFishingMapper.deleteByPrimaryKey(groupUser.getGroupId(), groupUser.getUserId());
+    public int deleteFishing(User user) {
+        return groupFishingMapper.deleteByPrimaryKey(user.getGroupId(), user.getUserId());
     }
 
     @Override

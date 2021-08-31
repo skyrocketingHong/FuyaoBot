@@ -16,7 +16,7 @@ import ninja.skyrocketing.fuyao.bot.config.MiraiBotConfig;
 import ninja.skyrocketing.fuyao.bot.function.EasterEggFunction;
 import ninja.skyrocketing.fuyao.bot.function.NotificationFunction;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessageInfo;
-import ninja.skyrocketing.fuyao.bot.pojo.group.GroupUser;
+import ninja.skyrocketing.fuyao.bot.pojo.user.User;
 import ninja.skyrocketing.fuyao.bot.sender.group.GroupMessageSender;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotBanedGroupService;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotConfigService;
@@ -72,7 +72,7 @@ public class GroupMessageListener extends SimpleListenerHost {
                 botBanedUserService.isBaned(event.getSender().getId())) {
             return ListeningStatus.LISTENING;
         }
-        GroupUser groupUser = GroupUser.builder().groupId(groupId).userId(event.getSender().getId()).build();
+        User user = User.builder().groupId(groupId).userId(event.getSender().getId()).build();
         Long timestamp = TimeUtil.getTimestamp();
         //获取消息
         Message messageInGroup = event.getMessage();
@@ -82,11 +82,11 @@ public class GroupMessageListener extends SimpleListenerHost {
         if (messageInGroupToString.matches(".*\\[mirai:at:" + event.getBot().getId() + "].*") &&
                 !messageInGroupToString.matches(".*\\[mirai:quote:\\[\\d*],\\[\\d*]].*")) {
             //防滥用判断
-            if (MessageUtil.preventingAbuse(timestamp, groupUser, event)) {
+            if (MessageUtil.preventingAbuse(timestamp, user, event)) {
                 return ListeningStatus.LISTENING;
             }
             //将触发用户添加进全局map中
-            MiraiBotConfig.GroupUserTriggerDelay.put(groupUser, timestamp);
+            MiraiBotConfig.GroupUserTriggerDelay.put(user, timestamp);
             //被@后返回帮助文案
             MessageReceipt<Group> receipt = GroupMessageSender.sendMessageByGroupIdWithReceipt(botConfigService.getConfigValueByKey("reply"), event.getGroup());
             GroupMessageInfo groupMessageInfo = new GroupMessageInfo(event);
@@ -100,7 +100,7 @@ public class GroupMessageListener extends SimpleListenerHost {
         //拦截以触发指令开头的消息
         else if (messageInGroupContentToString.matches("^[~～/].+")) {
             //防滥用判断
-            if (MessageUtil.preventingAbuse(timestamp, groupUser, event)) {
+            if (MessageUtil.preventingAbuse(timestamp, user, event)) {
                 return ListeningStatus.LISTENING;
             }
             //调用消息对应的实现类，并保存返回值（对应的回复）
@@ -111,7 +111,7 @@ public class GroupMessageListener extends SimpleListenerHost {
                 messageChainBuilder.add(MessageUtil.userNotify(event.getSender(), true));
                 messageChainBuilder.add("\n");
                 messageChainBuilder.add(message);
-                MiraiBotConfig.GroupUserTriggerDelay.put(groupUser, timestamp);
+                MiraiBotConfig.GroupUserTriggerDelay.put(user, timestamp);
                 MessageReceipt<Group> receipt = GroupMessageSender.sendMessageByGroupIdWithReceipt(messageChainBuilder, event.getGroup());
                 GroupMessageInfo groupMessageInfo = new GroupMessageInfo(event);
                 //存放触发消息

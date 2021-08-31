@@ -2,7 +2,7 @@ package ninja.skyrocketing.fuyao.bot.service.impl.group;
 
 import ninja.skyrocketing.fuyao.bot.mapper.group.GroupTimelyMessageMapper;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupTimelyMessage;
-import ninja.skyrocketing.fuyao.bot.pojo.group.GroupUser;
+import ninja.skyrocketing.fuyao.bot.pojo.user.User;
 import ninja.skyrocketing.fuyao.bot.service.group.GroupTimelyMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,8 +27,8 @@ public class GroupTimelyMessageServiceImpl implements GroupTimelyMessageService 
     }
 
     @Override
-    public int deleteSentMessageByGroupUser(GroupUser groupUser) {
-        return groupTimelyMessageMapper.deleteByPrimaryKey(groupUser.getGroupId(), groupUser.getUserId());
+    public int deleteSentMessageByGroupUser(User user) {
+        return groupTimelyMessageMapper.deleteByPrimaryKey(user.getGroupId(), user.getUserId());
     }
 
     @Override
