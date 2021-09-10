@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * @author skyrocketing Hong
@@ -215,5 +216,52 @@ public class MessageUtil {
             return true;
         }
         return false;
+    }
+    
+    /**
+     * 根据数字获取对应的emoji
+     * */
+    public static String getEmojiNumber(int num) {
+        return getEmojiNumber(String.valueOf(num));
+    }
+    public static String getEmojiNumber(String num) {
+        if (!num.matches("^[0-9]+$")) {
+            return null;
+        }
+        if (Objects.equals(num, "10")) {
+            return "🔟";
+        }
+        StringBuilder result = new StringBuilder();
+        for (char c : num.toCharArray()) {
+            switch (c) {
+                case '1' -> result.append("1️⃣");
+                case '2' -> result.append("2️⃣");
+                case '3' -> result.append("3️⃣");
+                case '4' -> result.append("4️⃣");
+                case '5' -> result.append("5️⃣");
+                case '6' -> result.append("6️⃣");
+                case '7' -> result.append("7️⃣");
+                case '8' -> result.append("8️⃣");
+                case '9' -> result.append("9️⃣");
+                case '0' -> result.append("0️⃣");
+            }
+        }
+        return result.toString();
+    }
+    
+    /**
+     * 布尔值可视化
+     * */
+    public static String getBooleanEmoji(Boolean bool) {
+        return getBooleanEmoji(bool.toString());
+    }
+    public static String getBooleanEmoji(String boolString) {
+        if (boolString.equals("true")) {
+            return "\uD83D\uDE4B";
+        } else if (boolString.equals("false")) {
+            return "\uD83D\uDE45";
+        } else {
+            return null;
+        }
     }
 }

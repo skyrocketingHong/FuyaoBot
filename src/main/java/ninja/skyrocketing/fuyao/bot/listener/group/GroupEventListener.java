@@ -168,7 +168,7 @@ public class GroupEventListener extends SimpleListenerHost {
     public ListeningStatus onMemberHonorChange(MemberHonorChangeEvent event) {
         String honorName = MessageUtil.getGroupHonorTypeName(event.getHonorType());
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("👍 恭喜 ");
+        messageChainBuilder.add("🐉 恭喜 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getUser(), true));
         messageChainBuilder.add("\n于 " + TimeUtil.dateTimeFormatter(new Date()) + " " +
                 "喜提" +  " \"" + honorName + "\" "
@@ -197,7 +197,7 @@ public class GroupEventListener extends SimpleListenerHost {
     @EventHandler
     public ListeningStatus onMemberSpecialTitleChange(MemberSpecialTitleChangeEvent event) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("👍 恭喜 ");
+        messageChainBuilder.add("👏 恭喜 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getMember(), false));
         messageChainBuilder.add("\n于 " + TimeUtil.dateTimeFormatter(new Date()) + " " +
                 "喜提 \"" + event.getNew() + "\" 头衔\n"

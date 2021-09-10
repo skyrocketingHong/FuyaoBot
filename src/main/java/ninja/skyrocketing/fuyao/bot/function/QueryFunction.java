@@ -8,6 +8,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Message;
+import ninja.skyrocketing.fuyao.FuyaoBotApplication;
 import ninja.skyrocketing.fuyao.bot.pojo.user.UserMessage;
 import ninja.skyrocketing.fuyao.util.HttpUtil;
 import ninja.skyrocketing.fuyao.util.MessageUtil;
@@ -50,12 +51,15 @@ public class QueryFunction {
      **/
     public static Message getOverwatchArcadeModes(UserMessage userMessage) throws IOException, ParseException {
         MessageReceipt messageReceipt = MessageUtil.waitingMessage(userMessage, "正在等待 API 返回数据");
-        JSONObject owModes = HttpUtil.readJsonFromURL("https://overwatcharcade.today/api/overwatch/today");
-        SimpleDateFormat updateDateTime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
-        userMessage.getMessageChainBuilder().add("今日守望先锋街机模式列表\n更新时间：" +
-                DateTime.of(updateDateTime.parse(owModes.getByPath("created_at", String.class))) + "\n");
-        for (int i = 1; i < 8; i++) {
-            userMessage.getMessageChainBuilder().add(i + ". " + owModes.getByPath("modes.tile_" + i + ".name", String.class) + "\n");
+        JSONObject owModes = HttpUtil.readJsonFromURL("https://overwatcharcade.today/api/v1/overwatch/today");
+        SimpleDateFormat updateDateTime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+        userMessage.getMessageChainBuilder().add("🎮 今日守望先锋街机模式列表\n更新时间: " +
+                DateTime.of(updateDateTime.parse(owModes.getByPath("data.createdAt", String.class))) + "\n");
+        JSONArray modesArray = owModes.getJSONObject("data").getJSONArray("modes");
+        for (int i = 1; i < modesArray.size(); i++) {
+            userMessage.getMessageChainBuilder().add(MessageUtil.getEmojiNumber(i) + " ");
+            userMessage.getMessageChainBuilder().add("名称: " + modesArray.getJSONObject(i - 1).getByPath("name",String.class) + "\n");
+            userMessage.getMessageChainBuilder().add("　   玩家人数: " + modesArray.getJSONObject(i - 1).getByPath("players",String.class) + "\n");
         }
         messageReceipt.recall();
         return userMessage.getMessageChainBuilder().asMessageChain();
@@ -115,5 +119,29 @@ public class QueryFunction {
 
         }
         return MusicSearchUtil.musicQuery(str, false);
+    }
+    
+    /**
+     * 群内设置查询
+     * */
+    public static Message groupSettings(UserMessage userMessage) {
+        userMessage.getMessageChainBuilder().add("⚙ 本群设置\n");
+        userMessage.getMessageChainBuilder().add("自动加群审批: " + MessageUtil.getBooleanEmoji(userMessage.getGroupMessageEvent().getGroup().getSettings().isAutoApproveEnabled()) + "\n");
+        userMessage.getMessageChainBuilder().add("允许群员邀请好友入群: " + MessageUtil.getBooleanEmoji(userMessage.getGroupMessageEvent().getGroup().getSettings().isAllowMemberInvite()) + "\n");
+        userMessage.getMessageChainBuilder().add("匿名聊天: " + MessageUtil.getBooleanEmoji(userMessage.getGroupMessageEvent().getGroup().getSettings().isAnonymousChatEnabled()) + "\n");
+        userMessage.getMessageChainBuilder().add("全体禁言: " + MessageUtil.getBooleanEmoji(userMessage.getGroupMessageEvent().getGroup().getSettings().isMuteAll()));
+        return userMessage.getMessageChainBuilderAsMessageChain();
+    }
+    
+    /**
+     * bot 状态查询
+     * */
+    public static Message botStatus(UserMessage userMessage) {
+        userMessage.getMessageChainBuilder().add("📊 扶摇 bot 的状态\n");
+        userMessage.getMessageChainBuilder().add("截至 " + TimeUtil.nowDateTime() + "\n");
+        userMessage.getMessageChainBuilder().add("已加入群聊 " + MessageUtil.getEmojiNumber(FuyaoBotApplication.bot.getGroups().size()) + " 个\n");
+        userMessage.getMessageChainBuilder().add("已添加好友 " + MessageUtil.getEmojiNumber(FuyaoBotApplication.bot.getFriends().size()) + " 人\n");
+        userMessage.getMessageChainBuilder().add("已被 " + MessageUtil.getEmojiNumber(FuyaoBotApplication.bot.getStrangers().size()) + " 人添加为单向好友");
+        return userMessage.getMessageChainBuilderAsMessageChain();
     }
 }

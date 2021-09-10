@@ -21,7 +21,7 @@ public class TimeUtil {
 
     //直接获取格式化后的当前时间
     public static String dateTimeFormatter(Date date) {
-        return dateFormatter(date) + " " + timeFormatter(date);
+        return dateFormatter(date) + " " + TimeUtil.getClockEmoji(date.getHours()) + " " + timeFormatter(date);
     }
     public static String nowDateTime() {
         return dateTimeFormatter(new Date());
