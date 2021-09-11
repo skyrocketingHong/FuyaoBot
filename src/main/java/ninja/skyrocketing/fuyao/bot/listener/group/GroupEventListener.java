@@ -1,5 +1,6 @@
 package ninja.skyrocketing.fuyao.bot.listener.group;
 
+import cn.hutool.core.date.DateUtil;
 import kotlin.coroutines.CoroutineContext;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
@@ -7,7 +8,6 @@ import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.ListeningStatus;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.*;
-import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.fuyao.bot.config.GlobalVariables;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessageInfo;
@@ -18,8 +18,6 @@ import ninja.skyrocketing.fuyao.util.LogUtil;
 import ninja.skyrocketing.fuyao.util.MessageUtil;
 import ninja.skyrocketing.fuyao.util.TimeUtil;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -47,7 +45,6 @@ public class GroupEventListener extends SimpleListenerHost {
     @EventHandler
     public ListeningStatus onGroupRecall(MessageRecallEvent.GroupRecall event) {
         GroupMessageInfo groupMessageInfo = new GroupMessageInfo(event.getGroup().getId(), event.getMessageIds()[0]);
-        System.out.println(GlobalVariables.getGlobalVariables().getTriggerGroupMessageInfoMap().containsKey(groupMessageInfo));
         if (GlobalVariables.getGlobalVariables().getTriggerGroupMessageInfoMap().containsKey(groupMessageInfo)) {
             try {
                 if (!GlobalVariables.getGlobalVariables().getTriggerGroupMessageInfoMap().get(groupMessageInfo)) {
@@ -64,8 +61,7 @@ public class GroupEventListener extends SimpleListenerHost {
                     }
                 }
             } catch (Exception e) {
-                Logger log =  LoggerFactory.getLogger(GroupEventListener.class);
-                log.error("撤回消息时出现错误，错误详情: " + e.getMessage());
+                LogUtil.eventLog(e.getMessage(), "撤回消息时出现错误");
             }
         }
         return ListeningStatus.LISTENING;
@@ -109,7 +105,7 @@ public class GroupEventListener extends SimpleListenerHost {
     @EventHandler
     public ListeningStatus onQuit(MemberLeaveEvent.Quit event) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("⚠ 群员减少提醒\n群员 ");
+        messageChainBuilder.add("🏃 群员退群\n群员 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getMember(), false));
         messageChainBuilder.add(" 悄悄地溜了...\n(提醒消息将在1分钟内自动撤回)");
         //清理数据
@@ -125,11 +121,11 @@ public class GroupEventListener extends SimpleListenerHost {
     @EventHandler
     public ListeningStatus onKick(MemberLeaveEvent.Kick event) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("⚠ 群员减少提醒\n群员 ");
+        messageChainBuilder.add("✈️ 群员被移除\n群员 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getMember(), false));
         messageChainBuilder.add(" 已被 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getOperator(), false));
-        messageChainBuilder.add(" 移出群聊。\n(提醒消息将在1分钟内自动撤回)");
+        messageChainBuilder.add(" 移出群聊\n(提醒消息将在1分钟内自动撤回)");
         //清理数据
         DBUtil.cleanDataAfterLeave(event.getGroup().getId(), event.getMember().getId());
         //撤回消息
@@ -165,10 +161,10 @@ public class GroupEventListener extends SimpleListenerHost {
      * 群员荣誉修改
      */
     @EventHandler
-    public ListeningStatus onMemberHonorChange(MemberHonorChangeEvent event) {
+    public ListeningStatus onMemberHonorChange(MemberHonorChangeEvent.Achieve event) {
         String honorName = MessageUtil.getGroupHonorTypeName(event.getHonorType());
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("🐉 恭喜 ");
+        messageChainBuilder.add("🐲 恭喜 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getUser(), true));
         messageChainBuilder.add("\n于 " + TimeUtil.dateTimeFormatter(new Date()) + " " +
                 "喜提" +  " \"" + honorName + "\" "
@@ -183,7 +179,7 @@ public class GroupEventListener extends SimpleListenerHost {
     @EventHandler
     public ListeningStatus onGroupTalkativeChange(GroupTalkativeChangeEvent event) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("🐉 恭喜新龙王 ");
+        messageChainBuilder.add("🐲 恭喜新龙王 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getNow(), true));
         messageChainBuilder.add("\n前任龙王为 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getPrevious(), false));
@@ -202,7 +198,6 @@ public class GroupEventListener extends SimpleListenerHost {
         messageChainBuilder.add("\n于 " + TimeUtil.dateTimeFormatter(new Date()) + " " +
                 "喜提 \"" + event.getNew() + "\" 头衔\n"
         );
-        messageChainBuilder.add(new At(event.getMember().getId()));
         GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
         return ListeningStatus.LISTENING;
     }
@@ -268,11 +263,66 @@ public class GroupEventListener extends SimpleListenerHost {
             return ListeningStatus.LISTENING;
         }
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("💬 群名片修改提醒\n");
-        messageChainBuilder.add(MessageUtil.userNotify(event.getUser(), true));
-        messageChainBuilder.add("\n的群名片从 \"" + event.getOrigin() + "\" 修改为 \"" + event.getNew() + "\"");
+        messageChainBuilder.add("💬 群名片修改\n");
+        messageChainBuilder.add("🔙 原名片: \"" + event.getOrigin() + "\"\n");
+        messageChainBuilder.add("🆕 新名片: \"" + event.getNew() + "\"\n");
+        messageChainBuilder.add("🔧 修改人: " + MessageUtil.userNotify(event.getMember(), false));
         messageChainBuilder.add("\n(提醒消息将在1分钟内自动撤回)");
         GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup(), 60000L);
+        return ListeningStatus.LISTENING;
+    }
+    
+    /**
+     * 监听群名修改
+     * */
+    @EventHandler
+    public ListeningStatus onGroupNameChangeEvent(GroupNameChangeEvent event) {
+        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+        messageChainBuilder.add("💬 群名称修改\n");
+        messageChainBuilder.add("🔙 原名称: \"" + event.getOrigin() + "\"\n");
+        messageChainBuilder.add("🆕 新名称: \"" + event.getNew() + "\"\n");
+        messageChainBuilder.add("🔧 修改人: " + MessageUtil.userNotify(event.getOperator(), false));
+        GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
+        return ListeningStatus.LISTENING;
+    }
+    
+    /**
+     * 监听群成员被禁言
+     * */
+    @EventHandler
+    public ListeningStatus onMemberMuteEvent(MemberMuteEvent event) {
+        Date date = new Date();
+        int durationSeconds = event.getDurationSeconds();
+        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+        messageChainBuilder.add("🤐 群员被禁言\n");
+        messageChainBuilder.add("🚫 被禁言人: " + MessageUtil.userNotify(event.getMember(), false) + "\n");
+        messageChainBuilder.add("👮 操作人: " + MessageUtil.userNotify(event.getOperator(), false) + "\n");
+        messageChainBuilder.add("⏱️ 禁言时长: " + DateUtil.secondToTime(durationSeconds) + "\n");
+        messageChainBuilder.add("📅 预计解禁时间: " + TimeUtil.dateTimeFormatter(DateUtil.offsetSecond(date, event.getDurationSeconds())));
+        messageChainBuilder.add("\n(提醒消息将在1分钟内自动撤回)");
+        GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup(), 60000L);
+        return ListeningStatus.LISTENING;
+    }
+    
+    /**
+     * 监听成员被解禁
+     * */
+    @EventHandler
+    public ListeningStatus onMemberUnmuteEvent(MemberUnmuteEvent event) {
+        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+        messageChainBuilder.add("😬 群员被解禁\n");
+        messageChainBuilder.add("✅ 被解禁人: " + MessageUtil.userNotify(event.getMember(), false) + "\n");
+        messageChainBuilder.add("👮 操作人: " + MessageUtil.userNotify(event.getOperator(), false));
+        messageChainBuilder.add("\n(提醒消息将在1分钟内自动撤回)");
+        GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup(), 60000L);
+        return ListeningStatus.LISTENING;
+    }
+    
+    /**
+     * 监听加群申请
+     * */
+    @EventHandler
+    public ListeningStatus onMemberJoinRequestEvent(MemberJoinRequestEvent event) {
         return ListeningStatus.LISTENING;
     }
 

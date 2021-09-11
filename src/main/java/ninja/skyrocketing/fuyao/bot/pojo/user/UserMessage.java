@@ -39,6 +39,7 @@ public class UserMessage {
     
     public UserMessage(FriendMessageEvent event) {
         this.message = event.getMessage().contentToString().replaceFirst("[~～/]", "");
+        this.user.setGroupId(0L);
         this.user.setUserId(event.getSender().getId());
         this.friendMessageEvent = event;
     }
@@ -48,6 +49,6 @@ public class UserMessage {
     }
     
     public boolean isFriendMessage() {
-        return this.user.getUserId() == 0L;
+        return this.user.getGroupId() == 0L;
     }
 }

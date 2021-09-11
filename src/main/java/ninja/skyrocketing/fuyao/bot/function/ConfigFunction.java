@@ -3,6 +3,14 @@ package ninja.skyrocketing.fuyao.bot.function;
 import lombok.NoArgsConstructor;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.NormalMember;
+import net.mamoe.mirai.event.events.FriendMessageEvent;
+import net.mamoe.mirai.event.events.GroupMessageEvent;
+import net.mamoe.mirai.message.data.Message;
+import ninja.skyrocketing.fuyao.bot.pojo.user.UserMessage;
+import ninja.skyrocketing.fuyao.bot.sender.friend.FriendMessageSender;
+import ninja.skyrocketing.fuyao.bot.service.bot.BotConfigService;
+import ninja.skyrocketing.fuyao.util.MessageUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,6 +21,11 @@ import org.springframework.stereotype.Component;
 @Component
 @NoArgsConstructor
 public class ConfigFunction {
+	private static BotConfigService botConfigService;
+	@Autowired
+	public ConfigFunction(BotConfigService botConfigService) {
+		ConfigFunction.botConfigService = botConfigService;
+	}
 	/**
 	 * 机器人群名片判断，防止恶意修改
 	 * */
@@ -20,11 +33,35 @@ public class ConfigFunction {
 		NormalMember botInGroup = group.getBotAsMember();
 		//群名片
 		String botNameCard = botInGroup.getNameCard();
-		//bot自己的名字
-		String botNick = botInGroup.getNick();
-		//不同时直接修改为bot的名字
-		if (!botNameCard.equals(botNick)) {
-			botInGroup.setNameCard(botNick);
+		//bot的群名片不为空时直接设为空
+		if (!botNameCard.equals("")) {
+			botInGroup.setNameCard("");
 		}
+	}
+	
+	/**
+	 * 反馈消息
+	 * */
+	public static Message feedbackMessage(UserMessage userMessage) {
+		//生成发给管理员的消息
+		userMessage.getMessageChainBuilder().add("🧑‍💻 收到新反馈\n");
+		if (userMessage.isFriendMessage()) {
+			FriendMessageEvent friendMessageEvent = userMessage.getFriendMessageEvent();
+			userMessage.getMessageChainBuilder().add("发送者: " + MessageUtil.getFriendInfo(friendMessageEvent) + "\n");
+			userMessage.getMessageChainBuilder().add("反馈原文:\n");
+			userMessage.getMessageChainBuilder().add(friendMessageEvent.getMessage());
+		} else {
+			GroupMessageEvent groupMessageEvent = userMessage.getGroupMessageEvent();
+			userMessage.getMessageChainBuilder().add("发送者: " + MessageUtil.getMemberInfo(groupMessageEvent.getSender()) + "\n");
+			userMessage.getMessageChainBuilder().add("发送群: " + MessageUtil.getGroupInfo(groupMessageEvent) + "\n");
+			userMessage.getMessageChainBuilder().add("反馈原文:\n");
+			userMessage.getMessageChainBuilder().add(groupMessageEvent.getMessage());
+		}
+		FriendMessageSender.sendMessageByFriendId(userMessage.getMessageChainBuilder(), Long.valueOf(botConfigService.getConfigValueByKey("admin_user")));
+		//清除之前的消息
+		userMessage.getMessageChainBuilder().clear();
+		//发送给反馈者的消息
+		userMessage.getMessageChainBuilder().add("🧑‍💻 你的反馈已收到并发送给了扶摇 bot 的开发者，开发者将在后期的开发过程中考虑此反馈哦");
+		return userMessage.getMessageChainBuilderAsMessageChain();
 	}
 }

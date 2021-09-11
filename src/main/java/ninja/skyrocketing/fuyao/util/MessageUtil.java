@@ -1,8 +1,10 @@
 package ninja.skyrocketing.fuyao.util;
 
+import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.data.GroupHonorType;
+import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.*;
@@ -41,7 +43,7 @@ public class MessageUtil {
         MessageUtil.botFunctionTriggerService = botFunctionTriggerService;
         MessageUtil.botAdminUserService = botAdminUserService;
     }
-    
+
     /**
      * 根据消息获取对应的实现类
      */
@@ -74,7 +76,7 @@ public class MessageUtil {
         }
         return null;
     }
-    
+
     /**
      * 根据实现类字符串执行对应的代码
      */
@@ -87,7 +89,7 @@ public class MessageUtil {
             return null;
         }
     }
-    
+
     //当群名片为空时返回昵称
     public static String nameOfMember(Member member) {
         return member.getNameCard().isEmpty() ? member.getNick() : member.getNameCard();
@@ -122,6 +124,7 @@ public class MessageUtil {
     public static Image uploadAvatarImageToGroup(Group group, Member member) throws IOException {
         return uploadImageToGroup(group, FileUtil.getAvatarImageFile(member.getId()));
     }
+
     //向QQ群上传图片
     public static Image uploadImageToGroup(Group group, File imageFile) throws IOException {
         ExternalResource externalResource = ExternalResource.create(imageFile);
@@ -175,21 +178,21 @@ public class MessageUtil {
     public static String removeSource(Message message) {
         return message.toString().replaceFirst("\\[mirai:source:\\[-?\\d+],\\[-?\\d+]]","");
     }
-    
+
     /**
      * 从Message中提取消息ID
      * */
     public static int getMessageIDInGroup(Message message) {
         return Integer.parseInt(message.toString().replaceAll("\n|\\n", "").replaceAll("\\[mirai:source:\\[","").replaceAll("],\\[-?\\d+]].*", ""));
     }
-    
+
     /**
      * 判断消息是否相等
      * */
     public static boolean isSame(String a, String b, String c) {
         return a.equals(b) && a.equals(c);
     }
-    
+
     /**
      * 防止滥用
      * */
@@ -217,7 +220,7 @@ public class MessageUtil {
         }
         return false;
     }
-    
+
     /**
      * 根据数字获取对应的emoji
      * */
@@ -248,7 +251,7 @@ public class MessageUtil {
         }
         return result.toString();
     }
-    
+
     /**
      * 布尔值可视化
      * */
@@ -263,5 +266,40 @@ public class MessageUtil {
         } else {
             return null;
         }
+    }
+
+    /**
+     * 根据GroupMessageEvent生成对应的信息
+     * */
+    public static String getGroupInfo(GroupMessageEvent event) {
+        return getGroupInfo(event.getGroup());
+    }
+
+    /**
+     * 根据Group生成对应的信息
+     * */
+    public static String getGroupInfo(Group group) {
+        return "\"" + group.getName() + "\" (" + group.getId() + ")";
+    }
+
+    /**
+     * 根据FriendMessageEvent生成对应的信息
+     * */
+    public static String getFriendInfo(FriendMessageEvent event) {
+        return getFriendInfo(event.getFriend());
+    }
+
+    /**
+     * 根据Friend生成对应的信息
+     * */
+    public static String getFriendInfo(Friend friend) {
+        return "\"" + friend.getNick() + "\" (" + friend.getId() + ")";
+    }
+
+    /**
+     * 根据Mender生成对应的信息
+     * */
+    public static String getMemberInfo(Member friend) {
+        return "\"" + friend.getNick() + "\" (" + friend.getId() + ")";
     }
 }

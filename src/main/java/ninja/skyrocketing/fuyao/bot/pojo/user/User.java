@@ -14,7 +14,7 @@ import lombok.*;
 @EqualsAndHashCode
 @Builder
 public class User {
-    private Long groupId = 0L;
+    private Long groupId;
 
     private Long userId;
 }

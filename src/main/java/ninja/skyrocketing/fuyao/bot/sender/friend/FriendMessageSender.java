@@ -4,6 +4,7 @@ import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
+import ninja.skyrocketing.fuyao.FuyaoBotApplication;
 import ninja.skyrocketing.fuyao.bot.pojo.user.UserMessage;
 import ninja.skyrocketing.fuyao.util.LogUtil;
 import ninja.skyrocketing.fuyao.util.MessageUtil;
@@ -29,7 +30,7 @@ public class FriendMessageSender {
     }
 
     /**
-     * 根据群号发消息并保存日志
+     * 根据Friend发消息并保存日志
      * @param message Message
      * @param friend Friend
      */
@@ -39,7 +40,7 @@ public class FriendMessageSender {
     }
 
     /**
-     * 根据群号发消息并保存日志
+     * 根据Friend发消息并保存日志
      * @param message MessageChainBuilder
      * @param friend Friend
      */
@@ -49,7 +50,7 @@ public class FriendMessageSender {
     }
 
     /**
-     * 根据群号发消息并保存日志
+     * 根据Friend发消息并保存日志
      * @param message String
      * @param friend Friend
      */
@@ -57,5 +58,34 @@ public class FriendMessageSender {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add(message);
         sendMessageByFriendId(messageChainBuilder, friend);
+    }
+    
+    /**
+     * 根据QQ发消息并保存日志
+     * @param message String
+     * @param id Long
+     */
+    public static void sendMessageByFriendId(String message, Long id) {
+        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+        messageChainBuilder.add(message);
+        sendMessageByFriendId(messageChainBuilder, FuyaoBotApplication.bot.getFriend(id));
+    }
+    
+    /**
+     * 根据QQ发消息并保存日志
+     * @param message MessageChainBuilder
+     * @param id Long
+     */
+    public static void sendMessageByFriendId(MessageChainBuilder message, Long id) {
+        sendMessageByFriendId(message, FuyaoBotApplication.bot.getFriend(id));
+    }
+    
+    /**
+     * 根据QQ发消息并保存日志
+     * @param message Message
+     * @param id Long
+     */
+    public static void sendMessageByFriendId(Message message, Long id) {
+        sendMessageByFriendId(message, FuyaoBotApplication.bot.getFriend(id));
     }
 }

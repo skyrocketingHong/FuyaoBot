@@ -45,7 +45,7 @@ public class FriendMessageListener extends SimpleListenerHost {
                 messageChainBuilder.add(message);
                 FriendMessageSender.sendMessageByFriendId(messageChainBuilder, event.getFriend());
             } else {
-                FriendMessageSender.sendMessageByFriendId("😶 私聊模式下暂不支持此功能", event.getFriend());
+                FriendMessageSender.sendMessageByFriendId("😞 没有此功能或私聊模式下暂不支持此功能", event.getFriend());
             }
         }
         //不满足触发命令的通用回复

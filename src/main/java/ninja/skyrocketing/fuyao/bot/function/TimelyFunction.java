@@ -185,7 +185,7 @@ public class TimelyFunction {
                                 .replace("\n（欢迎到评论区理性发言，友好讨论）", "")
                                 .replace("详情点击👉.*", "");
             } else {
-                resultMessage = "☀ 群友们早上好啊\n由于\"即刻\" APP 没有推送，今天没有“一觉醒来发生了什么”";
+                resultMessage = "☀ 群友们早上好啊\n由于抓取 \"即刻\" APP 的 RSS Hub 没有获取到今天的“一觉醒来发生了什么”，所以今天没有这个哦";
             }
         }
         for (Long groupId : GlobalVariables.getGlobalVariables().getMorningMessageList()) {
