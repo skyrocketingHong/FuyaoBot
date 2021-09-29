@@ -161,11 +161,11 @@ public class TimelyFunction {
     }
     
     /**
-     * 每天早上7点29分1秒发送问候消息
+     * 每天早上7点25分1秒发送问候消息
      */
     @Value("${fuyao-bot.rss.morning-url}")
     private String morningRSSURL;
-    @Scheduled(cron = "1 29 7 * * ?")
+    @Scheduled(cron = "1 25 7 * * ?")
     public void morningMessage() {
         //获取RSS Feed
         SyndFeed feed = HttpUtil.getRSSFeed(morningRSSURL);
