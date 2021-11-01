@@ -88,6 +88,7 @@ public class QueryFunction {
                         .replaceAll("\\[|]", "")
                         .split(",");
                 if (trans[0].equals("null")) {
+                    messageReceipt.recall();
                     userMessage.getMessageChainBuilder().add("没有查询到与 \"" + msg + "\" 相关的结果");
                     return userMessage.getMessageChainBuilderAsMessageChain();
                 }

@@ -38,7 +38,7 @@ public class GroupEventListener extends SimpleListenerHost {
     public GroupEventListener(BotConfigService botConfigService) {
         GroupEventListener.botConfigService = botConfigService;
     }
-
+    
     /**
      * 当用户将触发机器人的消息撤回后，自动撤回机器人发的消息
      * */
@@ -156,7 +156,7 @@ public class GroupEventListener extends SimpleListenerHost {
         LogUtil.eventLog(event.toString(), "机器人主动退出群聊");
         return ListeningStatus.LISTENING;
     }
-
+    
     /**
      * 群解散
      * */
@@ -168,7 +168,7 @@ public class GroupEventListener extends SimpleListenerHost {
         LogUtil.eventLog(event.toString(), "群已被解散");
         return ListeningStatus.LISTENING;
     }
-
+    
     /**
      * 群员荣誉修改
      */
@@ -240,7 +240,7 @@ public class GroupEventListener extends SimpleListenerHost {
         GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
         return ListeningStatus.LISTENING;
     }
-
+    
     /**
      * 机器人成功加入了一个新群 (可能是主动加入)
      * */
@@ -278,12 +278,11 @@ public class GroupEventListener extends SimpleListenerHost {
         messageChainBuilder.add("💬 群名片修改\n");
         messageChainBuilder.add("🔙 原名片: \"" + event.getOrigin() + "\"\n");
         messageChainBuilder.add("🆕 新名片: \"" + event.getNew() + "\"\n");
-        messageChainBuilder.add("🔧 修改人: " + MessageUtil.userNotify(event.getMember(), false));
         messageChainBuilder.add("\n(提醒消息将在1分钟内自动撤回)");
         GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup(), 60000L);
         return ListeningStatus.LISTENING;
     }
-
+    
     /**
      * 监听群名修改
      * */
@@ -297,7 +296,7 @@ public class GroupEventListener extends SimpleListenerHost {
         GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
         return ListeningStatus.LISTENING;
     }
-
+    
     /**
      * 监听群成员被禁言
      * */
@@ -315,7 +314,7 @@ public class GroupEventListener extends SimpleListenerHost {
         GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup(), 60000L);
         return ListeningStatus.LISTENING;
     }
-
+    
     /**
      * 监听成员被解禁
      * */
@@ -329,7 +328,7 @@ public class GroupEventListener extends SimpleListenerHost {
         GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup(), 60000L);
         return ListeningStatus.LISTENING;
     }
-
+    
     /**
      * 监听加群申请
      * */

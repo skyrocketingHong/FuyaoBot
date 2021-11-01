@@ -90,7 +90,7 @@ public class MiraiBotConfig {
                 botConfigService.getConfigValueByKey("qq_password"),
                 new BotConfiguration() {{
                     //设备缓存信息
-                    setProtocol(MiraiProtocol.ANDROID_PHONE);
+                    setProtocol(MiraiProtocol.IPAD);
                     fileBasedDeviceInfo("device.json");
                     //心跳策略
                     setHeartbeatStrategy(BotConfiguration.HeartbeatStrategy.STAT_HB);

@@ -36,6 +36,11 @@ public class FriendMessageListener extends SimpleListenerHost {
         Message messageInFriend = event.getMessage();
         String messageInFriendToString = messageInFriend.toString();
         String messageInFriendContentToString = messageInFriend.contentToString();
+        if (messageInFriendContentToString.matches("(((http|ftp|https)://)?)[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\\.[a-z]{2,4}\\b([-a-zA-Z0-9@:%_+.~#?&//=]*)?")
+        ){
+            //不满足触发命令不回复，如果发送的是违禁消息就删除好友
+            event.getFriend().delete();
+        }
         //满足触发命令
         if (messageInFriendContentToString.matches("^[~～/].+")) {
             //调用消息对应的实现类，并保存返回值（对应的回复）
@@ -47,10 +52,6 @@ public class FriendMessageListener extends SimpleListenerHost {
             } else {
                 FriendMessageSender.sendMessageByFriendId("😞 没有此功能或私聊模式下暂不支持此功能", event.getFriend());
             }
-        }
-        //不满足触发命令的通用回复
-        else {
-            FriendMessageSender.sendMessageByFriendId(botConfigService.getConfigValueByKey("friend_reply"), event.getFriend());
         }
         return ListeningStatus.LISTENING;
     }
