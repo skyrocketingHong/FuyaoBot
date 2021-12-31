@@ -91,6 +91,9 @@
 * 功能分群单独开关
 
 # 更新日志
+## 4.5.6.72 (2021-12-31)
+* **更新** Mirai 2.9.0 ([更新日志](https://github.com/mamoe/mirai/releases/tag/v2.9.0))
+
 ## 4.5.5.71 (2021-11-02)
 * **更新** Mirai 2.8.0-RC ([更新日志](https://github.com/mamoe/mirai/releases/tag/v2.8.0-RC))
 * **修改** 登录设备类型
@@ -98,14 +101,12 @@
 * **优化** 私聊发送分享链接后的操作（删除好友）
 * **优化** 部分文案
 
+<details>
+<summary>4.0.0 +</summary>
 ## 4.5.4.70 (2021-09-29)
 * **更新** Mirai 2.8.0-M1 ([更新日志](https://github.com/mamoe/mirai/releases/tag/v2.8.0-M1))
 * **优化** 早间消息发送时间
 * **新增** 监听群解散事件
-
-
-<details>
-<summary>4.0.0 +</summary>
 
 ## 4.5.3.69 (2021-09-11)
 * **更新** 部分依赖
