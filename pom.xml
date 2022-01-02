@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>ninja.skyrocketing.fuyao</groupId>
 	<artifactId>fuyao-bot</artifactId>
-	<version>4.5.6.72</version>
+	<version>4.5.7.73</version>
 	<name>Fuyao bot</name>
 	<description>A QQ bot named Fuyao and bases on Mirai, Spring Boot, MySQL and Mybatis Plus.</description>
 
@@ -32,7 +32,7 @@
 		<dependency>
 			<groupId>net.mamoe</groupId>
 			<artifactId>mirai-core-jvm</artifactId>
-			<version>2.9.0</version>
+			<version>2.9.1</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>atomicfu</artifactId>
@@ -57,7 +57,7 @@
 		<dependency>
 			<groupId>org.jetbrains.kotlinx</groupId>
 			<artifactId>kotlinx-coroutines-core</artifactId>
-			<version>1.5.0</version>
+			<version>1.5.1</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>kotlinx-coroutines-core-jvm</artifactId>
@@ -68,12 +68,12 @@
 		<dependency>
 			<groupId>org.jetbrains.kotlinx</groupId>
 			<artifactId>atomicfu</artifactId>
-			<version>0.16.1</version>
+			<version>0.16.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jetbrains.kotlinx</groupId>
 			<artifactId>kotlinx-coroutines-core-jvm</artifactId>
-			<version>1.5.0</version>
+			<version>1.5.1</version>
 		</dependency>
 		<!--druid连接池-->
 		<dependency>
@@ -85,7 +85,7 @@
 		<dependency>
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-all</artifactId>
-			<version>5.7.12</version>
+			<version>5.7.18</version>
 		</dependency>
 		<!--MySQL-->
 		<dependency>
@@ -97,12 +97,12 @@
 		<dependency>
 			<groupId>com.baomidou</groupId>
 			<artifactId>mybatis-plus-boot-starter</artifactId>
-			<version>3.4.3.3</version>
+			<version>3.4.3.4</version>
 		</dependency>
 		<dependency>
 			<groupId>com.baomidou</groupId>
 			<artifactId>mybatis-plus-generator</artifactId>
-			<version>3.4.1</version>
+			<version>3.5.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -122,7 +122,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.20</version>
+			<version>1.18.22</version>
 			<optional>true</optional>
 		</dependency>
 		<!--Spring Boot-->
@@ -158,7 +158,7 @@
 		<dependency>
 			<groupId>com.rometools</groupId>
 			<artifactId>rome</artifactId>
-			<version>1.16.0</version>
+			<version>1.17.0</version>
 		</dependency>
 	</dependencies>
 
