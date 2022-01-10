@@ -11,6 +11,7 @@ import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.fuyao.bot.config.GlobalVariables;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessageInfo;
+import ninja.skyrocketing.fuyao.bot.sender.friend.FriendMessageSender;
 import ninja.skyrocketing.fuyao.bot.sender.group.GroupMessageSender;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotConfigService;
 import ninja.skyrocketing.fuyao.util.DBUtil;
@@ -47,7 +48,7 @@ public class GroupEventListener extends SimpleListenerHost {
         GroupMessageInfo groupMessageInfo = new GroupMessageInfo(event.getGroup().getId(), event.getMessageIds()[0]);
         if (GlobalVariables.getGlobalVariables().getTriggerGroupMessageInfoMap().containsKey(groupMessageInfo)) {
             try {
-                if (!GlobalVariables.getGlobalVariables().getTriggerGroupMessageInfoMap().get(groupMessageInfo)) {
+                if (Boolean.FALSE.equals(GlobalVariables.getGlobalVariables().getTriggerGroupMessageInfoMap().get(groupMessageInfo))) {
                     GlobalVariables.getGlobalVariables().recallAndDeleteByGroupMessageInfo(groupMessageInfo);
                     return ListeningStatus.LISTENING;
                 } else {
@@ -219,11 +220,15 @@ public class GroupEventListener extends SimpleListenerHost {
      * */
     @EventHandler
     public ListeningStatus onBotInvitedJoinGroupRequestEvent(BotInvitedJoinGroupRequestEvent event) {
+        //邀请人是否为机器人好友
         if (Objects.equals(event.getBot().getFriend(event.getInvitorId()), event.getInvitor())) {
             event.accept();
-            LogUtil.eventLog(event.toString(), "机器人被邀请入群 (已同意)");
+            FriendMessageSender.sendMessageByFriendId("✔ 机器人已同意入群", event.getInvitor());
+            LogUtil.eventLog(event.toString(), "机器人已同意入群");
         } else {
-            LogUtil.eventLog(event.toString(), "机器人被邀请入群 (未同意)");
+            event.cancel();
+            FriendMessageSender.sendMessageByFriendId("❌ 邀请人非机器人好友\n机器人未同意入群", event.getInvitor());
+            LogUtil.eventLog(event.toString(), "邀请人非机器人好友，机器人未同意入群");
         }
         return ListeningStatus.LISTENING;
     }
@@ -233,11 +238,30 @@ public class GroupEventListener extends SimpleListenerHost {
      * */
     @EventHandler
     public ListeningStatus onBotJoinGroupEvent(BotJoinGroupEvent.Invite event) {
-        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("👏 感谢 ");
-        messageChainBuilder.add(MessageUtil.userNotify(event.getInvitor(), true));
-        messageChainBuilder.add(" 邀请\n");
-        GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
+        //默认全体禁言或群名包含违禁词时直接退群
+        if (event.getGroup().getName().matches(botConfigService.getConfigValueByKey("ban_name"))) {
+            event.getGroup().quit();
+            FriendMessageSender.sendMessageByFriendId("❌ 邀请群的名字中包含违禁词\n机器人未同意入群", event.getInvitor().getId());
+            LogUtil.eventLog(event.toString(), "群名包含违禁词，直接退群");
+        }
+        //判断群禁言
+        else if(event.getGroup().getSettings().isMuteAll()) {
+            event.getGroup().quit();
+            FriendMessageSender.sendMessageByFriendId("❌ 邀请的群为全员禁言群\n机器人未同意入群", event.getInvitor().getId());
+            LogUtil.eventLog(event.toString(), "由于默认全体禁言，直接退群");
+        }
+        //判断群人数
+        else if (event.getGroup().getMembers().size() <= 2) {
+            event.cancel();
+            FriendMessageSender.sendMessageByFriendId("❌ 邀请群人数过少\n机器人未同意入群", event.getInvitor().getId());
+            LogUtil.eventLog(event.toString(), "邀请群人数过少，机器人未同意入群");
+        } else {
+            MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+            messageChainBuilder.add("👏 感谢 ");
+            messageChainBuilder.add(MessageUtil.userNotify(event.getInvitor(), true));
+            messageChainBuilder.add(" 邀请\n");
+            GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
+        }
         return ListeningStatus.LISTENING;
     }
     
@@ -246,10 +270,26 @@ public class GroupEventListener extends SimpleListenerHost {
      * */
     @EventHandler
     public ListeningStatus onBotJoinGroupEvent(BotJoinGroupEvent.Active event) {
-        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("👏 大家好啊，我是扶摇bot\n");
-        messageChainBuilder.add(botConfigService.getConfigValueByKey("reply"));
-        GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
+        //默认全体禁言或群名包含违禁词时直接退群
+        if (event.getGroup().getName().matches(botConfigService.getConfigValueByKey("ban_name"))) {
+            event.getGroup().quit();
+            LogUtil.eventLog(event.toString(), "群名包含违禁词，直接退群");
+        }
+        //判断群禁言
+        else if(event.getGroup().getSettings().isMuteAll()) {
+            event.getGroup().quit();
+            LogUtil.eventLog(event.toString(), "由于默认全体禁言，直接退群");
+        }
+        //判断群人数
+        else if (event.getBot().getGroup(event.getGroupId()).getMembers().size() <= 2) {
+            event.cancel();
+            LogUtil.eventLog(event.toString(), "邀请群人数过少，机器人未同意入群");
+        } else {
+            MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+            messageChainBuilder.add("👏 大家好啊，我是扶摇bot\n");
+            messageChainBuilder.add(botConfigService.getConfigValueByKey("reply"));
+            GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
+        }
         return ListeningStatus.LISTENING;
     }
 
@@ -278,7 +318,7 @@ public class GroupEventListener extends SimpleListenerHost {
         messageChainBuilder.add("💬 群名片修改\n");
         messageChainBuilder.add("🔙 原名片: \"" + event.getOrigin() + "\"\n");
         messageChainBuilder.add("🆕 新名片: \"" + event.getNew() + "\"\n");
-        messageChainBuilder.add("\n(提醒消息将在1分钟内自动撤回)");
+        messageChainBuilder.add("(提醒消息将在1分钟内自动撤回)");
         GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup(), 60000L);
         return ListeningStatus.LISTENING;
     }
@@ -288,12 +328,17 @@ public class GroupEventListener extends SimpleListenerHost {
      * */
     @EventHandler
     public ListeningStatus onGroupNameChangeEvent(GroupNameChangeEvent event) {
-        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("💬 群名称修改\n");
-        messageChainBuilder.add("🔙 原名称: \"" + event.getOrigin() + "\"\n");
-        messageChainBuilder.add("🆕 新名称: \"" + event.getNew() + "\"\n");
-        messageChainBuilder.add("🔧 修改人: " + MessageUtil.userNotify(event.getOperator(), false));
-        GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
+        if (event.getNew().matches(botConfigService.getConfigValueByKey("ban_name"))) {
+            GroupMessageSender.sendMessageByGroupId("⚠ 群名称修改\n检测到违禁词，已自动退群", event.getGroup().getId());
+            event.getGroup().quit();
+        } else {
+            MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+            messageChainBuilder.add("💬 群名称修改\n");
+            messageChainBuilder.add("🔙 原名称: \"" + event.getOrigin() + "\"\n");
+            messageChainBuilder.add("🆕 新名称: \"" + event.getNew() + "\"\n");
+            messageChainBuilder.add("🔧 修改人: " + MessageUtil.userNotify(event.getOperator(), false));
+            GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
+        }
         return ListeningStatus.LISTENING;
     }
     

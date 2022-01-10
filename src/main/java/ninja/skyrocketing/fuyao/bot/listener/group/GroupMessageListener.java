@@ -72,6 +72,12 @@ public class GroupMessageListener extends SimpleListenerHost {
                 botBanedUserService.isBaned(event.getSender().getId())) {
             return ListeningStatus.LISTENING;
         }
+        //判断群名是否有违禁词
+        if (event.getGroup().getName().matches(botConfigService.getConfigValueByKey("ban_name"))) {
+            GroupMessageSender.sendMessageByGroupId("⚠ 群名称修改\n检测到违禁词，已自动退群", event.getGroup().getId());
+            event.getGroup().quit();
+            return ListeningStatus.LISTENING;
+        }
         User user = User.builder().groupId(groupId).userId(event.getSender().getId()).build();
         Long timestamp = TimeUtil.getTimestamp();
         //获取消息

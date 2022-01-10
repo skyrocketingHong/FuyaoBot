@@ -91,15 +91,21 @@
 * 功能分群单独开关
 
 # 更新日志
+## 4.5.8.74
+* **更新** Mirai 2.9.2 ([更新日志](https://github.com/mamoe/mirai/releases/tag/v2.9.2))
+* **新增** 对被邀请加入的群的要求
+    - 群名不得包含“邀请”、“红包”、“拉人”等相关内容（违禁词将不断更新）
+    - bot 入群时不得为全员禁言状态
+
 ## 4.5.7.73 (2022-01-02)
 * **更新** Mirai 2.9.1 ([更新日志](https://github.com/mamoe/mirai/releases/tag/v2.9.1))
 * **更新** 部分依赖
 
-## 4.5.6.72 (2021-12-31)
-* **更新** Mirai 2.9.0 ([更新日志](https://github.com/mamoe/mirai/releases/tag/v2.9.0))
-
 <details>
 <summary>4.0.0 +</summary>
+
+## 4.5.6.72 (2021-12-31)
+* **更新** Mirai 2.9.0 ([更新日志](https://github.com/mamoe/mirai/releases/tag/v2.9.0))
 
 ## 4.5.5.71 (2021-11-02)
 * **更新** Mirai 2.8.0-RC ([更新日志](https://github.com/mamoe/mirai/releases/tag/v2.8.0-RC))
