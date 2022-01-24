@@ -169,22 +169,6 @@ public class GroupEventListener extends SimpleListenerHost {
         LogUtil.eventLog(event.toString(), "群已被解散");
         return ListeningStatus.LISTENING;
     }
-    
-    /**
-     * 群员荣誉修改
-     */
-    @EventHandler
-    public ListeningStatus onMemberHonorChange(MemberHonorChangeEvent.Achieve event) {
-        String honorName = MessageUtil.getGroupHonorTypeName(event.getHonorType());
-        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("🐲 恭喜 ");
-        messageChainBuilder.add(MessageUtil.userNotify(event.getUser(), true));
-        messageChainBuilder.add("\n于 " + TimeUtil.dateTimeFormatter(new Date()) + " " +
-                "喜提" +  " \"" + honorName + "\" "
-        );
-        GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
-        return ListeningStatus.LISTENING;
-    }
 
     /**
      * 群龙王更改
@@ -222,9 +206,8 @@ public class GroupEventListener extends SimpleListenerHost {
     public ListeningStatus onBotInvitedJoinGroupRequestEvent(BotInvitedJoinGroupRequestEvent event) {
         //邀请人是否为机器人好友
         if (Objects.equals(event.getBot().getFriend(event.getInvitorId()), event.getInvitor())) {
-            event.accept();
-            FriendMessageSender.sendMessageByFriendId("✔ 机器人已同意入群", event.getInvitor());
-            LogUtil.eventLog(event.toString(), "机器人已同意入群");
+            FriendMessageSender.sendMessageByFriendId("❓ 等待开发者审核入群", event.getInvitor());
+            LogUtil.eventLog(event.toString(), "等待开发者审核入群");
         } else {
             event.cancel();
             FriendMessageSender.sendMessageByFriendId("❌ 邀请人非机器人好友\n机器人未同意入群", event.getInvitor());

@@ -161,11 +161,11 @@ public class TimelyFunction {
     }
     
     /**
-     * 每天早上7点26分1秒发送问候消息
+     * 每天早上7点30分1秒发送问候消息
      */
     @Value("${fuyao-bot.rss.morning-url}")
     private String morningRSSURL;
-    //@Scheduled(cron = "1 26 7 * * ?")
+    @Scheduled(cron = "1 30 7 * * ?")
     public void morningMessage() {
         //获取RSS Feed
         SyndFeed feed = HttpUtil.getRSSFeed(morningRSSURL);
@@ -195,34 +195,34 @@ public class TimelyFunction {
     }
     
     /**
-     * 每天0点0分1秒发送消息数量统计并将满足要求的群放入list中
+     * 每天0点0分1秒进行消息数量统计并将满足要求的群放入list中
      * */
-    //@Scheduled(cron = "1 0 0 * * ?")
+    @Scheduled(cron = "1 0 0 * * ?")
     public static void groupMessageCount() {
         //结束统计时间
-        Date endDate = new Date();
-        String endDateStr = TimeUtil.dateTimeFormatter(endDate);
+//        Date endDate = new Date();
+//        String endDateStr = TimeUtil.dateTimeFormatter(endDate);
         //开始统计时间
-        Date startDate;
-        //如果bot启动时间在当前发送消息的时间的24小时内，则使用启动时间作为开始统计时间
-        if (DateUtil.between(FuyaoBotApplication.StartDate, endDate, DateUnit.HOUR) < 24) {
-            startDate = FuyaoBotApplication.StartDate;
-        } else {
-            startDate = DateUtil.offsetHour(endDate, -24);
-        }
-        String startDateStr = TimeUtil.dateTimeFormatter(startDate);
+//        Date startDate;
+//        //如果bot启动时间在当前发送消息的时间的24小时内，则使用启动时间作为开始统计时间
+//        if (DateUtil.between(FuyaoBotApplication.StartDate, endDate, DateUnit.HOUR) < 24) {
+//            startDate = FuyaoBotApplication.StartDate;
+//        } else {
+//            startDate = DateUtil.offsetHour(endDate, -24);
+//        }
+//        String startDateStr = TimeUtil.dateTimeFormatter(startDate);
         //消息头
-        String message = "📊 发送消息数量统计\n" +
-                startDateStr + " 至 " + endDateStr + "\n" +
-                "本群共发送消息 ";
+//        String message = "📊 发送消息数量统计\n" +
+//                startDateStr + " 至 " + endDateStr + "\n" +
+//                "本群共发送消息 ";
         for (Map.Entry<Long, Integer> entry : GlobalVariables.getGlobalVariables().getGroupMessagesCount().entrySet()) {
-            if (entry.getValue() >= 3) {
+            if (entry.getValue() >= 20) {
                 //将满足要求的群放入list中
                 GlobalVariables.getGlobalVariables().getMorningMessageList().add(entry.getKey());
             }
-            if (entry.getValue() >= 10) {
-                GroupMessageSender.sendMessageByGroupId(message + entry.getValue() + " 条", entry.getKey());
-            }
+//            if (entry.getValue() >= 10) {
+//                GroupMessageSender.sendMessageByGroupId(message + entry.getValue() + " 条", entry.getKey());
+//            }
         }
         //从map中移除所有统计记录
         GlobalVariables.getGlobalVariables().getGroupMessagesCount().clear();
