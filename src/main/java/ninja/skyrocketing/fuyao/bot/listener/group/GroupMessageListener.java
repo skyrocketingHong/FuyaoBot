@@ -68,8 +68,7 @@ public class GroupMessageListener extends SimpleListenerHost {
             return ++v;
         });
         //判断是否为黑名单用户或群
-        if (botBanedGroupService.isBaned(groupId) &&
-                botBanedUserService.isBaned(event.getSender().getId())) {
+        if (botBanedGroupService.isBaned(groupId) || botBanedUserService.isBaned(event.getSender().getId())) {
             return ListeningStatus.LISTENING;
         }
         //判断群名是否有违禁词

@@ -297,6 +297,9 @@ public class GroupEventListener extends SimpleListenerHost {
             LogUtil.eventLog(event.toString(), "机器人群名片被修改");
             return ListeningStatus.LISTENING;
         }
+        if (event.getOrigin().equals("") || event.getNew().equals("")) {
+            return ListeningStatus.LISTENING;
+        }
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add("💬 群名片修改\n");
         messageChainBuilder.add("🔙 原名片: \"" + event.getOrigin() + "\"\n");
