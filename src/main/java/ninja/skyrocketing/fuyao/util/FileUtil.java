@@ -2,7 +2,7 @@ package ninja.skyrocketing.fuyao.util;
 
 import cn.hutool.http.HttpUtil;
 import net.mamoe.mirai.message.data.Image;
-import ninja.skyrocketing.fuyao.bot.config.MiraiBotConfig;
+import ninja.skyrocketing.fuyao.bot.config.GlobalVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.system.ApplicationHome;
@@ -40,7 +40,7 @@ public class FileUtil {
         //将QQ号和获取头像的链接拼接起来
         String avatarURL = "http://q1.qlogo.cn/g?b=qq&nk=" + qqId + "&s=640";
         //拼接头像的路径和文件名
-        String avatarFilePath = MiraiBotConfig.JAR_PATH +
+        String avatarFilePath = GlobalVariables.getGlobalVariables().getJarPath() +
                 separator + "cache" +
                 separator + "Member Avatar" +
                 separator + TimeUtil.dateFileName() +

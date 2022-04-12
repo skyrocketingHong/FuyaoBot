@@ -9,7 +9,7 @@ import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.*;
 import net.mamoe.mirai.utils.ExternalResource;
-import ninja.skyrocketing.fuyao.bot.config.MiraiBotConfig;
+import ninja.skyrocketing.fuyao.bot.config.GlobalVariables;
 import ninja.skyrocketing.fuyao.bot.pojo.bot.BotFunctionTrigger;
 import ninja.skyrocketing.fuyao.bot.pojo.user.User;
 import ninja.skyrocketing.fuyao.bot.pojo.user.UserMessage;
@@ -148,15 +148,6 @@ public class MessageUtil {
     }
 
     /**
-    * 等待API返回消息时的提醒，在获取到API返回的消息后会撤回
-    * @return
-    */
-    @Deprecated
-    public static MessageReceipt waitingForAPI(UserMessage userMessage) {
-        return waitingMessage(userMessage, "正在等待 API 返回数据...");
-    }
-
-    /**
      * 等待时发送的消息
      * @return
      */
@@ -198,13 +189,13 @@ public class MessageUtil {
      * */
     public static boolean preventingAbuse(long timestamp, User user, GroupMessageEvent event) {
         //当触发用户在防止滥用的Map中时，不发送消息
-        if (MiraiBotConfig.GroupUserTriggerDelay.containsKey(user)) {
+        if (GlobalVariables.getGlobalVariables().getGroupUserTriggerDelay().containsKey(user)) {
             //如果该用户已被提醒过，则不执行任何操作
-            if (MiraiBotConfig.userTriggerDelayNotified.contains(user)) {
+            if (GlobalVariables.getGlobalVariables().getUserTriggerDelayNotified().contains(user)) {
                 return true;
             }
             //计算冷却时间
-            long coolDownTime = (timestamp - MiraiBotConfig.GroupUserTriggerDelay.get(user)) % 10;
+            long coolDownTime = (timestamp - GlobalVariables.getGlobalVariables().getGroupUserTriggerDelay().get(user)) % 10;
             if (coolDownTime <= 0) {
                 return false;
             }
@@ -214,7 +205,7 @@ public class MessageUtil {
             messageChainBuilder.add("\n你的冷却时间尚未结束，请等待 " + coolDownTime + "s 后再操作");
             messageChainBuilder.add("\n(提醒消息将在冷却时间结束后撤回)");
             //发送消息，并在冷却时间内撤回
-            MiraiBotConfig.userTriggerDelayNotified.add(user);
+            GlobalVariables.getGlobalVariables().getUserTriggerDelayNotified().add(user);
             GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup(), coolDownTime * 1000);
             return true;
         }

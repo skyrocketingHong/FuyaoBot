@@ -7,14 +7,14 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import ninja.skyrocketing.fuyao.FuyaoBotApplication;
 import ninja.skyrocketing.fuyao.bot.config.GlobalVariables;
-import ninja.skyrocketing.fuyao.bot.config.MiraiBotConfig;
+import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessageCount;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupRSSMessage;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupTimelyMessage;
 import ninja.skyrocketing.fuyao.bot.pojo.user.User;
 import ninja.skyrocketing.fuyao.bot.sender.group.GroupMessageSender;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotConfigService;
+import ninja.skyrocketing.fuyao.bot.service.group.GroupMessageCountService;
 import ninja.skyrocketing.fuyao.bot.service.group.GroupRSSMessageService;
 import ninja.skyrocketing.fuyao.bot.service.group.GroupTimelyMessageService;
 import ninja.skyrocketing.fuyao.util.HttpUtil;
@@ -36,16 +36,19 @@ public class TimelyFunction {
     private static GroupTimelyMessageService groupTimelyMessageService;
     private static GroupRSSMessageService groupRSSMessageService;
     private static BotConfigService botConfigService;
+    private static GroupMessageCountService groupMessageCountService;
     
     @Autowired
     private TimelyFunction(
             GroupTimelyMessageService groupTimelyMessageService,
             GroupRSSMessageService groupRSSMessageService,
-            BotConfigService botConfigService
+            BotConfigService botConfigService,
+            GroupMessageCountService groupMessageCountService
     ) {
         TimelyFunction.groupTimelyMessageService = groupTimelyMessageService;
         TimelyFunction.groupRSSMessageService = groupRSSMessageService;
         TimelyFunction.botConfigService = botConfigService;
+        TimelyFunction.groupMessageCountService = groupMessageCountService;
     }
     
     /**
@@ -80,11 +83,11 @@ public class TimelyFunction {
     @Scheduled(cron = "*/10 * * * * ?")
     public static void preventAbuse() {
         long timeStamp = TimeUtil.getTimestamp();
-        for (User user : MiraiBotConfig.GroupUserTriggerDelay.keySet()) {
+        for (User user : GlobalVariables.getGlobalVariables().getGroupUserTriggerDelay().keySet()) {
             //当用户已经超过冷却时间时，将用户移除
-            if (MiraiBotConfig.GroupUserTriggerDelay.get(user) + 10 <= timeStamp) {
-                MiraiBotConfig.GroupUserTriggerDelay.remove(user);
-                MiraiBotConfig.userTriggerDelayNotified.remove(user);
+            if (GlobalVariables.getGlobalVariables().getGroupUserTriggerDelay().get(user) + 10 <= timeStamp) {
+                GlobalVariables.getGlobalVariables().getGroupUserTriggerDelay().remove(user);
+                GlobalVariables.getGlobalVariables().getGroupUserTriggerDelay().remove(user);
             }
         }
     }
@@ -161,11 +164,11 @@ public class TimelyFunction {
     }
     
     /**
-     * 每天早上7点30分1秒发送问候消息
+     * 每天08点00分1秒发送问候消息
      */
     @Value("${fuyao-bot.rss.morning-url}")
     private String morningRSSURL;
-    @Scheduled(cron = "1 30 7 * * ?")
+    @Scheduled(cron = "1 0 8 * * ?")
     public void morningMessage() {
         //获取RSS Feed
         SyndFeed feed = HttpUtil.getRSSFeed(morningRSSURL);
@@ -188,43 +191,21 @@ public class TimelyFunction {
                 resultMessage = "☀ 群友们早上好啊\n由于抓取 \"即刻\" APP 的 RSS Hub 没有获取到今天的“一觉醒来发生了什么”，所以今天没有这个哦";
             }
         }
-        for (Long groupId : GlobalVariables.getGlobalVariables().getMorningMessageList()) {
+        for (Long groupId : groupMessageCountService.getLastDayGroupMessageCountListByCount(20)) {
             GroupMessageSender.sendMessageByGroupId(resultMessage, groupId);
         }
-        GlobalVariables.getGlobalVariables().getMorningMessageList().clear();
     }
     
     /**
-     * 每天0点0分1秒进行消息数量统计并将满足要求的群放入list中
+     * 每天0点0分1秒进行消息数量统计并将满足要求的群放入last_day_message_count字段中
      * */
     @Scheduled(cron = "1 0 0 * * ?")
-    public static void groupMessageCount() {
-        //结束统计时间
-//        Date endDate = new Date();
-//        String endDateStr = TimeUtil.dateTimeFormatter(endDate);
-        //开始统计时间
-//        Date startDate;
-//        //如果bot启动时间在当前发送消息的时间的24小时内，则使用启动时间作为开始统计时间
-//        if (DateUtil.between(FuyaoBotApplication.StartDate, endDate, DateUnit.HOUR) < 24) {
-//            startDate = FuyaoBotApplication.StartDate;
-//        } else {
-//            startDate = DateUtil.offsetHour(endDate, -24);
-//        }
-//        String startDateStr = TimeUtil.dateTimeFormatter(startDate);
-        //消息头
-//        String message = "📊 发送消息数量统计\n" +
-//                startDateStr + " 至 " + endDateStr + "\n" +
-//                "本群共发送消息 ";
-        for (Map.Entry<Long, Integer> entry : GlobalVariables.getGlobalVariables().getGroupMessagesCount().entrySet()) {
-            if (entry.getValue() >= 20) {
-                //将满足要求的群放入list中
-                GlobalVariables.getGlobalVariables().getMorningMessageList().add(entry.getKey());
-            }
-//            if (entry.getValue() >= 10) {
-//                GroupMessageSender.sendMessageByGroupId(message + entry.getValue() + " 条", entry.getKey());
-//            }
+    public static void groupMessageCountUpdate() {
+        List<GroupMessageCount> groupMessageCountList = groupMessageCountService.getAllGroupMessageCount();
+        for (GroupMessageCount groupMessageCount : groupMessageCountList) {
+            groupMessageCount.setLastDayMessageCount(groupMessageCount.getMessageCount());
+            groupMessageCount.setMessageCount(0);
         }
-        //从map中移除所有统计记录
-        GlobalVariables.getGlobalVariables().getGroupMessagesCount().clear();
+        groupMessageCountService.updateGroupMessageCountById(groupMessageCountList);
     }
 }

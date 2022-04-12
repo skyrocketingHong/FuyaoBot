@@ -14,6 +14,7 @@ import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessageInfo;
 import ninja.skyrocketing.fuyao.bot.sender.friend.FriendMessageSender;
 import ninja.skyrocketing.fuyao.bot.sender.group.GroupMessageSender;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotConfigService;
+import ninja.skyrocketing.fuyao.bot.service.bot.BotReplyMessageService;
 import ninja.skyrocketing.fuyao.util.DBUtil;
 import ninja.skyrocketing.fuyao.util.LogUtil;
 import ninja.skyrocketing.fuyao.util.MessageUtil;
@@ -35,9 +36,14 @@ import java.util.Objects;
 @NoArgsConstructor
 public class GroupEventListener extends SimpleListenerHost {
     private static BotConfigService botConfigService;
+    private static BotReplyMessageService botReplyMessageService;
     @Autowired
-    public GroupEventListener(BotConfigService botConfigService) {
+    public GroupEventListener(
+            BotConfigService botConfigService,
+            BotReplyMessageService botReplyMessageService
+    ) {
         GroupEventListener.botConfigService = botConfigService;
+        GroupEventListener.botReplyMessageService = botReplyMessageService;
     }
     
     /**
@@ -75,7 +81,9 @@ public class GroupEventListener extends SimpleListenerHost {
     public ListeningStatus onJoin(MemberJoinEvent.Active event) throws IOException {
         //生成消息
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("👏 欢迎第" + (event.getGroup().getMembers().size() + 1) + "名群员。" + "\n");
+        messageChainBuilder.add("👏 欢迎第" + (event.getGroup().getMembers().size() + 1) + "名");
+        messageChainBuilder.add(botReplyMessageService.getGroupMemberTitleById(String.valueOf(event.getGroupId())));
+        messageChainBuilder.add("。\n");
         messageChainBuilder.add(MessageUtil.uploadAvatarImageToGroup(event.getGroup(), event.getMember()));
         messageChainBuilder.add(MessageUtil.userNotify(event.getMember(), true));
         messageChainBuilder.add("\n记得阅读群公告（如果有的话）哦！");
@@ -92,7 +100,9 @@ public class GroupEventListener extends SimpleListenerHost {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add("👏 欢迎由 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getInvitor(), false));
-        messageChainBuilder.add(" 邀请的第 " + (event.getGroup().getMembers().size() + 1) + " 名群员：" + "\n");
+        messageChainBuilder.add(" 邀请的第 " + (event.getGroup().getMembers().size() + 1) + " 名");
+        messageChainBuilder.add(botReplyMessageService.getGroupMemberTitleById(String.valueOf(event.getGroupId())));
+        messageChainBuilder.add("。\n");
         messageChainBuilder.add(MessageUtil.uploadAvatarImageToGroup(event.getGroup(), event.getMember()));
         messageChainBuilder.add(MessageUtil.userNotify(event.getMember(), true));
         messageChainBuilder.add("\n" + "记得阅读群公告（如果有的话）哦！");
@@ -178,7 +188,7 @@ public class GroupEventListener extends SimpleListenerHost {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add("🐲 恭喜新龙王 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getNow(), true));
-        messageChainBuilder.add("\n前任龙王为 ");
+        messageChainBuilder.add("\n💧 前任龙王为 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getPrevious(), false));
         GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
         return ListeningStatus.LISTENING;

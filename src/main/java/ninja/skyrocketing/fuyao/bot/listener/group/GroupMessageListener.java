@@ -12,7 +12,6 @@ import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.fuyao.bot.config.GlobalVariables;
-import ninja.skyrocketing.fuyao.bot.config.MiraiBotConfig;
 import ninja.skyrocketing.fuyao.bot.function.EasterEggFunction;
 import ninja.skyrocketing.fuyao.bot.function.NotificationFunction;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessageInfo;
@@ -21,6 +20,7 @@ import ninja.skyrocketing.fuyao.bot.sender.group.GroupMessageSender;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotBanedGroupService;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotConfigService;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotReplyMessageService;
+import ninja.skyrocketing.fuyao.bot.service.group.GroupMessageCountService;
 import ninja.skyrocketing.fuyao.bot.service.user.BotBanedUserService;
 import ninja.skyrocketing.fuyao.util.LogUtil;
 import ninja.skyrocketing.fuyao.util.MessageUtil;
@@ -41,32 +41,30 @@ public class GroupMessageListener extends SimpleListenerHost {
     private static BotBanedUserService botBanedUserService;
     private static BotConfigService botConfigService;
     private static BotReplyMessageService botReplyMessageService;
+    private static GroupMessageCountService groupMessageCountService;
     @Autowired
     public GroupMessageListener(
             BotBanedGroupService botBanedGroupService,
             BotBanedUserService botBanedUserService,
             BotConfigService botConfigService,
-            BotReplyMessageService botReplyMessageService
+            BotReplyMessageService botReplyMessageService,
+            GroupMessageCountService groupMessageCountService
     ) {
         GroupMessageListener.botBanedGroupService = botBanedGroupService;
         GroupMessageListener.botBanedUserService = botBanedUserService;
         GroupMessageListener.botConfigService = botConfigService;
         GroupMessageListener.botReplyMessageService = botReplyMessageService;
+        GroupMessageListener.groupMessageCountService = groupMessageCountService;
     }
 
     /**
-     监听所有群消息
+     * 监听所有群消息
     */
     @EventHandler
     public ListeningStatus onMessage(GroupMessageEvent event) throws Exception {
         long groupId = event.getGroup().getId();
         //记录消息数量
-        GlobalVariables.getGlobalVariables().getGroupMessagesCount().compute(groupId, (k, v) -> {
-            if (v == null) {
-                return 1;
-            }
-            return ++v;
-        });
+        groupMessageCountService.addOneMessageCountById(groupId);
         //判断是否为黑名单用户或群
         if (botBanedGroupService.isBaned(groupId) || botBanedUserService.isBaned(event.getSender().getId())) {
             return ListeningStatus.LISTENING;
@@ -91,7 +89,7 @@ public class GroupMessageListener extends SimpleListenerHost {
                 return ListeningStatus.LISTENING;
             }
             //将触发用户添加进全局map中
-            MiraiBotConfig.GroupUserTriggerDelay.put(user, timestamp);
+            GlobalVariables.getGlobalVariables().getGroupUserTriggerDelay().put(user, timestamp);
             //被@后返回帮助文案
             MessageReceipt<Group> receipt = GroupMessageSender.sendMessageByGroupIdWithReceipt(botConfigService.getConfigValueByKey("reply"), event.getGroup());
             GroupMessageInfo groupMessageInfo = new GroupMessageInfo(event);
@@ -116,7 +114,7 @@ public class GroupMessageListener extends SimpleListenerHost {
                 messageChainBuilder.add(MessageUtil.userNotify(event.getSender(), true));
                 messageChainBuilder.add("\n");
                 messageChainBuilder.add(message);
-                MiraiBotConfig.GroupUserTriggerDelay.put(user, timestamp);
+                GlobalVariables.getGlobalVariables().getGroupUserTriggerDelay().put(user, timestamp);
                 MessageReceipt<Group> receipt = GroupMessageSender.sendMessageByGroupIdWithReceipt(messageChainBuilder, event.getGroup());
                 GroupMessageInfo groupMessageInfo = new GroupMessageInfo(event);
                 //存放触发消息

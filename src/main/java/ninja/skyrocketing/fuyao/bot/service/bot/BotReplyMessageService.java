@@ -10,4 +10,20 @@ import java.util.List;
  */
 public interface BotReplyMessageService {
     List<BotReplyMessage> getAllReplyMessage();
+    
+    /**
+     * 获取加群后群成员对应的称呼
+     *
+     * @param id 群号
+     * @return 称呼
+     */
+    String getGroupMemberTitleById(String id);
+    
+    /**
+     *  根据ID获取该表中的数据
+     *
+     * @param id ID
+     * @return BotReplyMessage
+     */
+    BotReplyMessage getBotReplyMessageById(String id);
 }

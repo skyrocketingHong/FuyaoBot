@@ -13,16 +13,12 @@ import ninja.skyrocketing.fuyao.bot.listener.friend.FriendEventListener;
 import ninja.skyrocketing.fuyao.bot.listener.friend.FriendMessageListener;
 import ninja.skyrocketing.fuyao.bot.listener.group.GroupEventListener;
 import ninja.skyrocketing.fuyao.bot.listener.group.GroupMessageListener;
-import ninja.skyrocketing.fuyao.bot.pojo.bot.BotQQ;
-import ninja.skyrocketing.fuyao.bot.pojo.user.User;
 import ninja.skyrocketing.fuyao.bot.sender.friend.FriendMessageSender;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotConfigService;
-import ninja.skyrocketing.fuyao.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.Date;
 
 /**
  * @author skyrocketing Hong
@@ -36,54 +32,15 @@ public class MiraiBotConfig {
     public MiraiBotConfig(BotConfigService botConfigService) {
         MiraiBotConfig.botConfigService = botConfigService;
     }
-    
-    public static GlobalVariables globalVariables = new GlobalVariables();
-
     /**
-     * 全局jar根目录
+     * 初始化全局变量
      * */
-    public static final String JAR_PATH =  FileUtil.getPath();
-    /**
-     * 全局cache目录
-     * */
-    public static final String CACHE_PATH = JAR_PATH + FileUtil.separator + "cache";
-    /**
-     * 全局log文件的File对象
-     * */
-    public static final String LOG_FILE = CACHE_PATH + FileUtil.separator + "log" + FileUtil.separator;
-    /**
-     * 全局hs卡牌缓存目录
-     * */
-    public static final String HS_CACHE_PATH = CACHE_PATH + FileUtil.separator + "Hearthstone";
-    /**
-     * 全局防止滥用变量
-     * */
-    public static Map<User, Long> GroupUserTriggerDelay = new HashMap<>();
-    /**
-     * 全局防止滥用（已通知）变量
-     * */
-    public static List<User> userTriggerDelayNotified = new ArrayList<>();
-
-    /**
-     * 根据模式获得不同的qq号
-     * */
-    @Deprecated(since = "4.4.5.61")
-    public static BotQQ setBotQQByMode(boolean devMode) {
-        BotQQ botQQ = new BotQQ();
-        if (devMode) {
-            botQQ.setQqId(Long.parseLong(botConfigService.getConfigValueByKey("qq_id_dev")));
-            botQQ.setQqPassword(botConfigService.getConfigValueByKey("qq_password_dev"));
-        } else {
-            botQQ.setQqId(Long.parseLong(botConfigService.getConfigValueByKey("qq_id")));
-            botQQ.setQqPassword(botConfigService.getConfigValueByKey("qq_password"));
-        }
-        return botQQ;
-    }
+    static GlobalVariables globalVariables = new GlobalVariables();
 
     /**
      * 运行机器人
      * */
-    public static void runBot() throws IOException {
+    public static void runBot() {
         //bot配置
         FuyaoBotApplication.bot = BotFactory.INSTANCE.newBot(
                 Long.parseLong(botConfigService.getConfigValueByKey("qq_id")),

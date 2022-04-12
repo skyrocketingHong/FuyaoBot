@@ -1,6 +1,6 @@
 package ninja.skyrocketing.fuyao.util;
 
-import ninja.skyrocketing.fuyao.bot.config.MiraiBotConfig;
+import ninja.skyrocketing.fuyao.bot.config.GlobalVariables;
 
 /**
  * @author skyrocketing Hong
@@ -16,7 +16,7 @@ public class LogUtil {
      */
     public static void messageLog(String message, Long id, boolean isGroup, String name) {
         //log文件路径
-        String logFilePath = MiraiBotConfig.LOG_FILE + TimeUtil.dateFileName() + ".log";
+        String logFilePath = GlobalVariables.getGlobalVariables().getLogFilePath() + TimeUtil.dateFileName() + ".log";
         String type;
         //根据类型添加不同的信息
         if (isGroup) {
@@ -39,7 +39,7 @@ public class LogUtil {
      */
     public static void eventLog(String event, String type) {
         //log文件路径
-        String logFilePath = MiraiBotConfig.LOG_FILE + TimeUtil.dateFileName() + ".log";
+        String logFilePath = GlobalVariables.getGlobalVariables().getLogFilePath() + TimeUtil.dateFileName() + ".log";
         //构造字符串
         String content = "[" + TimeUtil.nowDateTime() + "]" + "\r\n" +
                 "[事件类型] " + type + "\r\n" +

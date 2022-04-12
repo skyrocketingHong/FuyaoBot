@@ -25,4 +25,27 @@ public class BotReplyMessageServiceImpl implements BotReplyMessageService {
     public List<BotReplyMessage> getAllReplyMessage() {
         return botReplyMessageMapper.selectAllBotReplyMessage();
     }
+    
+    /**
+     * 获取加群后群成员对应的称呼
+     *
+     * @param id 群号
+     * @return 称呼
+     */
+    @Override
+    public String getGroupMemberTitleById(String id) {
+        BotReplyMessage botReplyMessage = getBotReplyMessageById(id);
+        return botReplyMessage == null ? "群员" : botReplyMessage.getReplyValue();
+    }
+    
+    /**
+     * 根据ID获取该表中的数据
+     *
+     * @param id ID
+     * @return BotReplyMessage
+     */
+    @Override
+    public BotReplyMessage getBotReplyMessageById(String id) {
+        return botReplyMessageMapper.selectById(id);
+    }
 }

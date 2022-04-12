@@ -4,7 +4,7 @@ import cn.hutool.http.HttpUtil;
 import lombok.NoArgsConstructor;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Message;
-import ninja.skyrocketing.fuyao.bot.config.MiraiBotConfig;
+import ninja.skyrocketing.fuyao.bot.config.GlobalVariables;
 import ninja.skyrocketing.fuyao.bot.pojo.game.GameHsCard;
 import ninja.skyrocketing.fuyao.bot.pojo.user.UserMessage;
 import ninja.skyrocketing.fuyao.bot.service.game.GameHsCardService;
@@ -70,7 +70,7 @@ public class SmallGamesFunction {
         for (GameHsCard gameHsCard : gameHsCardList) {
             jointCardFileName.append(gameHsCard.getId());
             //卡的图片的缓存位置
-            File cardImageFile = new File(MiraiBotConfig.HS_CACHE_PATH + FileUtil.separator + gameHsCard.getId() + ".png");
+            File cardImageFile = new File(GlobalVariables.getGlobalVariables().getHearthstoneFilePath() + FileUtil.separator + gameHsCard.getId() + ".png");
             //如果图片不存在时就下载
             if (!cardImageFile.exists()) {
                 cardImageFile = HttpUtil.downloadFileFromUrl(gameHsCard.getImgurl(), cardImageFile);
@@ -80,7 +80,7 @@ public class SmallGamesFunction {
             userMessage.getMessageChainBuilder().add(gameHsCard.getRarity() + " " + gameHsCard.getName() + "\n");
         }
         //拼接后的图片的保存位置
-        File jointCardFile = new File(MiraiBotConfig.HS_CACHE_PATH + FileUtil.separator + jointCardFileName + ".png");
+        File jointCardFile = new File(GlobalVariables.getGlobalVariables().getHearthstoneFilePath() + FileUtil.separator + jointCardFileName + ".png");
         //图片不存在时就拼接
         if (!jointCardFile.exists()) {
             FileUtil.jointPic(cardImageFileList, jointCardFile);
