@@ -13,4 +13,6 @@ public interface GameHsCardService {
     int insertACard(GameHsCard gameHsCard);
 
     List<GameHsCard> selectBySetOrderByRandom();
+    
+    int deleteAllCards();
 }

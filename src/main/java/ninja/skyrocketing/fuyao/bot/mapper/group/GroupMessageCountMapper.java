@@ -20,6 +20,6 @@ public interface GroupMessageCountMapper extends BaseMapper<GroupMessageCount> {
 	@Select("select * from group_message_count")
 	List<GroupMessageCount> selectAll();
 	
-	@Select("select group_id from group_message_count where last_day_message_count >= #{messageCount,jdbcType=INTEGER}")
-	List<Long> selectLastDayGroupMessageCountListByCount(int count);
+	@Select("select group_id from group_message_count where yesterday_message_count >= #{messageCount,jdbcType=INTEGER}")
+	List<Long> selectYesterdayGroupMessageCountListByCount(int count);
 }

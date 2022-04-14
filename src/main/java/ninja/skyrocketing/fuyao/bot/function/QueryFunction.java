@@ -6,14 +6,19 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import lombok.NoArgsConstructor;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Message;
 import ninja.skyrocketing.fuyao.FuyaoBotApplication;
+import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessageCount;
 import ninja.skyrocketing.fuyao.bot.pojo.user.UserMessage;
+import ninja.skyrocketing.fuyao.bot.service.group.GroupMessageCountService;
 import ninja.skyrocketing.fuyao.util.HttpUtil;
 import ninja.skyrocketing.fuyao.util.MessageUtil;
 import ninja.skyrocketing.fuyao.util.MusicSearchUtil;
 import ninja.skyrocketing.fuyao.util.TimeUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -27,7 +32,15 @@ import java.time.format.DateTimeFormatter;
  * @date 2021-03-05 16:27:53
  */
 
+@Component
+@NoArgsConstructor
 public class QueryFunction {
+    private static GroupMessageCountService groupMessageCountService;
+    @Autowired
+    private QueryFunction(GroupMessageCountService groupMessageCountService) {
+        QueryFunction.groupMessageCountService = groupMessageCountService;
+    }
+    
     /**
      * 获取当前时间
      **/
@@ -143,6 +156,17 @@ public class QueryFunction {
         userMessage.getMessageChainBuilder().add("已加入群聊 " + MessageUtil.getEmojiNumber(FuyaoBotApplication.bot.getGroups().size()) + " 个\n");
         userMessage.getMessageChainBuilder().add("已添加好友 " + MessageUtil.getEmojiNumber(FuyaoBotApplication.bot.getFriends().size()) + " 人\n");
         userMessage.getMessageChainBuilder().add("已被 " + MessageUtil.getEmojiNumber(FuyaoBotApplication.bot.getStrangers().size()) + " 人添加为单向好友");
+        return userMessage.getMessageChainBuilderAsMessageChain();
+    }
+    
+    /**
+     * 群内消息数量查询
+     * */
+    public static Message messageCount(UserMessage userMessage) {
+        GroupMessageCount groupMessageCount = groupMessageCountService.getGroupMessageCountById(userMessage.getUser().getGroupId());
+        userMessage.getMessageChainBuilder().add("📊 当前群内消息数量统计\n");
+        userMessage.getMessageChainBuilder().add("截至 " + TimeUtil.dateTimeFormatter(groupMessageCount.getLastUpdateTime()) + "\n");
+        userMessage.getMessageChainBuilder().add("本群今日已发送消息 " + (groupMessageCount.getMessageCount() + 1) + " 条");
         return userMessage.getMessageChainBuilderAsMessageChain();
     }
 }

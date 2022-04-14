@@ -30,4 +30,9 @@ public class GameHsCardServiceImpl implements GameHsCardService {
     public List<GameHsCard> selectBySetOrderByRandom() {
         return gameHsCardMapper.selectBySetOrderByRandom();
     }
+    
+    @Override
+    public int deleteAllCards() {
+        return gameHsCardMapper.deleteAllCards();
+    }
 }

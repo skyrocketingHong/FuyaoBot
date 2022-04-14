@@ -15,7 +15,7 @@ public interface GroupMessageCountService {
 	 * @param groupId 群号
 	 * @return int 插入条数
 	 * */
-	int addOneMessageCountById(Long groupId);
+	int addOneMessageCountById(long groupId);
 	
 	/**
 	 * 获取大于对应消息数量值的群号list
@@ -47,4 +47,12 @@ public interface GroupMessageCountService {
 	 * @return Integer 插入数量
 	 * */
 	int updateGroupMessageCountById(List<GroupMessageCount> groupMessageCountList);
+	
+	/**
+	 * 根据群号查找
+	 *
+	 * @param groupId id
+	 * @return GroupMessageCount
+	 * */
+	GroupMessageCount getGroupMessageCountById(long groupId);
 }

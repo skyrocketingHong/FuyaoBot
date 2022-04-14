@@ -38,11 +38,4 @@ public class GameHsCard {
             default -> rarity;
         };
     }
-
-    public String getSet() {
-        return switch (set) {
-            case "THE_BARRENS" -> "贫瘠之地的锤炼";
-            default -> set;
-        };
-    }
 }

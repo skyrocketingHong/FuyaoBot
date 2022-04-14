@@ -7,6 +7,7 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.fuyao.bot.config.GlobalVariables;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessageCount;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupRSSMessage;
@@ -14,6 +15,7 @@ import ninja.skyrocketing.fuyao.bot.pojo.group.GroupTimelyMessage;
 import ninja.skyrocketing.fuyao.bot.pojo.user.User;
 import ninja.skyrocketing.fuyao.bot.sender.group.GroupMessageSender;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotConfigService;
+import ninja.skyrocketing.fuyao.bot.service.bot.BotReplyMessageService;
 import ninja.skyrocketing.fuyao.bot.service.group.GroupMessageCountService;
 import ninja.skyrocketing.fuyao.bot.service.group.GroupRSSMessageService;
 import ninja.skyrocketing.fuyao.bot.service.group.GroupTimelyMessageService;
@@ -24,6 +26,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.sql.Time;
 import java.util.*;
 
 /**
@@ -37,18 +40,21 @@ public class TimelyFunction {
     private static GroupRSSMessageService groupRSSMessageService;
     private static BotConfigService botConfigService;
     private static GroupMessageCountService groupMessageCountService;
+    private static BotReplyMessageService botReplyMessageService;
     
     @Autowired
     private TimelyFunction(
             GroupTimelyMessageService groupTimelyMessageService,
             GroupRSSMessageService groupRSSMessageService,
             BotConfigService botConfigService,
-            GroupMessageCountService groupMessageCountService
+            GroupMessageCountService groupMessageCountService,
+            BotReplyMessageService botReplyMessageService
     ) {
         TimelyFunction.groupTimelyMessageService = groupTimelyMessageService;
         TimelyFunction.groupRSSMessageService = groupRSSMessageService;
         TimelyFunction.botConfigService = botConfigService;
         TimelyFunction.groupMessageCountService = groupMessageCountService;
+        TimelyFunction.botReplyMessageService = botReplyMessageService;
     }
     
     /**
@@ -127,11 +133,11 @@ public class TimelyFunction {
             //直接抓取目前最新的一篇文章
             //最终推送文案
             String resultMessage =
-                    "🔔 \"" + feed.getTitle() + "\"" +
-                            " 在 " + TimeUtil.dateTimeFormatter(firstEntryPublishedDate) +
-                            " 推送了：\n" +
-                            firstEntry.getTitle()
-                            + "\n" + firstEntry.getLink();
+                    "🔔 RSS订阅提醒\n" +
+                    "🗞️ 订阅源: " + feed.getTitle() + "\n" +
+                    "🏷️ 标题: " + firstEntry.getTitle() + "\n" +
+                    "🔗 链接: " + firstEntry.getLink() +  "\n" +
+                    "⏰ 推送时间: " + TimeUtil.dateTimeFormatter(firstEntryPublishedDate) +"\n";
             PushMessage pushMessage = new PushMessage(resultMessage, firstEntryPublishedDate, firstEntry.getLink());
             urlAndPushMessageMap.put(rssUrl, pushMessage);
         }
@@ -197,15 +203,37 @@ public class TimelyFunction {
     }
     
     /**
-     * 每天0点0分1秒进行消息数量统计并将满足要求的群放入last_day_message_count字段中
+     * 每天0点0分1秒将昨日消息数量放入last_day_message_count字段中并发送前一日消息统计信息
      * */
     @Scheduled(cron = "1 0 0 * * ?")
     public static void groupMessageCountUpdate() {
+        //获取当前时间戳
+        long currentTimeMillis = System.currentTimeMillis();
+        //获取全部GroupMessageCount
         List<GroupMessageCount> groupMessageCountList = groupMessageCountService.getAllGroupMessageCount();
+        //需要发送消息数量统计信息的群
+        Map<Long, Integer> messageCountSenderMap = new HashMap<>();
         for (GroupMessageCount groupMessageCount : groupMessageCountList) {
-            groupMessageCount.setLastDayMessageCount(groupMessageCount.getMessageCount());
+            //将昨日消息数量设置
+            groupMessageCount.setYesterdayMessageCount(groupMessageCount.getMessageCount());
+            //当消息数量最后修改时间与当前时间的差值小于10秒时，则认为群内当前有人说话，放入list中
+            if (groupMessageCount.getLastUpdateTime().getTime() - currentTimeMillis <= 10000) {
+                messageCountSenderMap.put(groupMessageCount.getGroupId(), groupMessageCount.getMessageCount());
+            }
+            //将（今日）消息数量置为0
             groupMessageCount.setMessageCount(0);
         }
+        //批量修改
         groupMessageCountService.updateGroupMessageCountById(groupMessageCountList);
+        //发送消息统计消息
+        for (Map.Entry<Long, Integer> entry: messageCountSenderMap.entrySet()) {
+            MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+            messageChainBuilder.add("当前时间为" + TimeUtil.nowDateTime() +"\n");
+            messageChainBuilder.add("📊 昨日本群共发送消息 " + entry.getValue() + " 条\n");
+            messageChainBuilder.add("🌃 新的一天已经开始了，群内的" +
+                    botReplyMessageService.getGroupMemberTitleById(String.valueOf(entry.getKey())) +
+                    "们" + "早点休息哦");
+            GroupMessageSender.sendMessageByGroupId(messageChainBuilder, entry.getKey());
+        }
     }
 }

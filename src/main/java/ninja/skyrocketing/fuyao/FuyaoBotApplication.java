@@ -10,8 +10,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import java.util.Date;
-
 /**
  * @author skyrocketing Hong
  */
@@ -24,7 +22,7 @@ public class FuyaoBotApplication implements CommandLineRunner {
 	/**
 	 * 生成启动时间
 	 * */
-	public static Date StartDate = new Date();
+	public static final long StartDate = System.currentTimeMillis();
 
 	/**
 	 * 机器人实例

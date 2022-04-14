@@ -1,7 +1,5 @@
 package ninja.skyrocketing.fuyao.bot.config;
 
-import cn.hutool.core.date.DateUnit;
-import cn.hutool.core.date.DateUtil;
 import net.mamoe.mirai.BotFactory;
 import net.mamoe.mirai.event.EventChannel;
 import net.mamoe.mirai.event.events.BotEvent;
@@ -17,8 +15,6 @@ import ninja.skyrocketing.fuyao.bot.sender.friend.FriendMessageSender;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 /**
  * @author skyrocketing Hong
@@ -72,10 +68,9 @@ public class MiraiBotConfig {
         TimelyFunction.timelyMessage();
 
         //发送启动成功消息
-        Date endDate = new Date();
         FriendMessageSender.sendMessageByFriendId(
                 "✔ 启动成功" + "\n" +
-                        "耗费时间：" + DateUtil.between(FuyaoBotApplication.StartDate, endDate, DateUnit.SECOND) + "s",
+                        "耗费时间：" + ((System.currentTimeMillis() - FuyaoBotApplication.StartDate) / 1000) + "s",
                 FuyaoBotApplication.bot.getFriend(Long.parseLong(botConfigService.getConfigValueByKey("admin_user")))
         );
 

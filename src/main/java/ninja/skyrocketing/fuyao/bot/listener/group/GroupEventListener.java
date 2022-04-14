@@ -55,14 +55,14 @@ public class GroupEventListener extends SimpleListenerHost {
         if (GlobalVariables.getGlobalVariables().getTriggerGroupMessageInfoMap().containsKey(groupMessageInfo)) {
             try {
                 if (Boolean.FALSE.equals(GlobalVariables.getGlobalVariables().getTriggerGroupMessageInfoMap().get(groupMessageInfo))) {
-                    GlobalVariables.getGlobalVariables().recallAndDeleteByGroupMessageInfo(groupMessageInfo);
+                    GlobalVariables.getGlobalVariables().recallAndDeleteMessageByGroupMessageInfo(groupMessageInfo);
                     return ListeningStatus.LISTENING;
                 } else {
                     int messageId = groupMessageInfo.getMessageId();
                     for (int i = 1; i < 3; ++i) {
                         groupMessageInfo.setMessageId(messageId + i);
                         if (GlobalVariables.getGlobalVariables().getGroupSentMessageReceipt().get(groupMessageInfo) != null) {
-                            GlobalVariables.getGlobalVariables().recallAndDeleteByGroupMessageInfo(groupMessageInfo);
+                            GlobalVariables.getGlobalVariables().recallAndDeleteMessageByGroupMessageInfo(groupMessageInfo);
                             return ListeningStatus.LISTENING;
                         }
                     }
@@ -86,7 +86,6 @@ public class GroupEventListener extends SimpleListenerHost {
         messageChainBuilder.add("。\n");
         messageChainBuilder.add(MessageUtil.uploadAvatarImageToGroup(event.getGroup(), event.getMember()));
         messageChainBuilder.add(MessageUtil.userNotify(event.getMember(), true));
-        messageChainBuilder.add("\n记得阅读群公告（如果有的话）哦！");
         GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
         return ListeningStatus.LISTENING;
     }
@@ -105,7 +104,6 @@ public class GroupEventListener extends SimpleListenerHost {
         messageChainBuilder.add("。\n");
         messageChainBuilder.add(MessageUtil.uploadAvatarImageToGroup(event.getGroup(), event.getMember()));
         messageChainBuilder.add(MessageUtil.userNotify(event.getMember(), true));
-        messageChainBuilder.add("\n" + "记得阅读群公告（如果有的话）哦！");
         GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
         return ListeningStatus.LISTENING;
     }
@@ -287,7 +285,7 @@ public class GroupEventListener extends SimpleListenerHost {
     }
 
     /**
-     * 机器人成功加入了一个新群 (原群主通过 https://huifu.qq.com/ 恢复原来群主身份并入群, Bot 是原群主)
+     * 机器人成功加入了一个新群 (原群主通过 <a href="https://huifu.qq.com/">https://huifu.qq.com/</a> 恢复原来群主身份并入群, Bot 是原群主)
      * */
     @EventHandler
     public ListeningStatus onBotJoinGroupEvent(BotJoinGroupEvent.Retrieve event) {
@@ -311,10 +309,9 @@ public class GroupEventListener extends SimpleListenerHost {
             return ListeningStatus.LISTENING;
         }
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("💬 群名片修改\n");
+        messageChainBuilder.add("💬 群名片修改 (将在1分钟内自动撤回)\n");
         messageChainBuilder.add("🔙 原名片: \"" + event.getOrigin() + "\"\n");
         messageChainBuilder.add("🆕 新名片: \"" + event.getNew() + "\"\n");
-        messageChainBuilder.add("(提醒消息将在1分钟内自动撤回)");
         GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup(), 60000L);
         return ListeningStatus.LISTENING;
     }
@@ -324,14 +321,15 @@ public class GroupEventListener extends SimpleListenerHost {
      * */
     @EventHandler
     public ListeningStatus onGroupNameChangeEvent(GroupNameChangeEvent event) {
-        if (event.getNew().matches(botConfigService.getConfigValueByKey("ban_name"))) {
+        String newName = event.getNew();
+        if (newName.matches(botConfigService.getConfigValueByKey("ban_name"))) {
             GroupMessageSender.sendMessageByGroupId("⚠ 群名称修改\n检测到违禁词，已自动退群", event.getGroup().getId());
             event.getGroup().quit();
         } else {
             MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
             messageChainBuilder.add("💬 群名称修改\n");
             messageChainBuilder.add("🔙 原名称: \"" + event.getOrigin() + "\"\n");
-            messageChainBuilder.add("🆕 新名称: \"" + event.getNew() + "\"\n");
+            messageChainBuilder.add("🆕 新名称: \"" + newName + "\"\n");
             messageChainBuilder.add("🔧 修改人: " + MessageUtil.userNotify(event.getOperator(), false));
             GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
         }
@@ -346,12 +344,11 @@ public class GroupEventListener extends SimpleListenerHost {
         Date date = new Date();
         int durationSeconds = event.getDurationSeconds();
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("🤐 群员被禁言\n");
+        messageChainBuilder.add("🤐 群员被禁言 (将在1分钟内自动撤回)\n");
         messageChainBuilder.add("🚫 被禁言人: " + MessageUtil.userNotify(event.getMember(), false) + "\n");
         messageChainBuilder.add("👮 操作人: " + MessageUtil.userNotify(event.getOperator(), false) + "\n");
         messageChainBuilder.add("⏱️ 禁言时长: " + DateUtil.secondToTime(durationSeconds) + "\n");
         messageChainBuilder.add("📅 预计解禁时间: " + TimeUtil.dateTimeFormatter(DateUtil.offsetSecond(date, event.getDurationSeconds())));
-        messageChainBuilder.add("\n(提醒消息将在1分钟内自动撤回)");
         GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup(), 60000L);
         return ListeningStatus.LISTENING;
     }
@@ -362,10 +359,9 @@ public class GroupEventListener extends SimpleListenerHost {
     @EventHandler
     public ListeningStatus onMemberUnmuteEvent(MemberUnmuteEvent event) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("😬 群员被解禁\n");
+        messageChainBuilder.add("😬 群员被解禁 (将在1分钟内自动撤回)\n");
         messageChainBuilder.add("✅ 被解禁人: " + MessageUtil.userNotify(event.getMember(), false) + "\n");
         messageChainBuilder.add("👮 操作人: " + MessageUtil.userNotify(event.getOperator(), false));
-        messageChainBuilder.add("\n(提醒消息将在1分钟内自动撤回)");
         GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup(), 60000L);
         return ListeningStatus.LISTENING;
     }
@@ -375,6 +371,13 @@ public class GroupEventListener extends SimpleListenerHost {
      * */
     @EventHandler
     public ListeningStatus onMemberJoinRequestEvent(MemberJoinRequestEvent event) {
+        MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+        messageChainBuilder.add("➕ 群员加群申请\n");
+        messageChainBuilder.add("🈸 申请人: " + event.getFromNick() + " (" + event.getFromId() + ")");
+        if (event.getInvitor() != null) {
+            messageChainBuilder.add("🤝 邀请人: " + event.getInvitor() + " (" + event.getInvitorId() + ")");
+        }
+        GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
         return ListeningStatus.LISTENING;
     }
 

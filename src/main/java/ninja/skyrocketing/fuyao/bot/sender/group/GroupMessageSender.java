@@ -1,5 +1,6 @@
 package ninja.skyrocketing.fuyao.bot.sender.group;
 
+import lombok.NoArgsConstructor;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.MessageReceipt;
@@ -9,10 +10,12 @@ import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.fuyao.FuyaoBotApplication;
 import ninja.skyrocketing.fuyao.bot.function.ConfigFunction;
 import ninja.skyrocketing.fuyao.bot.pojo.user.UserMessage;
+import ninja.skyrocketing.fuyao.bot.service.group.GroupMessageCountService;
 import ninja.skyrocketing.fuyao.util.LogUtil;
 import ninja.skyrocketing.fuyao.util.MessageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,7 +24,14 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
+@NoArgsConstructor
 public class GroupMessageSender {
+    private static GroupMessageCountService groupMessageCountService;
+    @Autowired
+    private GroupMessageSender(GroupMessageCountService groupMessageCountService) {
+        GroupMessageSender.groupMessageCountService = groupMessageCountService;
+    }
+    
     /**
      * 消息发送器
      */
@@ -32,6 +42,16 @@ public class GroupMessageSender {
             return MessageUtil.runByInvoke(className, userMessage);
         }
         return null;
+    }
+    
+    /**
+     * 消息发送后的操作
+     * */
+    private static void afterMessageSent(Message message, Group group) {
+        //添加机器人群名片判断，防止恶意修改
+        ConfigFunction.botNameCardCheck(group);
+        //群消息计数器+1
+        groupMessageCountService.addOneMessageCountById(group.getId());
     }
 
     /**
@@ -49,8 +69,7 @@ public class GroupMessageSender {
             return false;
         }
         LogUtil.messageLog(message.toString(), group.getId(), true, group.getName());
-        //添加机器人群名片判断，防止恶意修改
-        ConfigFunction.botNameCardCheck(group);
+        afterMessageSent(message, group);
         return true;
     }
     
@@ -69,8 +88,7 @@ public class GroupMessageSender {
             return null;
         }
         LogUtil.messageLog(message.toString(), group.getId(), true, group.getName());
-        //添加机器人群名片判断，防止恶意修改
-        ConfigFunction.botNameCardCheck(group);
+        afterMessageSent(message, group);
         return messageReceipt;
     }
     
@@ -103,6 +121,16 @@ public class GroupMessageSender {
         Message asMessageChain = message.asMessageChain();
         return sendMessageByGroupId(asMessageChain, group);
     }
+    
+    /**
+     * 根据群号发消息并保存日志
+     * @param message MessageChainBuilder
+     * @param groupId 群号
+     */
+    public static boolean sendMessageByGroupId(MessageChainBuilder message, Long groupId) {
+        Message asMessageChain = message.asMessageChain();
+        return sendMessageByGroupId(asMessageChain, FuyaoBotApplication.bot.getGroup(groupId));
+    }
 
     /**
      * 根据群号发消息并保存日志
@@ -128,8 +156,7 @@ public class GroupMessageSender {
                 true,
                 group.getName()
         );
-        //添加机器人群名片判断，防止恶意修改
-        ConfigFunction.botNameCardCheck(group);
+        afterMessageSent(message, group);
     }
     
     /**
@@ -140,5 +167,6 @@ public class GroupMessageSender {
      */
     public static void sendMessageByGroupId(MessageChainBuilder message, Group group, Long recall) {
         sendMessageByGroupId(message.asMessageChain(), group, recall);
+        afterMessageSent(message.asMessageChain(), group);
     }
 }

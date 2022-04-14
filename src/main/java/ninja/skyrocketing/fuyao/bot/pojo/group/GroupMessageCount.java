@@ -25,5 +25,5 @@ public class GroupMessageCount {
 	
 	private Date lastUpdateTime;
 	
-	private Integer lastDayMessageCount;
+	private Integer yesterdayMessageCount;
 }

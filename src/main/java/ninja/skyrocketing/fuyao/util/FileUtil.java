@@ -36,15 +36,11 @@ public class FileUtil {
     /**
      * 根据QQ号下载头像并保存在jar包同级目录中
      * */
-    public static File getAvatarImageFile(long qqId) throws IOException {
+    public static File getAvatarImageFile(long qqId) {
         //将QQ号和获取头像的链接拼接起来
-        String avatarURL = "http://q1.qlogo.cn/g?b=qq&nk=" + qqId + "&s=640";
+        String avatarURL = "https://q1.qlogo.cn/g?b=qq&nk=" + qqId + "&s=640";
         //拼接头像的路径和文件名
-        String avatarFilePath = GlobalVariables.getGlobalVariables().getJarPath() +
-                separator + "cache" +
-                separator + "Member Avatar" +
-                separator + TimeUtil.dateFileName() +
-                separator + qqId + ".jpg";
+        String avatarFilePath = GlobalVariables.getGlobalVariables().getGroupMemberAvatarPath() + separator + TimeUtil.dateFileName() + separator + qqId + ".jpg";
         //下载并保存头像。当头像存在时则不下载，直接返回
         File avatarImageFile = new File(avatarFilePath);
         HttpUtil.downloadFile(avatarURL, avatarImageFile);

@@ -65,12 +65,12 @@ public class SmallGamesFunction {
         List<File> cardImageFileList = new ArrayList<>();
         //生成的新图片的文件名，将卡的id直接拼在一起
         StringBuilder jointCardFileName = new StringBuilder();
-        userMessage.getMessageChainBuilder().add("🎁 贫瘠之地的锤炼\n");
+        userMessage.getMessageChainBuilder().add("🎁 "+ gameHsCardList.get(0).getSet() + "\n");
         //遍历5张卡
         for (GameHsCard gameHsCard : gameHsCardList) {
             jointCardFileName.append(gameHsCard.getId());
             //卡的图片的缓存位置
-            File cardImageFile = new File(GlobalVariables.getGlobalVariables().getHearthstoneFilePath() + FileUtil.separator + gameHsCard.getId() + ".png");
+            File cardImageFile = new File(GlobalVariables.getGlobalVariables().getHearthstoneFilePath() + FileUtil.separator + "cardimage" + FileUtil.separator + gameHsCard.getId() + ".png");
             //如果图片不存在时就下载
             if (!cardImageFile.exists()) {
                 cardImageFile = HttpUtil.downloadFileFromUrl(gameHsCard.getImgurl(), cardImageFile);
@@ -80,7 +80,7 @@ public class SmallGamesFunction {
             userMessage.getMessageChainBuilder().add(gameHsCard.getRarity() + " " + gameHsCard.getName() + "\n");
         }
         //拼接后的图片的保存位置
-        File jointCardFile = new File(GlobalVariables.getGlobalVariables().getHearthstoneFilePath() + FileUtil.separator + jointCardFileName + ".png");
+        File jointCardFile = new File(GlobalVariables.getGlobalVariables().getHearthstoneFilePath() + FileUtil.separator + "cardimagecombined" + FileUtil.separator + jointCardFileName + ".png");
         //图片不存在时就拼接
         if (!jointCardFile.exists()) {
             FileUtil.jointPic(cardImageFileList, jointCardFile);

@@ -44,7 +44,12 @@ public class GlobalVariables {
 	/**
 	 * 全局hs卡牌缓存目录
 	 * */
-	private String HearthstoneFilePath = CachePath + FileUtil.separator + "Hearthstone";
+	private String HearthstoneFilePath = CachePath + FileUtil.separator + "hearthstone";
+	
+	/**
+	 * 全局群成员头像缓存目录
+	 * */
+	private String GroupMemberAvatarPath = CachePath + FileUtil.separator + "groupmemberavatar";
 	
 	/**
 	 * 全局防止滥用变量
@@ -80,7 +85,7 @@ public class GlobalVariables {
 	/**
 	 * 撤回消息并删除触发消息和被触发后发送消息的回执
 	 * */
-	public void recallAndDeleteByGroupMessageInfo(GroupMessageInfo groupMessageInfo) {
+	public void recallAndDeleteMessageByGroupMessageInfo(GroupMessageInfo groupMessageInfo) {
 		GroupSentMessageReceipt.get(groupMessageInfo).recall();
 		GroupSentMessageReceipt.remove(groupMessageInfo);
 		TriggerGroupMessageInfoMap.remove(groupMessageInfo);
