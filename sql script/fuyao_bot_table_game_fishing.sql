@@ -1,10 +1,4 @@
 
--- --------------------------------------------------------
-
---
--- 表的结构 `game_fishing`
---
-
 CREATE TABLE IF NOT EXISTS `game_fishing` (
   `fish_id` varchar(256) NOT NULL COMMENT '鱼名称id',
   `fish_name` varchar(256) NOT NULL COMMENT '鱼的名称',

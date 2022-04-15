@@ -1,11 +1,5 @@
 
---
--- 限制导出的表
---
 
---
--- 限制表 `group_fishing`
---
 ALTER TABLE `group_fishing`
   ADD CONSTRAINT `group_fishing_fk1` FOREIGN KEY (`fish_1`) REFERENCES `game_fishing` (`fish_id`) ON DELETE SET NULL,
   ADD CONSTRAINT `group_fishing_fk2` FOREIGN KEY (`fish_2`) REFERENCES `game_fishing` (`fish_id`) ON DELETE SET NULL,

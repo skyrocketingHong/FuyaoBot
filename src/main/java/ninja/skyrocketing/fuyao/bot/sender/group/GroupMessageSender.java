@@ -10,6 +10,7 @@ import net.mamoe.mirai.message.data.MessageChainBuilder;
 import ninja.skyrocketing.fuyao.FuyaoBotApplication;
 import ninja.skyrocketing.fuyao.bot.function.ConfigFunction;
 import ninja.skyrocketing.fuyao.bot.pojo.user.UserMessage;
+import ninja.skyrocketing.fuyao.bot.service.group.GroupMemberMessageCountService;
 import ninja.skyrocketing.fuyao.bot.service.group.GroupMessageCountService;
 import ninja.skyrocketing.fuyao.util.LogUtil;
 import ninja.skyrocketing.fuyao.util.MessageUtil;
@@ -27,9 +28,14 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class GroupMessageSender {
     private static GroupMessageCountService groupMessageCountService;
+    private static GroupMemberMessageCountService groupMemberMessageCountService;
     @Autowired
-    private GroupMessageSender(GroupMessageCountService groupMessageCountService) {
+    private GroupMessageSender(
+            GroupMessageCountService groupMessageCountService,
+            GroupMemberMessageCountService groupMemberMessageCountService
+    ) {
         GroupMessageSender.groupMessageCountService = groupMessageCountService;
+        GroupMessageSender.groupMemberMessageCountService = groupMemberMessageCountService;
     }
     
     /**
@@ -48,10 +54,14 @@ public class GroupMessageSender {
      * 消息发送后的操作
      * */
     private static void afterMessageSent(Message message, Group group) {
+        //时间戳
+        long milliseconds = System.currentTimeMillis();
         //添加机器人群名片判断，防止恶意修改
         ConfigFunction.botNameCardCheck(group);
         //群消息计数器+1
-        groupMessageCountService.addOneMessageCountById(group.getId());
+        groupMessageCountService.addMessageCountById(group.getId(), milliseconds);
+        //bot消息计数器+1
+        groupMemberMessageCountService.addGroupMemberMessageCount(group.getId(), FuyaoBotApplication.bot.getId(), milliseconds);
     }
 
     /**

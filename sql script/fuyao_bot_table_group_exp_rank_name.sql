@@ -1,10 +1,4 @@
 
--- --------------------------------------------------------
-
---
--- 表的结构 `group_exp_rank_name`
---
-
 CREATE TABLE IF NOT EXISTS `group_exp_rank_name` (
   `group_id` bigint NOT NULL COMMENT '群号',
   `exp_offset` int DEFAULT '0',

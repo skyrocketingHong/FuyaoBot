@@ -1,6 +1,7 @@
 package ninja.skyrocketing.fuyao.util;
 
 import cn.hutool.core.date.DateUtil;
+import ninja.skyrocketing.fuyao.FuyaoBotApplication;
 
 import java.util.Date;
 
@@ -25,6 +26,20 @@ public class TimeUtil {
     }
     public static String nowDateTime() {
         return dateTimeFormatter(new Date());
+    }
+    
+    //获取当日0时时间
+    public static String zeroDateTime(Date date) {
+        return dateFormatter(date) + " " + TimeUtil.getClockEmoji(0) + " " + "00:00:00.000";
+    }
+    
+    //获取启动时间或0时时间
+    public static String bootTimeOrZeroTime(Date date) {
+        if (FuyaoBotApplication.StartDate < System.currentTimeMillis()) {
+            return dateTimeFormatter(new Date(FuyaoBotApplication.StartDate));
+        } else {
+            return zeroDateTime(date);
+        }
     }
 
     //将日期时间作为文件名

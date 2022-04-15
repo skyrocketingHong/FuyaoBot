@@ -10,8 +10,10 @@ import lombok.NoArgsConstructor;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Message;
 import ninja.skyrocketing.fuyao.FuyaoBotApplication;
+import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMemberMessageCount;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessageCount;
 import ninja.skyrocketing.fuyao.bot.pojo.user.UserMessage;
+import ninja.skyrocketing.fuyao.bot.service.group.GroupMemberMessageCountService;
 import ninja.skyrocketing.fuyao.bot.service.group.GroupMessageCountService;
 import ninja.skyrocketing.fuyao.util.HttpUtil;
 import ninja.skyrocketing.fuyao.util.MessageUtil;
@@ -26,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 /**
  * @author skyrocketing Hong
@@ -36,9 +39,14 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 public class QueryFunction {
     private static GroupMessageCountService groupMessageCountService;
+    private static GroupMemberMessageCountService groupMemberMessageCountService;
     @Autowired
-    private QueryFunction(GroupMessageCountService groupMessageCountService) {
+    private QueryFunction(
+            GroupMessageCountService groupMessageCountService,
+            GroupMemberMessageCountService groupMemberMessageCountService
+    ) {
         QueryFunction.groupMessageCountService = groupMessageCountService;
+        QueryFunction.groupMemberMessageCountService = groupMemberMessageCountService;
     }
     
     /**
@@ -164,9 +172,14 @@ public class QueryFunction {
      * */
     public static Message messageCount(UserMessage userMessage) {
         GroupMessageCount groupMessageCount = groupMessageCountService.getGroupMessageCountById(userMessage.getUser().getGroupId());
+        GroupMemberMessageCount groupMemberMessageCount = groupMemberMessageCountService.selectGroupMemberMessageCountByUser(userMessage.getUser());
         userMessage.getMessageChainBuilder().add("📊 当前群内消息数量统计\n");
-        userMessage.getMessageChainBuilder().add("截至 " + TimeUtil.dateTimeFormatter(groupMessageCount.getLastUpdateTime()) + "\n");
-        userMessage.getMessageChainBuilder().add("本群今日已发送消息 " + (groupMessageCount.getMessageCount() + 1) + " 条");
+        userMessage.getMessageChainBuilder().add(TimeUtil.bootTimeOrZeroTime(new Date()) + " ");
+        userMessage.getMessageChainBuilder().add("至 " + TimeUtil.dateTimeFormatter(groupMessageCount.getLastUpdateTime()) + "\n");
+        userMessage.getMessageChainBuilder().add("👥 本群总发送消息 " + (groupMessageCount.getMessageCount() + 1) + " 条" + "\n");
+        userMessage.getMessageChainBuilder().add("👤 群员 ");
+        userMessage.getMessageChainBuilder().add(MessageUtil.userNotify(userMessage.getGroupMessageEvent().getSender(), false));
+        userMessage.getMessageChainBuilder().add(" 已发送消息 " + groupMemberMessageCount.getMessageCount() + " 条");
         return userMessage.getMessageChainBuilderAsMessageChain();
     }
 }

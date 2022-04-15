@@ -15,7 +15,7 @@ public interface GroupMessageCountService {
 	 * @param groupId 群号
 	 * @return int 插入条数
 	 * */
-	int addOneMessageCountById(long groupId);
+	int addMessageCountById(long groupId, long timestamp);
 	
 	/**
 	 * 获取大于对应消息数量值的群号list
@@ -41,12 +41,20 @@ public interface GroupMessageCountService {
 	List<GroupMessageCount> getAllGroupMessageCount();
 	
 	/**
-	 * 根据群号修改表
+	 * 根据群号批量修改表
 	 *
 	 * @param groupMessageCountList groupMessageCountList
-	 * @return Integer 插入数量
+	 * @return int 插入数量
 	 * */
 	int updateGroupMessageCountById(List<GroupMessageCount> groupMessageCountList);
+	
+	/**
+	 * 根据群号修改表
+	 *
+	 * @param groupMessageCount groupMessageCount
+	 * @return int 插入数量
+	 * */
+	int updateGroupMessageCountById(GroupMessageCount groupMessageCount);
 	
 	/**
 	 * 根据群号查找

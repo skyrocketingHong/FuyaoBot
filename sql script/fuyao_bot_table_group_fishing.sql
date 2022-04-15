@@ -1,10 +1,4 @@
 
--- --------------------------------------------------------
-
---
--- 表的结构 `group_fishing`
---
-
 CREATE TABLE IF NOT EXISTS `group_fishing` (
   `group_id` bigint NOT NULL COMMENT '群号',
   `user_id` bigint NOT NULL COMMENT 'QQ号',

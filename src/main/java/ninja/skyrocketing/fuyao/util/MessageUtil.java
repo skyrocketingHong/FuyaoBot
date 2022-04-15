@@ -141,7 +141,7 @@ public class MessageUtil {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add("\"" + nameOfMember(member) + "\" " + "(" + member.getId() + ")");
         if (needAt) {
-            messageChainBuilder.add("\n");
+            messageChainBuilder.add(" ");
             messageChainBuilder.add(new At(member.getId()));
         }
         return messageChainBuilder.asMessageChain();

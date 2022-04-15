@@ -209,28 +209,30 @@ public class TimelyFunction {
     public static void groupMessageCountUpdate() {
         //获取当前时间戳
         long currentTimeMillis = System.currentTimeMillis();
-        //获取全部GroupMessageCount
-        List<GroupMessageCount> groupMessageCountList = groupMessageCountService.getAllGroupMessageCount();
         //需要发送消息数量统计信息的群
         Map<Long, Integer> messageCountSenderMap = new HashMap<>();
+        //获取全部GroupMessageCount
+        List<GroupMessageCount> groupMessageCountList = groupMessageCountService.getAllGroupMessageCount();
         for (GroupMessageCount groupMessageCount : groupMessageCountList) {
             //将昨日消息数量设置
             groupMessageCount.setYesterdayMessageCount(groupMessageCount.getMessageCount());
-            //当消息数量最后修改时间与当前时间的差值小于10秒时，则认为群内当前有人说话，放入list中
-            if (groupMessageCount.getLastUpdateTime().getTime() - currentTimeMillis <= 10000) {
-                messageCountSenderMap.put(groupMessageCount.getGroupId(), groupMessageCount.getMessageCount());
-            }
             //将（今日）消息数量置为0
             groupMessageCount.setMessageCount(0);
+            //如果时间差小于60秒，则发送消息统计信息
+            if (currentTimeMillis - groupMessageCount.getLastUpdateTime().getTime() <= 60000L) {
+                messageCountSenderMap.put(groupMessageCount.getGroupId(), groupMessageCount.getMessageCount());
+            }
+            //将最后修改时间修改为当前时间
+            groupMessageCount.setLastUpdateTime(new Date());
+            //写回数据库
+            groupMessageCountService.updateGroupMessageCountById(groupMessageCount);
         }
-        //批量修改
-        groupMessageCountService.updateGroupMessageCountById(groupMessageCountList);
         //发送消息统计消息
         for (Map.Entry<Long, Integer> entry: messageCountSenderMap.entrySet()) {
             MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
             messageChainBuilder.add("当前时间为" + TimeUtil.nowDateTime() +"\n");
             messageChainBuilder.add("📊 昨日本群共发送消息 " + entry.getValue() + " 条\n");
-            messageChainBuilder.add("🌃 新的一天已经开始了，群内的" +
+            messageChainBuilder.add("🌃 新的一天已经开始了\n群内的" +
                     botReplyMessageService.getGroupMemberTitleById(String.valueOf(entry.getKey())) +
                     "们" + "早点休息哦");
             GroupMessageSender.sendMessageByGroupId(messageChainBuilder, entry.getKey());

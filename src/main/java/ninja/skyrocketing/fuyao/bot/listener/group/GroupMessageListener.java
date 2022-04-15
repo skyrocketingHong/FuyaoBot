@@ -20,6 +20,7 @@ import ninja.skyrocketing.fuyao.bot.sender.group.GroupMessageSender;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotBanedGroupService;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotConfigService;
 import ninja.skyrocketing.fuyao.bot.service.bot.BotReplyMessageService;
+import ninja.skyrocketing.fuyao.bot.service.group.GroupMemberMessageCountService;
 import ninja.skyrocketing.fuyao.bot.service.group.GroupMessageCountService;
 import ninja.skyrocketing.fuyao.bot.service.user.BotBanedUserService;
 import ninja.skyrocketing.fuyao.util.LogUtil;
@@ -42,19 +43,22 @@ public class GroupMessageListener extends SimpleListenerHost {
     private static BotConfigService botConfigService;
     private static BotReplyMessageService botReplyMessageService;
     private static GroupMessageCountService groupMessageCountService;
+    private static GroupMemberMessageCountService groupMemberMessageCountService;
     @Autowired
     public GroupMessageListener(
             BotBanedGroupService botBanedGroupService,
             BotBanedUserService botBanedUserService,
             BotConfigService botConfigService,
             BotReplyMessageService botReplyMessageService,
-            GroupMessageCountService groupMessageCountService
+            GroupMessageCountService groupMessageCountService,
+            GroupMemberMessageCountService groupMemberMessageCountService
     ) {
         GroupMessageListener.botBanedGroupService = botBanedGroupService;
         GroupMessageListener.botBanedUserService = botBanedUserService;
         GroupMessageListener.botConfigService = botConfigService;
         GroupMessageListener.botReplyMessageService = botReplyMessageService;
         GroupMessageListener.groupMessageCountService = groupMessageCountService;
+        GroupMessageListener.groupMemberMessageCountService = groupMemberMessageCountService;
     }
 
     /**
@@ -63,8 +67,12 @@ public class GroupMessageListener extends SimpleListenerHost {
     @EventHandler
     public ListeningStatus onMessage(GroupMessageEvent event) throws Exception {
         long groupId = event.getGroup().getId();
+        long userId = event.getSender().getId();
+        long milliseconds = System.currentTimeMillis();
         //记录消息数量
-        groupMessageCountService.addOneMessageCountById(groupId);
+        groupMessageCountService.addMessageCountById(groupId, milliseconds);
+        //记录群员消息数量
+        groupMemberMessageCountService.addGroupMemberMessageCount(groupId, userId, milliseconds);
         //判断是否为黑名单用户或群
         if (botBanedGroupService.isBaned(groupId) || botBanedUserService.isBaned(event.getSender().getId())) {
             return ListeningStatus.LISTENING;

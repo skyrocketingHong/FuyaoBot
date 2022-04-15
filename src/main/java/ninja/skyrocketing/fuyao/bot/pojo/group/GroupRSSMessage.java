@@ -26,6 +26,8 @@ public class GroupRSSMessage {
 	
 	private boolean enabled;
 	
+	private String notifyKeywords;
+	
 	private Date lastNotifiedDate;
 	
 	private String lastNotifiedUrl;

@@ -30,7 +30,7 @@ public class GroupMessageCountServiceImpl implements GroupMessageCountService {
 	 * @return int 修改/插入条数
 	 */
 	@Override
-	public int addOneMessageCountById(long groupId) {
+	public int addMessageCountById(long groupId, long timestamp) {
 		int messageCount = 1;
 		GroupMessageCount groupMessageCount = getGroupMessageCountById(groupId);
 		if(groupMessageCount == null) {
@@ -38,21 +38,21 @@ public class GroupMessageCountServiceImpl implements GroupMessageCountService {
 					GroupMessageCount.builder()
 							.groupId(groupId)
 							.messageCount(messageCount)
-							.lastUpdateTime(new Date(System.currentTimeMillis()))
+							.lastUpdateTime(new Date(timestamp))
 							.build()
 			);
 			return 1;
 		} else {
 			//当该群的最后更新时间不是同一天时，自动将前一日的消息移至yesterday_message_count
-			if (!DateUtil.isSameDay(groupMessageCount.getLastUpdateTime(), new Date())) {
+			if (!DateUtil.isSameDay(groupMessageCount.getLastUpdateTime(), new Date(timestamp))) {
 				groupMessageCount.setYesterdayMessageCount(groupMessageCount.getMessageCount());
 				groupMessageCount.setMessageCount(messageCount);
-				groupMessageCount.setLastUpdateTime(new Date(System.currentTimeMillis()));
+				groupMessageCount.setLastUpdateTime(new Date(timestamp));
 				return groupMessageCountMapper.updateById(groupMessageCount);
 			}
 			messageCount = groupMessageCount.getMessageCount() + 1;
 			groupMessageCount.setMessageCount(messageCount);
-			groupMessageCount.setLastUpdateTime(new Date());
+			groupMessageCount.setLastUpdateTime(new Date(timestamp));
 			return groupMessageCountMapper.updateById(groupMessageCount);
 		}
 	}
@@ -103,6 +103,17 @@ public class GroupMessageCountServiceImpl implements GroupMessageCountService {
 			update += groupMessageCountMapper.updateById(groupMessageCount);
 		}
 		return update;
+	}
+	
+	/**
+	 * 根据群号修改表
+	 *
+	 * @param groupMessageCount groupMessageCount
+	 * @return int 插入数量
+	 */
+	@Override
+	public int updateGroupMessageCountById(GroupMessageCount groupMessageCount) {
+		return groupMessageCountMapper.updateById(groupMessageCount);
 	}
 	
 	/**

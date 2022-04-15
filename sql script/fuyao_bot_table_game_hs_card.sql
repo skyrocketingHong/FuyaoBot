@@ -1,10 +1,4 @@
 
--- --------------------------------------------------------
-
---
--- 表的结构 `game_hs_card`
---
-
 CREATE TABLE IF NOT EXISTS `game_hs_card` (
   `id` int NOT NULL COMMENT '卡的数字id',
   `set` varchar(128) NOT NULL COMMENT '卡所属的扩展包',
