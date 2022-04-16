@@ -7,6 +7,7 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.NoArgsConstructor;
+import net.mamoe.mirai.contact.NormalMember;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Message;
 import ninja.skyrocketing.fuyao.FuyaoBotApplication;
@@ -172,14 +173,56 @@ public class QueryFunction {
      * */
     public static Message messageCount(UserMessage userMessage) {
         GroupMessageCount groupMessageCount = groupMessageCountService.getGroupMessageCountById(userMessage.getUser().getGroupId());
-        GroupMemberMessageCount groupMemberMessageCount = groupMemberMessageCountService.selectGroupMemberMessageCountByUser(userMessage.getUser());
-        userMessage.getMessageChainBuilder().add("📊 当前群内消息数量统计\n");
-        userMessage.getMessageChainBuilder().add(TimeUtil.bootTimeOrZeroTime(new Date()) + " ");
-        userMessage.getMessageChainBuilder().add("至 " + TimeUtil.dateTimeFormatter(groupMessageCount.getLastUpdateTime()) + "\n");
+        userMessage.getMessageChainBuilder().add(TimeUtil.zeroDateTime(new Date()) + " ");
+        userMessage.getMessageChainBuilder().add("至 " + TimeUtil.getClockEmoji(groupMessageCount.getLastUpdateTime().getHours()) +  TimeUtil.timeFormatter(groupMessageCount.getLastUpdateTime()) + "\n");
         userMessage.getMessageChainBuilder().add("👥 本群总发送消息 " + (groupMessageCount.getMessageCount() + 1) + " 条" + "\n");
-        userMessage.getMessageChainBuilder().add("👤 群员 ");
-        userMessage.getMessageChainBuilder().add(MessageUtil.userNotify(userMessage.getGroupMessageEvent().getSender(), false));
-        userMessage.getMessageChainBuilder().add(" 已发送消息 " + groupMemberMessageCount.getMessageCount() + " 条");
+        
+        return userMessage.getMessageChainBuilderAsMessageChain();
+    }
+    
+    /**
+     * 个人信息查询
+     * */
+    public static Message memberStatus(UserMessage userMessage) {
+        String messageWithoutTrigger = userMessage.getMessage().replaceFirst("member[\\s|-]?status\\s*@?", "");
+        messageWithoutTrigger = messageWithoutTrigger.replaceAll("\\s", "");
+        long queryId = 0;
+        if (messageWithoutTrigger.length() > 0) {
+            queryId = Long.parseLong(messageWithoutTrigger);
+        }
+        NormalMember normalMember;
+        userMessage.getMessageChainBuilder().add("👤 群员信息查询" + "\n");
+        //查询其他群员信息
+        if (queryId != 0) {
+            normalMember = userMessage.getGroupMessageEvent().getGroup().get(queryId);
+            //判断是否为有效群员qq号
+            if (normalMember == null) {
+                userMessage.getMessageChainBuilder().add("⚠️ 群内无此群员");
+                return userMessage.getMessageChainBuilderAsMessageChain();
+            }
+            GroupMemberMessageCount groupMemberMessageCount = groupMemberMessageCountService.selectGroupMemberMessageCountById(userMessage.getUser().getGroupId(), queryId);
+            int messageCount = 0;
+            //判断群员是否发送过消息或查询的结果是否为前一日
+            if (groupMemberMessageCount != null && DateUtil.isSameDay(new Date(), groupMemberMessageCount.getLastUpdateTime())) {
+                messageCount = groupMemberMessageCount.getMessageCount();
+            }
+            userMessage.getMessageChainBuilder().add("🪪 群名片/昵称: " + MessageUtil.userNotify(userMessage.getGroupMessageEvent().getGroup().get(queryId), false) + "\n");
+            userMessage.getMessageChainBuilder().add("🦜 最后发言时间: " + TimeUtil.dateTimeFormatter(new Date(normalMember.getLastSpeakTimestamp() * 1000L)) + "\n");
+            userMessage.getMessageChainBuilder().add("🗣️ 今日已发送消息数量: " + messageCount + " 条" + "\n");
+        }
+        //查询发送人的信息
+        else {
+            normalMember = userMessage.getGroupMessageEvent().getGroup().get(userMessage.getUser().getUserId());
+            GroupMemberMessageCount groupMemberMessageCount = groupMemberMessageCountService.selectGroupMemberMessageCountByUser(userMessage.getUser());
+            userMessage.getMessageChainBuilder().add("🗣️ 今日已发送消息数量: " + groupMemberMessageCount.getMessageCount() + " 条" + "\n");
+        }
+        userMessage.getMessageChainBuilder().add("➕ 入群时间: " + TimeUtil.dateTimeFormatter(new Date(normalMember.getJoinTimestamp() * 1000L)) + "\n");
+        userMessage.getMessageChainBuilder().add("👑 群头衔: " + ("".equals(normalMember.getSpecialTitle()) ? "无" : normalMember.getSpecialTitle()) + "\n");
+        userMessage.getMessageChainBuilder().add(
+                "🈲 是否禁言: " + (normalMember.isMuted()
+                        ? "是\n" + "🉑 解禁时间: " + TimeUtil.dateTimeFormatter(new Date(System.currentTimeMillis() + normalMember.getMuteTimeRemaining() * 1000L))
+                        : "否")
+        );
         return userMessage.getMessageChainBuilderAsMessageChain();
     }
 }

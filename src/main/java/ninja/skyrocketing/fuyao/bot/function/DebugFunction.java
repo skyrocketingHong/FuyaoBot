@@ -4,11 +4,9 @@ import cn.hutool.http.HttpUtil;
 import net.mamoe.mirai.message.data.Message;
 import ninja.skyrocketing.fuyao.bot.config.GlobalVariables;
 import ninja.skyrocketing.fuyao.bot.pojo.user.UserMessage;
-import ninja.skyrocketing.fuyao.util.FileUtil;
 import ninja.skyrocketing.fuyao.util.HearthstoneUtil;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * @author skyrocketing Hong

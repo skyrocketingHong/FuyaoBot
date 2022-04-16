@@ -303,8 +303,8 @@ public class GroupEventListener extends SimpleListenerHost {
         if (event.getMember().getId() == event.getBot().getId()) {
             event.getMember().setNameCard(event.getBot().getNick());
             LogUtil.eventLog(event.toString(), "机器人群名片被修改");
-            return ListeningStatus.LISTENING;
         }
+        /* 群员群名片修改提醒，不稳定
         if (event.getOrigin().equals("") || event.getNew().equals("")) {
             return ListeningStatus.LISTENING;
         }
@@ -313,6 +313,7 @@ public class GroupEventListener extends SimpleListenerHost {
         messageChainBuilder.add("🔙 原名片: \"" + event.getOrigin() + "\"\n");
         messageChainBuilder.add("🆕 新名片: \"" + event.getNew() + "\"\n");
         GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup(), 60000L);
+        */
         return ListeningStatus.LISTENING;
     }
     

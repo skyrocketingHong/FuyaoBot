@@ -36,4 +36,5 @@ INSERT INTO `bot_function_trigger` (`id`, `char_id`, `trigger_name`, `trigger_co
 (20, 'group-settings', '群内设置查询', '群内设置查询', '^group[\\s|-]?settings$', 'function.QueryFunction.groupSettings', 1, 1, 0),
 (21, 'bot-status', 'bot状态查询', 'bot状态查询', '^bot[\\s|-]?status$', 'function.QueryFunction.botStatus', 1, 1, 0),
 (22, 'feedback-message', '扶摇 bot 反馈', '收到反馈后会发送给开发者', '^feedback\\s+\\S+', 'function.ConfigFunction.feedbackMessage', 1, 1, 0),
-(23, 'message-count', '消息数量查询', '消息数量查询', '^message[\\s|-]count$', 'function.QueryFunction.messageCount', 1, 1, 0);
+(23, 'message-count', '消息数量查询', '消息数量查询', '^message[\\s|-]count$', 'function.QueryFunction.messageCount', 1, 1, 0),
+(24, 'member-status', '群员信息查询', '群员信息查询', '^member[\\s|-]?status\\s*(@\\d{5,10})?\\s*$', 'function.QueryFunction.memberStatus', '1', '1', '0');

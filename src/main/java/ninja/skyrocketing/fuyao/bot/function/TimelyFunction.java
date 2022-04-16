@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.sql.Time;
 import java.util.*;
 
 /**
@@ -208,34 +207,37 @@ public class TimelyFunction {
     @Scheduled(cron = "1 0 0 * * ?")
     public static void groupMessageCountUpdate() {
         //获取当前时间戳
-        long currentTimeMillis = System.currentTimeMillis();
-        //需要发送消息数量统计信息的群
-        Map<Long, Integer> messageCountSenderMap = new HashMap<>();
+        Date currentDate = new Date();
+        long currentTimeMillis = currentDate.getTime();
         //获取全部GroupMessageCount
         List<GroupMessageCount> groupMessageCountList = groupMessageCountService.getAllGroupMessageCount();
+        //昨日的最后更新时间
+        Map<Long, Date> yesterdayLastUpdateTimes = new HashMap<>();
+        //修改数据库数据
         for (GroupMessageCount groupMessageCount : groupMessageCountList) {
             //将昨日消息数量设置
             groupMessageCount.setYesterdayMessageCount(groupMessageCount.getMessageCount());
             //将（今日）消息数量置为0
             groupMessageCount.setMessageCount(0);
-            //如果时间差小于60秒，则发送消息统计信息
-            if (currentTimeMillis - groupMessageCount.getLastUpdateTime().getTime() <= 60000L) {
-                messageCountSenderMap.put(groupMessageCount.getGroupId(), groupMessageCount.getMessageCount());
-            }
+            //记录昨日的最后更新时间
+            yesterdayLastUpdateTimes.put(groupMessageCount.getGroupId(), groupMessageCount.getLastUpdateTime());
             //将最后修改时间修改为当前时间
-            groupMessageCount.setLastUpdateTime(new Date());
+            groupMessageCount.setLastUpdateTime(currentDate);
             //写回数据库
             groupMessageCountService.updateGroupMessageCountById(groupMessageCount);
         }
-        //发送消息统计消息
-        for (Map.Entry<Long, Integer> entry: messageCountSenderMap.entrySet()) {
-            MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-            messageChainBuilder.add("当前时间为" + TimeUtil.nowDateTime() +"\n");
-            messageChainBuilder.add("📊 昨日本群共发送消息 " + entry.getValue() + " 条\n");
-            messageChainBuilder.add("🌃 新的一天已经开始了\n群内的" +
-                    botReplyMessageService.getGroupMemberTitleById(String.valueOf(entry.getKey())) +
-                    "们" + "早点休息哦");
-            GroupMessageSender.sendMessageByGroupId(messageChainBuilder, entry.getKey());
+        //前一日已发送消息统计消息
+        for (GroupMessageCount groupMessageCount : groupMessageCountList) {
+            //如果时间差小于60秒，则发送消息统计信息
+            if (currentTimeMillis - yesterdayLastUpdateTimes.get(groupMessageCount.getGroupId()).getTime() <= 60000L) {
+                MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
+                messageChainBuilder.add("当前时间为" + TimeUtil.nowDateTime() +"\n");
+                messageChainBuilder.add("📊 昨日本群共发送消息 " + groupMessageCount.getYesterdayMessageCount() + " 条\n");
+                messageChainBuilder.add("🌃 新的一天已经开始了\n群内的" +
+                        botReplyMessageService.getGroupMemberTitleById(String.valueOf(groupMessageCount.getGroupId())) +
+                        "们" + "早点休息哦");
+                GroupMessageSender.sendMessageByGroupId(messageChainBuilder, groupMessageCount.getGroupId());
+            }
         }
     }
 }

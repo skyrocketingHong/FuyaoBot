@@ -42,7 +42,7 @@ public class FuyaoBotApplication implements CommandLineRunner {
 	 * 覆盖run方法
 	 * */
 	@Override
-	public void run(String... args) throws Exception {
+	public void run(String[] arg) throws Exception {
 		//运行机器人
 		MiraiBotConfig.runBot();
 
