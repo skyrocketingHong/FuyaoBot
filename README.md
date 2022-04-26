@@ -6,6 +6,7 @@
 - [操作列表](#操作列表)
 - [TO-DO](#TO-DO)
 - [更新日志](#更新日志)
+- [鸣谢](#鸣谢)
 
 # 操作列表
 
@@ -547,3 +548,12 @@
 * 首次更新。
     * 实现功能01~04。
 </details>
+
+## 鸣谢
+
+> [IntelliJ IDEA](https://zh.wikipedia.org/zh-hans/IntelliJ_IDEA) 是一个在各个方面都最大程度地提高开发人员的生产力的 IDE，适用于 JVM 平台语言。
+
+特别感谢 [JetBrains](https://www.jetbrains.com) 为开源项目提供免费的 [开源开发许可证 (Licenses for Open Source Development)](https://www.jetbrains.com/community/opensource/#support)
+
+
+[<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" width="200"/>](https://www.jetbrains.com)
