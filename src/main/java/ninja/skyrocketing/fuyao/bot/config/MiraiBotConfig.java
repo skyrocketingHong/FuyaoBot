@@ -1,5 +1,6 @@
 package ninja.skyrocketing.fuyao.bot.config;
 
+import lombok.NoArgsConstructor;
 import net.mamoe.mirai.BotFactory;
 import net.mamoe.mirai.event.EventChannel;
 import net.mamoe.mirai.event.events.BotEvent;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
+@NoArgsConstructor
 public class MiraiBotConfig {
     private static BotConfigService botConfigService;
     @Autowired

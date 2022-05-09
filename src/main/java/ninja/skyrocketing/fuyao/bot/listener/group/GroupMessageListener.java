@@ -90,7 +90,7 @@ public class GroupMessageListener extends SimpleListenerHost {
         String messageInGroupToString = messageInGroup.toString();
         String messageInGroupContentToString = messageInGroup.contentToString();
         //判断是否为@机器人
-        if (messageInGroupContentToString.matches("^@" + event.getBot().getId() + "$")) {
+        if (messageInGroupContentToString.matches("^@" + event.getBot().getId() + "\\s*" + "$")) {
             //防滥用判断
             if (MessageUtil.preventingAbuse(timestamp, user, event)) {
                 return ListeningStatus.LISTENING;

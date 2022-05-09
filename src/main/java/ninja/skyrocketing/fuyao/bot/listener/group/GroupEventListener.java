@@ -83,7 +83,7 @@ public class GroupEventListener extends SimpleListenerHost {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
         messageChainBuilder.add("👏 欢迎第" + (event.getGroup().getMembers().size() + 1) + "名");
         messageChainBuilder.add(botReplyMessageService.getGroupMemberTitleById(String.valueOf(event.getGroupId())));
-        messageChainBuilder.add("。\n");
+        messageChainBuilder.add("\n");
         messageChainBuilder.add(MessageUtil.uploadAvatarImageToGroup(event.getGroup(), event.getMember()));
         messageChainBuilder.add(MessageUtil.userNotify(event.getMember(), true));
         GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
@@ -101,7 +101,7 @@ public class GroupEventListener extends SimpleListenerHost {
         messageChainBuilder.add(MessageUtil.userNotify(event.getInvitor(), false));
         messageChainBuilder.add(" 邀请的第 " + (event.getGroup().getMembers().size() + 1) + " 名");
         messageChainBuilder.add(botReplyMessageService.getGroupMemberTitleById(String.valueOf(event.getGroupId())));
-        messageChainBuilder.add("。\n");
+        messageChainBuilder.add("\n");
         messageChainBuilder.add(MessageUtil.uploadAvatarImageToGroup(event.getGroup(), event.getMember()));
         messageChainBuilder.add(MessageUtil.userNotify(event.getMember(), true));
         GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup());
@@ -114,9 +114,12 @@ public class GroupEventListener extends SimpleListenerHost {
     @EventHandler
     public ListeningStatus onQuit(MemberLeaveEvent.Quit event) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("🏃 群员退群\n群员 ");
+        messageChainBuilder.add(
+                "🏃 群员退群 (1分钟内自动撤回)" + "\n" +
+                "群员 "
+        );
         messageChainBuilder.add(MessageUtil.userNotify(event.getMember(), false));
-        messageChainBuilder.add(" 悄悄地溜了...\n(提醒消息将在1分钟内自动撤回)");
+        messageChainBuilder.add(" 悄悄地溜了...\n");
         //清理数据
         DBUtil.cleanDataAfterLeave(event.getGroup().getId(), event.getMember().getId());
         //撤回消息
@@ -130,11 +133,14 @@ public class GroupEventListener extends SimpleListenerHost {
     @EventHandler
     public ListeningStatus onKick(MemberLeaveEvent.Kick event) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("✈️ 群员被移除\n群员 ");
+        messageChainBuilder.add(
+                "✈️ 群员被移除 (1分钟内自动撤回)" + "\n" +
+                "群员 "
+        );
         messageChainBuilder.add(MessageUtil.userNotify(event.getMember(), false));
         messageChainBuilder.add(" 已被 ");
         messageChainBuilder.add(MessageUtil.userNotify(event.getOperator(), false));
-        messageChainBuilder.add(" 移出群聊\n(提醒消息将在1分钟内自动撤回)");
+        messageChainBuilder.add(" 移出群聊");
         //清理数据
         DBUtil.cleanDataAfterLeave(event.getGroup().getId(), event.getMember().getId());
         //撤回消息
@@ -345,7 +351,7 @@ public class GroupEventListener extends SimpleListenerHost {
         Date date = new Date();
         int durationSeconds = event.getDurationSeconds();
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("🤐 群员被禁言 (将在1分钟内自动撤回)\n");
+        messageChainBuilder.add("🤐 群员被禁言 (1分钟内自动撤回)\n");
         messageChainBuilder.add("🚫 被禁言人: " + MessageUtil.userNotify(event.getMember(), false) + "\n");
         messageChainBuilder.add("👮 操作人: " + MessageUtil.userNotify(event.getOperator(), false) + "\n");
         messageChainBuilder.add("⏱️ 禁言时长: " + DateUtil.secondToTime(durationSeconds) + "\n");
@@ -360,7 +366,7 @@ public class GroupEventListener extends SimpleListenerHost {
     @EventHandler
     public ListeningStatus onMemberUnmuteEvent(MemberUnmuteEvent event) {
         MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
-        messageChainBuilder.add("😬 群员被解禁 (将在1分钟内自动撤回)\n");
+        messageChainBuilder.add("😬 群员被解禁 (1分钟内自动撤回)\n");
         messageChainBuilder.add("✅ 被解禁人: " + MessageUtil.userNotify(event.getMember(), false) + "\n");
         messageChainBuilder.add("👮 操作人: " + MessageUtil.userNotify(event.getOperator(), false));
         GroupMessageSender.sendMessageByGroupId(messageChainBuilder, event.getGroup(), 60000L);

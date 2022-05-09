@@ -206,9 +206,14 @@ public class QueryFunction {
             if (groupMemberMessageCount != null && DateUtil.isSameDay(new Date(), groupMemberMessageCount.getLastUpdateTime())) {
                 messageCount = groupMemberMessageCount.getMessageCount();
             }
-            userMessage.getMessageChainBuilder().add("🪪 群名片/昵称: " + MessageUtil.userNotify(userMessage.getGroupMessageEvent().getGroup().get(queryId), false) + "\n");
+            userMessage.getMessageChainBuilder().add("🪪 群名片 / 昵称: " + MessageUtil.userNotify(userMessage.getGroupMessageEvent().getGroup().get(queryId), false) + "\n");
             userMessage.getMessageChainBuilder().add("🦜 最后发言时间: " + TimeUtil.dateTimeFormatter(new Date(normalMember.getLastSpeakTimestamp() * 1000L)) + "\n");
             userMessage.getMessageChainBuilder().add("🗣️ 今日已发送消息数量: " + messageCount + " 条" + "\n");
+            userMessage.getMessageChainBuilder().add(
+                    "🈲 是否禁言: " + (normalMember.isMuted()
+                            ? "是\n" + "🉑 解禁时间: " + TimeUtil.dateTimeFormatter(new Date(System.currentTimeMillis() + normalMember.getMuteTimeRemaining() * 1000L))
+                            : "否")
+            );
         }
         //查询发送人的信息
         else {
@@ -218,11 +223,6 @@ public class QueryFunction {
         }
         userMessage.getMessageChainBuilder().add("➕ 入群时间: " + TimeUtil.dateTimeFormatter(new Date(normalMember.getJoinTimestamp() * 1000L)) + "\n");
         userMessage.getMessageChainBuilder().add("👑 群头衔: " + ("".equals(normalMember.getSpecialTitle()) ? "无" : normalMember.getSpecialTitle()) + "\n");
-        userMessage.getMessageChainBuilder().add(
-                "🈲 是否禁言: " + (normalMember.isMuted()
-                        ? "是\n" + "🉑 解禁时间: " + TimeUtil.dateTimeFormatter(new Date(System.currentTimeMillis() + normalMember.getMuteTimeRemaining() * 1000L))
-                        : "否")
-        );
         return userMessage.getMessageChainBuilderAsMessageChain();
     }
 }

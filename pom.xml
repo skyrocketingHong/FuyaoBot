@@ -5,12 +5,12 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.0.0-M1</version>
+		<version>3.0.0-M2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ninja.skyrocketing.fuyao</groupId>
 	<artifactId>fuyao-bot</artifactId>
-	<version>4.6.14.80</version>
+	<version>4.6.15.81</version>
 	<name>Fuyao bot</name>
 	<description>A QQ bot named Fuyao and bases on Mirai, Spring Boot, MySQL and Mybatis Plus.</description>
 
@@ -40,7 +40,7 @@
 		<dependency>
 			<groupId>net.mamoe</groupId>
 			<artifactId>mirai-core-jvm</artifactId>
-			<version>2.11.0-M2.2</version>
+			<version>2.11.0-RC2</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>atomicfu</artifactId>
@@ -55,6 +55,11 @@
 					<groupId>org.jetbrains</groupId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15on</artifactId>
+			<version>1.70</version>
 		</dependency>
 		<!--Kotlin-->
 		<dependency>
@@ -87,13 +92,13 @@
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>druid-spring-boot-starter</artifactId>
-			<version>1.2.8</version>
+			<version>1.2.9</version>
 		</dependency>
 		<!--hutool工具包-->
 		<dependency>
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-all</artifactId>
-			<version>5.7.22</version>
+			<version>5.8.0</version>
 		</dependency>
 		<!--MySQL-->
 		<dependency>
@@ -281,5 +286,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

@@ -204,7 +204,7 @@ public class TimelyFunction {
     /**
      * 每天0点0分1秒将昨日消息数量放入last_day_message_count字段中并发送前一日消息统计信息
      * */
-    @Scheduled(cron = "1 0 0 * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     public static void groupMessageCountUpdate() {
         //获取当前时间戳
         Date currentDate = new Date();
@@ -229,13 +229,14 @@ public class TimelyFunction {
         //前一日已发送消息统计消息
         for (GroupMessageCount groupMessageCount : groupMessageCountList) {
             //如果时间差小于60秒，则发送消息统计信息
-            if (currentTimeMillis - yesterdayLastUpdateTimes.get(groupMessageCount.getGroupId()).getTime() <= 60000L) {
+            if (currentTimeMillis - yesterdayLastUpdateTimes.get(groupMessageCount.getGroupId()).getTime() <= 1800000L) {
                 MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
                 messageChainBuilder.add("当前时间为" + TimeUtil.nowDateTime() +"\n");
                 messageChainBuilder.add("📊 昨日本群共发送消息 " + groupMessageCount.getYesterdayMessageCount() + " 条\n");
-                messageChainBuilder.add("🌃 新的一天已经开始了\n群内的" +
-                        botReplyMessageService.getGroupMemberTitleById(String.valueOf(groupMessageCount.getGroupId())) +
-                        "们" + "早点休息哦");
+                messageChainBuilder.add(
+                        "🌃 新的一天已经开始了" + "\n" +
+                        "🌙 " + botReplyMessageService.getGroupMemberTitleById(String.valueOf(groupMessageCount.getGroupId())) + "们早点休息哦"
+                );
                 GroupMessageSender.sendMessageByGroupId(messageChainBuilder, groupMessageCount.getGroupId());
             }
         }
