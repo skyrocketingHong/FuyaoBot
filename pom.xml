@@ -10,13 +10,13 @@
 	</parent>
 	<groupId>ninja.skyrocketing.fuyao</groupId>
 	<artifactId>fuyao-bot</artifactId>
-	<version>4.6.15.81</version>
+	<version>4.6.16.82</version>
 	<name>Fuyao bot</name>
 	<description>A QQ bot named Fuyao and bases on Mirai, Spring Boot, MySQL and Mybatis Plus.</description>
 
 	<properties>
 		<java.version>17</java.version>
-		<kotlin.version>1.6.20</kotlin.version>
+		<kotlin.version>1.6.21</kotlin.version>
 		<start-class>ninja.skyrocketing.fuyao.FuyaoBotApplication</start-class>
 	</properties>
 
@@ -81,7 +81,7 @@
 		<dependency>
 			<groupId>org.jetbrains.kotlinx</groupId>
 			<artifactId>atomicfu</artifactId>
-			<version>0.17.1</version>
+			<version>0.17.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jetbrains.kotlinx</groupId>
@@ -135,7 +135,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.22</version>
+			<version>1.18.24</version>
 			<optional>true</optional>
 		</dependency>
 		<!--Spring Boot-->
