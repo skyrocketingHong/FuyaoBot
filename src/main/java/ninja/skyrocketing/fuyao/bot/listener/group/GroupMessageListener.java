@@ -25,10 +25,15 @@ import ninja.skyrocketing.fuyao.bot.service.group.GroupMessageCountService;
 import ninja.skyrocketing.fuyao.bot.service.user.BotBanedUserService;
 import ninja.skyrocketing.fuyao.util.LogUtil;
 import ninja.skyrocketing.fuyao.util.MessageUtil;
+import ninja.skyrocketing.fuyao.util.RandomUtil;
 import ninja.skyrocketing.fuyao.util.TimeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+import static ninja.skyrocketing.fuyao.util.QueryUtil.nbnhhshQuery;
 
 /**
  * @author skyrocketing Hong
@@ -145,6 +150,20 @@ public class GroupMessageListener extends SimpleListenerHost {
         }
         //拦截视频消息
         else if (messageInGroupContentToString.matches("\\[不支持的消息#-?\\d+]\\[视频]你的QQ暂不支持查看视频短片，请升级到最新版本后查看。")) {
+            return ListeningStatus.LISTENING;
+        }
+        //拦截字母消息
+        else if (messageInGroupContentToString.matches("[a-zA-Z]{2,}")) {
+            List<String> queryList = nbnhhshQuery(messageInGroupContentToString);
+            if (queryList.isEmpty() || queryList == null) {
+                return ListeningStatus.LISTENING;
+            }
+            if (queryList.size() == 1) {
+                GroupMessageSender.sendMessageByGroupId(queryList.get(0), event.getGroup().getId());
+            } else {
+                int randomNum = RandomUtil.secureRandomNum(0, queryList.size());
+                GroupMessageSender.sendMessageByGroupId(queryList.get(randomNum), event.getGroup().getId());
+            }
             return ListeningStatus.LISTENING;
         }
         //拦截其它可能触发机器人的消息

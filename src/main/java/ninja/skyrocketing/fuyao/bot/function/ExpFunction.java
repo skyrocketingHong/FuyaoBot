@@ -14,6 +14,7 @@ import ninja.skyrocketing.fuyao.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 /**
@@ -37,7 +38,7 @@ public class ExpFunction {
     }
 
     //签到
-    public static Message signIn(UserMessage userMessage) {
+    public static Message signIn(UserMessage userMessage) throws NoSuchAlgorithmException {
         //创建群号和QQ号的实例
         User user = userMessage.getUser();
         //从数据库中获取当前群中的用户的数据
@@ -45,7 +46,7 @@ public class ExpFunction {
         //获取当前日期
         Date nowDate = DateUtil.date();
         //随机生成一个经验值
-        int exp = RandomUtil.randomNum(10) + 10;
+        int exp = RandomUtil.secureRandomNum(10) + 10;
         //用户不存在时，直接插入一条新的数据
         if (groupExp == null) {
             groupExp = new GroupExp(user, exp);

@@ -9,6 +9,7 @@ import ninja.skyrocketing.fuyao.bot.sender.group.GroupMessageSender;
 import ninja.skyrocketing.fuyao.util.MessageUtil;
 import ninja.skyrocketing.fuyao.util.RandomUtil;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,7 +68,7 @@ public class EasterEggFunction {
     /**
      * 人工智障回复“为什么”或“***吗”消息
      * */
-    public static void stupidAiForWhy(GroupMessageEvent event) {
+    public static void stupidAiForWhy(GroupMessageEvent event) throws NoSuchAlgorithmException {
         List<String> whyMessageList = new ArrayList<>();
         whyMessageList.add("不知道，下一个");
         whyMessageList.add("你可以试试问一下神奇的魔法海螺");

@@ -13,6 +13,7 @@ import ninja.skyrocketing.fuyao.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 /**
@@ -30,7 +31,7 @@ public class CoinFunction {
         CoinFunction.groupCoinService = groupCoinService;
     }
     //领金币
-    public static Message getCoin(UserMessage userMessage) {
+    public static Message getCoin(UserMessage userMessage) throws NoSuchAlgorithmException {
         //创建群号和QQ号的实例
         User user = userMessage.getUser();
         //从数据库中获取当前群中的用户的数据
@@ -38,7 +39,7 @@ public class CoinFunction {
         //获取当前时间
         Date nowDate = DateUtil.date();
         //随机生成一个金币值
-        Long coin = (long) (RandomUtil.randomNum(10) + 10);
+        Long coin = (long) (RandomUtil.secureRandomNum(10) + 10);
         //用户不存在时，直接插入一条新的数据
         if (groupCoin == null) {
             groupCoin = new GroupCoin(user, coin);

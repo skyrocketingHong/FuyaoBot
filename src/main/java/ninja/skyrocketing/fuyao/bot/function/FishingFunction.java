@@ -17,6 +17,7 @@ import ninja.skyrocketing.fuyao.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 /**
@@ -45,7 +46,7 @@ public class FishingFunction {
     }
 
     //根据经验值和金币值钓鱼
-    public static Message fishByExpAndCoin(UserMessage userMessage) {
+    public static Message fishByExpAndCoin(UserMessage userMessage) throws NoSuchAlgorithmException {
         GroupCoin groupCoin = groupCoinService.getCoinByGroupUser(userMessage.getUser());
         GroupExp groupExp = groupExpService.getExpByGroupUser(userMessage.getUser());
         if (groupCoin == null && groupExp == null) {
@@ -76,7 +77,7 @@ public class FishingFunction {
     }
 
     //直接获取一条鱼
-    public static GameFishing getFish(UserMessage userMessage) {
+    public static GameFishing getFish(UserMessage userMessage) throws NoSuchAlgorithmException {
         List<GameFishing> allFish = gameFishingService.getAllFish();
         //生成随机数0~9999，共10000个
         int randomNum = RandomUtil.secureRandomNum(0, 9999);
@@ -96,7 +97,7 @@ public class FishingFunction {
     }
 
     //返回钓到的鱼，生成对应消息
-    public static Message fishAFish(UserMessage userMessage, GroupCoin groupCoin) {
+    public static Message fishAFish(UserMessage userMessage, GroupCoin groupCoin) throws NoSuchAlgorithmException {
         //直接获取数据库中对应人的鱼筐
         User user = userMessage.getUser();
         GroupFishing groupFishing = groupFishingService.getGroupFishingByGroupUser(user);

@@ -1,7 +1,7 @@
 package ninja.skyrocketing.fuyao.util;
 
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Random;
 
 /**
  * @author skyrocketing Hong
@@ -9,15 +9,14 @@ import java.util.Random;
  */
 
 public class RandomUtil {
-    //生成0-seed之类的整数，不含seed
-    public static int randomNum(int seed) {
-        Random random = new Random();
-        return random.nextInt(seed);
+    //生成[min - max)之内的强加密随机数，实例默认构造函数不使用随机种子。
+    public static int secureRandomNum(int min, int max) throws NoSuchAlgorithmException {
+        SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+        return secureRandom.nextInt(max - min) + min;
     }
 
-    //生成强加密随机数，实例默认构造函数不使用随机种子
-    public static int secureRandomNum(int min, int max) {
-        SecureRandom secureRandom = new SecureRandom();
-        return secureRandom.nextInt(max - min) + min;
+    //生成[0 - max)之内的强加密随机数，实例默认构造函数不使用随机种子。
+    public static int secureRandomNum(int max) throws NoSuchAlgorithmException {
+        return secureRandomNum(0, max);
     }
 }

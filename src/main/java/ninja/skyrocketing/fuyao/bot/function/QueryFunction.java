@@ -5,7 +5,6 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import lombok.NoArgsConstructor;
 import net.mamoe.mirai.contact.NormalMember;
 import net.mamoe.mirai.message.MessageReceipt;
@@ -30,6 +29,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
+
+import static ninja.skyrocketing.fuyao.util.QueryUtil.nbnhhshQuery;
 
 /**
  * @author skyrocketing Hong
@@ -97,30 +99,22 @@ public class QueryFunction {
         if (msg.matches("[a-z]+")) {
             //发送等待提醒消息
             MessageReceipt<?> messageReceipt = MessageUtil.waitingMessage(userMessage, "正在等待 API 返回数据");
-            //拼接查询参数
-            String param = "{\"text\" : \"" + msg + "\"}";
-            //存储返回的json字符串
-            String nbnhhsh = cn.hutool.http.HttpUtil.post("https://lab.magiconch.com/api/nbnhhsh/guess", param);
-            //如果字符串是json数组，则返回消息
-            if (JSONUtil.isJsonArray(nbnhhsh)) {
-                //将字符串转换为json数组
-                JSONArray nbnhhshArray = JSONUtil.parseArray(nbnhhsh);
-                //获取可能的结果，去掉中括号并分割成String数组
-                String[] trans = nbnhhshArray.getByPath("trans", String.class)
-                        .replaceAll("\\[|]", "")
-                        .split(",");
-                if (trans[0].equals("null")) {
+            //获取查询结果
+            List<String> queryList = nbnhhshQuery(msg);
+            //如果不为空，则返回消息
+            if (queryList != null) {
+                if (queryList.isEmpty()) {
                     messageReceipt.recall();
                     userMessage.getMessageChainBuilder().add("没有查询到与 \"" + msg + "\" 相关的结果");
                     return userMessage.getMessageChainBuilderAsMessageChain();
                 }
                 //统计个数
-                int count = trans.length;
+                int count = queryList.size();
                 //拼接消息
                 userMessage.getMessageChainBuilder().add("\"" + msg + "\" ");
                 userMessage.getMessageChainBuilder().add("有以下 " + count + " 种结果: \n");
                 for (int i = 0; i < count; ++i) {
-                    userMessage.getMessageChainBuilder().add(i + 1 + ". " + trans[i] + " ");
+                    userMessage.getMessageChainBuilder().add(i + 1 + ". " + queryList.get(i) + " ");
                 }
             } else {
                 userMessage.getMessageChainBuilder().add("❌ 查询失败，请稍后重试...");

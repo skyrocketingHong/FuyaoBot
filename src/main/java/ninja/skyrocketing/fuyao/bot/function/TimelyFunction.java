@@ -20,6 +20,7 @@ import ninja.skyrocketing.fuyao.bot.service.group.GroupMessageCountService;
 import ninja.skyrocketing.fuyao.bot.service.group.GroupRSSMessageService;
 import ninja.skyrocketing.fuyao.bot.service.group.GroupTimelyMessageService;
 import ninja.skyrocketing.fuyao.util.HttpUtil;
+import ninja.skyrocketing.fuyao.util.MessageUtil;
 import ninja.skyrocketing.fuyao.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -169,11 +170,11 @@ public class TimelyFunction {
     }
     
     /**
-     * 每天08点00分1秒发送问候消息
+     * 每天08点00分0秒发送问候消息
      */
     @Value("${fuyao-bot.rss.morning-url}")
     private String morningRSSURL;
-    @Scheduled(cron = "1 0 8 * * ?")
+    @Scheduled(cron = "0 0 8 * * ?")
     public void morningMessage() {
         //获取RSS Feed
         SyndFeed feed = HttpUtil.getRSSFeed(morningRSSURL);
@@ -202,7 +203,7 @@ public class TimelyFunction {
     }
     
     /**
-     * 每天0点0分1秒将昨日消息数量放入last_day_message_count字段中并发送前一日消息统计信息
+     * 每天0点0分0秒将昨日消息数量放入last_day_message_count字段中并发送前一日消息统计信息
      * */
     @Scheduled(cron = "0 0 0 * * ?")
     public static void groupMessageCountUpdate() {
@@ -232,7 +233,7 @@ public class TimelyFunction {
             if (currentTimeMillis - yesterdayLastUpdateTimes.get(groupMessageCount.getGroupId()).getTime() <= 1800000L) {
                 MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
                 messageChainBuilder.add("当前时间为" + TimeUtil.nowDateTime() +"\n");
-                messageChainBuilder.add("📊 昨日本群共发送消息 " + groupMessageCount.getYesterdayMessageCount() + " 条\n");
+                messageChainBuilder.add("📊 昨日本群共发送消息 " + MessageUtil.getEmojiNumber(groupMessageCount.getYesterdayMessageCount()) + " 条\n");
                 messageChainBuilder.add(
                         "🌃 新的一天已经开始了" + "\n" +
                         "🌙 " + botReplyMessageService.getGroupMemberTitleById(String.valueOf(groupMessageCount.getGroupId())) + "们早点休息哦"

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,8 +37,8 @@ public class SmallGamesFunction {
     /**
      * 投骰子
      */
-    public static Message rollADice(UserMessage userMessage) {
-        int randomNum = RandomUtil.randomNum(100);
+    public static Message rollADice(UserMessage userMessage) throws NoSuchAlgorithmException {
+        int randomNum = RandomUtil.secureRandomNum(100);
         String[] dice = new String[]{"⚀", "⚁", "⚂", "⚃", "⚄", "⚅"};
         userMessage.getMessageChainBuilder().add(dice[randomNum % 6] + " 点数为 " + (randomNum % 6 + 1));
         return userMessage.getMessageChainBuilderAsMessageChain();
@@ -46,8 +47,8 @@ public class SmallGamesFunction {
     /**
      * 石头剪刀布
      */
-    public static Message rockPaperScissors(UserMessage userMessage) {
-        int randomNum = RandomUtil.randomNum(100);
+    public static Message rockPaperScissors(UserMessage userMessage) throws NoSuchAlgorithmException {
+        int randomNum = RandomUtil.secureRandomNum(100);
         String[] rockPaperScissorsIcon = new String[]{"✊", "✌", "✋"};
         String[] rockPaperScissorsText = new String[]{" 石头 ", " 剪刀 ", " 布 "};
         userMessage.getMessageChainBuilder().add(rockPaperScissorsIcon[randomNum % 3] + " 手势为 " + rockPaperScissorsText[randomNum % 3]);
