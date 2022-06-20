@@ -104,67 +104,58 @@ public class TimelyFunction {
      */
     @Scheduled(cron = "*/30 * * * * ?")
     public void rssMessage() {
-        //构造PushMessage内部类
-        @Getter
-        @Setter
-        @AllArgsConstructor
-        class PushMessage {
-            private String message;
-            private Date publishedDate;
-            private String url;
-        }
         //获取所有需要查询的RSS源
         List<String> allRSSUrl = groupRSSMessageService.getAllRSSUrl();
         //获取所有GroupRSSMessage
         List<GroupRSSMessage> groupRSSMessage = groupRSSMessageService.getAllGroupRSSMessage();
-        //RSS URL, PushMessage的键值对
-        Map<String, PushMessage> urlAndPushMessageMap = new HashMap<>();
+        //RSS URL, SyndFeed的键值对
+        Map<String, SyndFeed> urlAndSyndFeedMap = new HashMap<>();
         for (String rssUrl : allRSSUrl) {
             //获取RSS Feed
             SyndFeed feed = HttpUtil.getRSSFeed(rssUrl);
+            //获取不到直接跳过
             if (feed == null) {
-                urlAndPushMessageMap.remove(rssUrl);
+                urlAndSyndFeedMap.remove(rssUrl);
                 continue;
             }
-            //获取首条消息
-            SyndEntry firstEntry = feed.getEntries().get(0);
-            //获取首条消息的推送时间
-            Date firstEntryPublishedDate = firstEntry.getPublishedDate();
-            //直接抓取目前最新的一篇文章
-            //最终推送文案
-            String resultMessage =
-                    "🔔 RSS订阅提醒\n" +
-                    "🗞️ 订阅源: " + feed.getTitle() + "\n" +
-                    "🏷️ 标题: " + firstEntry.getTitle() + "\n" +
-                    "🔗 链接: " + firstEntry.getLink() +  "\n" +
-                    "⏰ 推送时间: " + TimeUtil.dateTimeFormatter(firstEntryPublishedDate) +"\n";
-            PushMessage pushMessage = new PushMessage(resultMessage, firstEntryPublishedDate, firstEntry.getLink());
-            urlAndPushMessageMap.put(rssUrl, pushMessage);
+            //将获取到的放入map中
+            urlAndSyndFeedMap.put(rssUrl, feed);
         }
-        //遍历GroupRSSMessage
         for (GroupRSSMessage singleGroupRSSMessage : groupRSSMessage) {
-            if (singleGroupRSSMessage.isEnabled()) {
-                //获取单个GroupRSSMessage中的RssUrl
-                String rssUrl = singleGroupRSSMessage.getRssUrl();
-                if (urlAndPushMessageMap.containsKey(rssUrl)) {
-                    //获取PushMessage类
-                    PushMessage pushMessage = urlAndPushMessageMap.get(rssUrl);
-                    //获取文章URL，便于后期判断
-                    String url = pushMessage.getUrl();
-                    if (singleGroupRSSMessage.getLastNotifiedDate() == null
-                            || singleGroupRSSMessage.getLastNotifiedUrl() == null
-                            || singleGroupRSSMessage.getLastNotifiedDate().before(pushMessage.getPublishedDate())
-                            || !Objects.equals(singleGroupRSSMessage.getLastNotifiedUrl(), url)
-                    ) {
-                        //发送消息
-                        if (GroupMessageSender.sendMessageByGroupId(pushMessage.getMessage(), singleGroupRSSMessage.getGroupId())) {
-                            //将当前推送时间和推送URL写回数据库，便于下次判断
-                            singleGroupRSSMessage.setLastNotifiedDate(new Date());
-                            singleGroupRSSMessage.setLastNotifiedUrl(url);
-                            groupRSSMessageService.updateGroupRSSMessage(singleGroupRSSMessage);
-                        }
-                    }
-                }
+            SyndFeed syndFeed = urlAndSyndFeedMap.get(singleGroupRSSMessage.getRssUrl());
+            if (syndFeed == null) {
+                continue;
+            }
+            //数组下标，保证不多于5条且以从旧到新的顺序发送
+            int i = Math.min(syndFeed.getEntries().size(), 5);
+            //消息发送状态
+            boolean sendStatus = false;
+            //最后推送的消息的链接，用于写回数据库
+            String url = null;
+            //最后推送的消息的时间，用于写回数据库
+            Date publishedDate = null;
+            //1、获取到的项目的推送日期不早于数据库中上次推送的时间 2、获取到的项目的链接与数据库中上次推送的链接不同 3、不超过5条
+            while (i >= 0 && syndFeed.getEntries().get(i).getPublishedDate().getTime() >= singleGroupRSSMessage.getLastNotifiedDate().getTime()
+                    && !syndFeed.getEntries().get(i).getLink().equals(singleGroupRSSMessage.getLastNotifiedUrl())) {
+                //保留链接
+                url = syndFeed.getEntries().get(i).getLink();
+                //保留日期
+                publishedDate = syndFeed.getEntries().get(i).getPublishedDate();
+                //生成消息
+                String resultMessage =
+                        "🔔 RSS订阅提醒\n" +
+                                "🗞️ 标题: " + syndFeed.getEntries().get(i).getTitle() + " (" + syndFeed.getTitle() + ")" + "\n" +
+                                "🔗 链接: " + url +  "\n" +
+                                "⏰ 推送时间: " + TimeUtil.dateTimeFormatter(publishedDate) +"\n";
+                //保留发送状态
+                sendStatus = GroupMessageSender.sendMessageByGroupId(resultMessage, singleGroupRSSMessage.getGroupId());
+                --i;
+            }
+            //根据最后一次的发送状态，选择是否将数据写回数据库
+            if (sendStatus) {
+                singleGroupRSSMessage.setLastNotifiedDate(publishedDate);
+                singleGroupRSSMessage.setLastNotifiedUrl(url);
+                groupRSSMessageService.updateGroupRSSMessage(singleGroupRSSMessage);
             }
         }
     }

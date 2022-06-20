@@ -238,6 +238,9 @@ public class MessageUtil {
                 case '8' -> result.append("8️⃣");
                 case '9' -> result.append("9️⃣");
                 case '0' -> result.append("0️⃣");
+                default -> {
+                    return num;
+                }
             }
         }
         return result.toString();
