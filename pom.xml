@@ -10,13 +10,13 @@
 	</parent>
 	<groupId>ninja.skyrocketing.fuyao</groupId>
 	<artifactId>fuyao-bot</artifactId>
-	<version>4.6.18.84</version>
+	<version>4.5.19.85</version>
 	<name>Fuyao bot</name>
 	<description>A QQ bot named Fuyao and bases on Mirai, Spring Boot, MySQL and Mybatis Plus.</description>
 
 	<properties>
 		<java.version>17</java.version>
-		<kotlin.version>1.7.0</kotlin.version>
+		<kotlin.version>1.7.10</kotlin.version>
 		<start-class>ninja.skyrocketing.fuyao.FuyaoBotApplication</start-class>
 	</properties>
 
@@ -40,21 +40,7 @@
 		<dependency>
 			<groupId>net.mamoe</groupId>
 			<artifactId>mirai-core-jvm</artifactId>
-			<version>2.11.1</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>atomicfu</artifactId>
-					<groupId>org.jetbrains.kotlinx</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>kotlinx-coroutines-core-jvm</artifactId>
-					<groupId>org.jetbrains.kotlinx</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>annotations</artifactId>
-					<groupId>org.jetbrains</groupId>
-				</exclusion>
-			</exclusions>
+			<version>2.12.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
@@ -70,7 +56,7 @@
 		<dependency>
 			<groupId>org.jetbrains.kotlinx</groupId>
 			<artifactId>kotlinx-coroutines-core</artifactId>
-			<version>1.6.2</version>
+			<version>1.6.4</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>kotlinx-coroutines-core-jvm</artifactId>
@@ -81,12 +67,12 @@
 		<dependency>
 			<groupId>org.jetbrains.kotlinx</groupId>
 			<artifactId>atomicfu</artifactId>
-			<version>0.17.3</version>
+			<version>0.18.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jetbrains.kotlinx</groupId>
 			<artifactId>kotlinx-coroutines-core-jvm</artifactId>
-			<version>1.6.2</version>
+			<version>1.6.4</version>
 		</dependency>
 		<!--druid连接池-->
 		<dependency>
@@ -98,7 +84,7 @@
 		<dependency>
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-all</artifactId>
-			<version>5.8.3</version>
+			<version>5.8.5</version>
 		</dependency>
 		<!--MySQL-->
 		<dependency>
@@ -115,7 +101,7 @@
 		<dependency>
 			<groupId>com.baomidou</groupId>
 			<artifactId>mybatis-plus-generator</artifactId>
-			<version>3.5.2</version>
+			<version>3.5.3</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -256,8 +242,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.9.0</version>
 				<configuration>
-					<source>16</source>
-					<target>16</target>
+					<source>17</source>
+					<target>17</target>
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>

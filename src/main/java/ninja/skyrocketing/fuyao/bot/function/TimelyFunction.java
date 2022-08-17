@@ -41,7 +41,7 @@ public class TimelyFunction {
     private static BotConfigService botConfigService;
     private static GroupMessageCountService groupMessageCountService;
     private static BotReplyMessageService botReplyMessageService;
-    
+
     @Autowired
     private TimelyFunction(
             GroupTimelyMessageService groupTimelyMessageService,
@@ -56,7 +56,7 @@ public class TimelyFunction {
         TimelyFunction.groupMessageCountService = groupMessageCountService;
         TimelyFunction.botReplyMessageService = botReplyMessageService;
     }
-    
+
     /**
      * 定时消息
      * 每分钟读取一次数据库
@@ -81,7 +81,7 @@ public class TimelyFunction {
             }
         }
     }
-    
+
     /**
      * 定时处理防刷屏
      * 每10秒钟判断一次
@@ -97,12 +97,12 @@ public class TimelyFunction {
             }
         }
     }
-    
+
     /**
      * 定时获取RSS源更新
-     * 每30秒抓取一次
+     * 每10秒抓取一次
      */
-    @Scheduled(cron = "*/30 * * * * ?")
+    @Scheduled(cron = "*/10 * * * * ?")
     public void rssMessage() {
         //获取所有需要查询的RSS源
         List<String> allRSSUrl = groupRSSMessageService.getAllRSSUrl();
@@ -115,38 +115,41 @@ public class TimelyFunction {
             SyndFeed feed = HttpUtil.getRSSFeed(rssUrl);
             //获取不到直接跳过
             if (feed == null) {
-                urlAndSyndFeedMap.remove(rssUrl);
                 continue;
             }
             //将获取到的放入map中
             urlAndSyndFeedMap.put(rssUrl, feed);
         }
         for (GroupRSSMessage singleGroupRSSMessage : groupRSSMessage) {
-            SyndFeed syndFeed = urlAndSyndFeedMap.get(singleGroupRSSMessage.getRssUrl());
-            if (syndFeed == null) {
-                continue;
+            List<SyndEntry> syndEntry = new LinkedList<>();
+            if (urlAndSyndFeedMap.containsKey(singleGroupRSSMessage.getRssUrl())) {
+                syndEntry = urlAndSyndFeedMap.get(singleGroupRSSMessage.getRssUrl()).getEntries();
             }
-            //数组下标，保证不多于5条且以从旧到新的顺序发送
-            int i = Math.min(syndFeed.getEntries().size(), 5);
+            //数组下标，保证不多于6条且以从旧到新的顺序发送
+            int i = Math.min(syndEntry.size(), 5);
             //消息发送状态
             boolean sendStatus = false;
             //最后推送的消息的链接，用于写回数据库
             String url = null;
             //最后推送的消息的时间，用于写回数据库
             Date publishedDate = null;
-            //1、获取到的项目的推送日期不早于数据库中上次推送的时间 2、获取到的项目的链接与数据库中上次推送的链接不同 3、不超过5条
-            while (i >= 0 && syndFeed.getEntries().get(i).getPublishedDate().getTime() >= singleGroupRSSMessage.getLastNotifiedDate().getTime()
-                    && !syndFeed.getEntries().get(i).getLink().equals(singleGroupRSSMessage.getLastNotifiedUrl())) {
+            // 1、获取到的项目的推送日期不早于数据库中上次推送的时间
+            // 2、获取到最新推送的链接与数据库中上次推送的链接不同
+            // 3、不超过6条
+            while (i >= 0
+                    && syndEntry.get(i).getPublishedDate().getTime() >= singleGroupRSSMessage.getLastNotifiedDate().getTime()
+                    && !syndEntry.get(0).getLink().equals(singleGroupRSSMessage.getLastNotifiedUrl())
+            ) {
                 //保留链接
-                url = syndFeed.getEntries().get(i).getLink();
+                url = syndEntry.get(i).getLink();
                 //保留日期
-                publishedDate = syndFeed.getEntries().get(i).getPublishedDate();
+                publishedDate = syndEntry.get(i).getPublishedDate();
                 //生成消息
                 String resultMessage =
                         "🔔 RSS订阅提醒\n" +
-                                "🗞️ 标题: " + syndFeed.getEntries().get(i).getTitle() + " (" + syndFeed.getTitle() + ")" + "\n" +
+                                "🗞️ 标题: " + syndEntry.get(i).getTitle() + " (" + urlAndSyndFeedMap.get(singleGroupRSSMessage.getRssUrl()).getTitle() + ")" + "\n" +
                                 "🔗 链接: " + url +  "\n" +
-                                "⏰ 推送时间: " + TimeUtil.dateTimeFormatter(publishedDate) +"\n";
+                                "⏰ 发布时间: " + TimeUtil.dateTimeFormatter(publishedDate) +"\n";
                 //保留发送状态
                 sendStatus = GroupMessageSender.sendMessageByGroupId(resultMessage, singleGroupRSSMessage.getGroupId());
                 --i;
@@ -159,7 +162,7 @@ public class TimelyFunction {
             }
         }
     }
-    
+
     /**
      * 每天08点00分0秒发送问候消息
      */
@@ -192,7 +195,7 @@ public class TimelyFunction {
             GroupMessageSender.sendMessageByGroupId(resultMessage, groupId);
         }
     }
-    
+
     /**
      * 每天0点0分0秒将昨日消息数量放入last_day_message_count字段中并发送前一日消息统计信息
      * */
@@ -224,7 +227,7 @@ public class TimelyFunction {
             if (currentTimeMillis - yesterdayLastUpdateTimes.get(groupMessageCount.getGroupId()).getTime() <= 1800000L) {
                 MessageChainBuilder messageChainBuilder = new MessageChainBuilder();
                 messageChainBuilder.add("当前时间为" + TimeUtil.nowDateTime() +"\n");
-                messageChainBuilder.add("📊 昨日本群共发送消息 " + MessageUtil.getEmojiNumber(groupMessageCount.getYesterdayMessageCount()) + " 条\n");
+                messageChainBuilder.add("📊 昨日本群发送消息约 " + MessageUtil.getEmojiNumber(groupMessageCount.getYesterdayMessageCount()) + " 条\n");
                 messageChainBuilder.add(
                         "🌃 新的一天已经开始了" + "\n" +
                         "🌙 " + botReplyMessageService.getGroupMemberTitleById(String.valueOf(groupMessageCount.getGroupId())) + "们早点休息哦"

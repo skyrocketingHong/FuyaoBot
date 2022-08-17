@@ -33,7 +33,7 @@ public class GroupRSSMessageImpl implements GroupRSSMessageService {
 	}
 	
 	/**
-	 * 获取全部RSS URL
+	 * 获取全部已启用的RSS URL
 	 */
 	@Override
 	public List<String> getAllRSSUrl() {

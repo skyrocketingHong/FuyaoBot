@@ -16,7 +16,7 @@ public interface GroupRSSMessageService {
 	int updateGroupRSSMessage(GroupRSSMessage groupRSSMessage);
 	
 	/**
-	 * 获取全部RSS URL
+	 * 获取全部已启用的RSS URL
 	 * */
 	List<String> getAllRSSUrl();
 }
