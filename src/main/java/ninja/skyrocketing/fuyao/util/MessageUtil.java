@@ -107,18 +107,18 @@ public class MessageUtil {
     }
 
     //获取群成员荣誉信息名称
-    public static String getGroupHonorTypeName(GroupHonorType type) {
-        return switch (type) {
-            case TALKATIVE -> "龙王";
-            case PERFORMER -> "群聊之火";
-            case LEGEND -> "群聊炽焰";
-            case STRONG_NEWBIE -> "冒尖小春笋";
-            case EMOTION -> "快乐源泉";
-            case ACTIVE -> "活跃头衔";
-            case EXCLUSIVE -> "特殊头衔";
-            case MANAGE -> "管理头衔";
-        };
-    }
+//    public static String getGroupHonorTypeName(GroupHonorType type) {
+//        return switch (type) {
+//            case TALKATIVE -> "龙王";
+//            case PERFORMER -> "群聊之火";
+//            case LEGEND -> "群聊炽焰";
+//            case STRONG_NEWBIE -> "冒尖小春笋";
+//            case EMOTION -> "快乐源泉";
+//            case ACTIVE -> "活跃头衔";
+//            case EXCLUSIVE -> "特殊头衔";
+//            case MANAGE -> "管理头衔";
+//        };
+//    }
 
     //向QQ群上传头像
     public static Image uploadAvatarImageToGroup(Group group, Member member) throws IOException {
@@ -166,15 +166,15 @@ public class MessageUtil {
     /**
     * 将Message toString 后去除 source
     * */
-    public static String removeSource(Message message) {
-        return message.toString().replaceFirst("\\[mirai:source:\\[-?\\d+],\\[-?\\d+]]","");
+    public static String removeSource(MessageChain message) {
+        return message.get(1).toString();
     }
 
     /**
      * 从Message中提取消息ID
      * */
-    public static int getMessageIDInGroup(Message message) {
-        return Integer.parseInt(message.toString().replaceAll("\n|\\n", "").replaceAll("\\[mirai:source:\\[","").replaceAll("],\\[-?\\d+]].*", ""));
+    public static int getMessageIDInGroup(MessageChain message) {
+        return Integer.parseInt(message.get(0).toString().replaceAll("\n|\\n", "").replaceAll("\\[mirai:source:ids=\\[","").replaceAll("],.*", ""));
     }
 
     /**

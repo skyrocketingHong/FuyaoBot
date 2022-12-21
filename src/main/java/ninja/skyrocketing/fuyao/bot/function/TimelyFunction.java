@@ -21,12 +21,14 @@ import ninja.skyrocketing.fuyao.bot.service.group.GroupRSSMessageService;
 import ninja.skyrocketing.fuyao.bot.service.group.GroupTimelyMessageService;
 import ninja.skyrocketing.fuyao.util.HttpUtil;
 import ninja.skyrocketing.fuyao.util.MessageUtil;
+import ninja.skyrocketing.fuyao.util.RandomUtil;
 import ninja.skyrocketing.fuyao.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 /**
@@ -41,7 +43,7 @@ public class TimelyFunction {
     private static BotConfigService botConfigService;
     private static GroupMessageCountService groupMessageCountService;
     private static BotReplyMessageService botReplyMessageService;
-
+    
     @Autowired
     private TimelyFunction(
             GroupTimelyMessageService groupTimelyMessageService,
@@ -56,7 +58,7 @@ public class TimelyFunction {
         TimelyFunction.groupMessageCountService = groupMessageCountService;
         TimelyFunction.botReplyMessageService = botReplyMessageService;
     }
-
+    
     /**
      * 定时消息
      * 每分钟读取一次数据库
@@ -81,7 +83,7 @@ public class TimelyFunction {
             }
         }
     }
-
+    
     /**
      * 定时处理防刷屏
      * 每10秒钟判断一次
@@ -97,10 +99,10 @@ public class TimelyFunction {
             }
         }
     }
-
+    
     /**
      * 定时获取RSS源更新
-     * 每10秒抓取一次
+     * 每30秒抓取一次
      */
     @Scheduled(cron = "*/10 * * * * ?")
     public void rssMessage() {
@@ -162,14 +164,14 @@ public class TimelyFunction {
             }
         }
     }
-
+    
     /**
      * 每天08点00分0秒发送问候消息
      */
     @Value("${fuyao-bot.rss.morning-url}")
     private String morningRSSURL;
     @Scheduled(cron = "0 0 8 * * ?")
-    public void morningMessage() {
+    public void morningMessage() throws NoSuchAlgorithmException, InterruptedException {
         //获取RSS Feed
         SyndFeed feed = HttpUtil.getRSSFeed(morningRSSURL);
         String resultMessage;
@@ -193,14 +195,16 @@ public class TimelyFunction {
         }
         for (Long groupId : groupMessageCountService.getLastDayGroupMessageCountListByCount(20)) {
             GroupMessageSender.sendMessageByGroupId(resultMessage, groupId);
+            //睡一下
+            Thread.sleep(RandomUtil.secureRandomNum(500, 1000));
         }
     }
-
+    
     /**
      * 每天0点0分0秒将昨日消息数量放入last_day_message_count字段中并发送前一日消息统计信息
      * */
     @Scheduled(cron = "0 0 0 * * ?")
-    public static void groupMessageCountUpdate() {
+    public static void groupMessageCountUpdate() throws NoSuchAlgorithmException, InterruptedException {
         //获取当前时间戳
         Date currentDate = new Date();
         long currentTimeMillis = currentDate.getTime();
@@ -233,6 +237,8 @@ public class TimelyFunction {
                         "🌙 " + botReplyMessageService.getGroupMemberTitleById(String.valueOf(groupMessageCount.getGroupId())) + "们早点休息哦"
                 );
                 GroupMessageSender.sendMessageByGroupId(messageChainBuilder, groupMessageCount.getGroupId());
+                //睡一下
+                Thread.sleep(RandomUtil.secureRandomNum(500, 1000));
             }
         }
     }

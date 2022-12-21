@@ -3,6 +3,7 @@ package ninja.skyrocketing.fuyao.bot.function;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.MessageReceipt;
+import net.mamoe.mirai.message.data.SingleMessage;
 import ninja.skyrocketing.fuyao.bot.config.GlobalVariables;
 import ninja.skyrocketing.fuyao.bot.pojo.group.GroupMessageInfo;
 import ninja.skyrocketing.fuyao.bot.sender.group.GroupMessageSender;
@@ -31,6 +32,7 @@ public class EasterEggFunction {
         int messageId = MessageUtil.getMessageIDInGroup(event.getMessage());
         //GroupAndMessageId
         GroupMessageInfo groupMessageInfo = new GroupMessageInfo(event);
+        
         //获取当前群的消息列表
         List<String> groupMessageList = GlobalVariables.getGlobalVariables().getGroupMessageMap().get(groupId);
         //如果为null，则初始化

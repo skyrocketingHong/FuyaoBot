@@ -4,6 +4,7 @@ import lombok.*;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.data.Message;
+import net.mamoe.mirai.message.data.MessageChain;
 import ninja.skyrocketing.fuyao.util.MessageUtil;
 
 /**
@@ -21,7 +22,7 @@ public class GroupMessageInfo {
 	
 	private int messageId;
 	
-	public GroupMessageInfo(Group group, Message message) {
+	public GroupMessageInfo(Group group, MessageChain message) {
 		this.groupId = group.getId();
 		this.messageId = MessageUtil.getMessageIDInGroup(message);
 	}
